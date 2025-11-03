@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/user01377/pi-weather/issues"
   },
-  "homepage": "https://github.com/user01377/pi-weather#readme"
+  "homepage": "https://github.com/user01377/pi-weather#readme",
+  "dependencies": {
+    "express": "^5.1.0"
+  }
 }
