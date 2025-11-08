@@ -20,7 +20,7 @@ server.use(express.json());
 server.use(morgan('combined')) // for realtime logging like django
 
 server.get('/', (req, res) => {
-  res.json("Weather API is LIVE")
+  res.send("Weather API is LIVE")
 });
 
 server.use('/', apiRouter);
