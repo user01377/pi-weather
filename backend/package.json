@@ -2,9 +2,9 @@
   "name": "weather",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "server.js",
   "scripts": {
-    "test": "console.log(\"print hello\");"
+    "test": "node -e \"console.log('placeholder test')\""
   },
   "repository": {
     "type": "git",
