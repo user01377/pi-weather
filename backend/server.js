@@ -1,3 +1,5 @@
+import dotenv from "dotenv";
+dotenv.config();
 import express from 'express';
 import morgan from 'morgan';
 import apiRouter from './routes/nws-api.js';
