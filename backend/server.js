@@ -1,13 +1,19 @@
-const express = require('express');  // import express
-const app = express();               // create an Express app
-const PORT = 3000;                   // define a port
+import dotenv from "dotenv";
+dotenv.config();
+import express from 'express';
+import morgan from 'morgan';
+import apiRouter from './routes/nws-api.js';
 
-// Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello, Express!');
+const server = express();
+const PORT = 8000;
+
+server.get('/', (req, res) => {
+  res.send("Weather API is LIVE");
 });
 
-// Start the server
-app.listen(PORT, () => {
+server.use(morgan('combined')) // for realtime logging like django
+server.use('/', apiRouter);;
+
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
