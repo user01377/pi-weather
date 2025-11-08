@@ -1,13 +1,13 @@
-const express = require('express');  // import express
-const app = express();               // create an Express app
-const PORT = 3000;                   // define a port
+const express = require('express');  
+const server = express();               
+const PORT = 8000;                   
+import apiRouter from "./routes/nws-api.js"
 
-// Define a simple route
-app.get('/', (req, res) => {
-  res.send('Hello, Express!');
+server.get('/', (req, res) => {
+  
 });
 
 // Start the server
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
