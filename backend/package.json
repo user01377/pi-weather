@@ -20,6 +20,7 @@
   "dependencies": {
     "dotenv": "^17.2.3",
     "express": "^5.1.0",
+    "morgan": "^1.10.1",
     "node-fetch": "^3.3.2",
     "suncalc": "^1.9.0"
   }

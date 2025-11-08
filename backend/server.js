@@ -1,4 +1,5 @@
 import express from 'express';
+import morgan from 'morgan';
 import apiRouter from './routes/nws-api.js';
 
 const server = express();
@@ -8,7 +9,8 @@ server.get('/', (req, res) => {
   res.send("Weather API is LIVE");
 });
 
-server.use('/', apiRouter);
+server.use(morgan('combined')) // for realtime logging like django
+server.use('/', apiRouter);;
 
 server.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);

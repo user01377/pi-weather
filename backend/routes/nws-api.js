@@ -2,17 +2,16 @@ import express from "express";
 import fetch from "node-fetch";
 import SunCalc from "suncalc";
 import dotenv from "dotenv";
+dotenv.config({ path: '../.env' });
 
 const router = express.Router();
-dotenv.config({ path: '../.env'});
 
 const DEFAULT_LAT = 43.083308;
 const DEFAULT_LON = -77.676973;
 const STATION_ID = "KROC";
+const CACHE_DURATION = parseInt(process.env.CACHE_DURATION, 10) * 1000;
 
 let cache = {};
-const CACHE_DURATION = parseInt(process.env.CACHE_DURATION, 10) * 1000; // uses .env, declares base 10, * 1000 to convert seconds over to correct unit
-const USER_AGENT = process.env.USER_AGENT;
 
 export const NWSFetch = async (url) => {
   const res = await fetch(url, {
@@ -25,6 +24,7 @@ export const NWSFetch = async (url) => {
   return res.json();
 };
 
+
 export const getCachedData = async (key, fetchFunction) => {
   const now = Date.now();
   if (cache[key] && now - cache[key].timestamp < CACHE_DURATION) {
@@ -35,40 +35,50 @@ export const getCachedData = async (key, fetchFunction) => {
   return data;
 };
 
+// get current observation through nws api
 export const getCurrentObservation = async () => {
   return NWSFetch(`https://api.weather.gov/stations/${STATION_ID}/observations/latest`);
 };
 
-// Express route
 router.get("/current", async (req, res) => {
   try {
-      const data = await getCachedData(`current-${STATION_ID}`, async () => {
-      const obs = await getCurrentObservation();
-      const pointData = await NWSFetch(`https://api.weather.gov/points/${DEFAULT_LAT},${DEFAULT_LON}`);
-      const forecast = await NWSFetch(pointData.forecast);
-      const alertsData = await NWSFetch(`https://api.weather.gov/alerts/active?point=${DEFAULT_LAT},${DEFAULT_LON}`)
-      const sunTimes = SunCalc.getTimes(new Date(), DEFAULT_LAT, DEFAULT_LON);
+    const data = await getCachedData(`current-${STATION_ID}`, async () => {
+      const [obs, pointData, alertsData] = await Promise.all([
+        getCurrentObservation(),
+        NWSFetch(`https://api.weather.gov/points/${DEFAULT_LAT},${DEFAULT_LON}`),
+        NWSFetch(`https://api.weather.gov/alerts/active?point=${DEFAULT_LAT},${DEFAULT_LON}`)
+      ]);
 
-      return {
-        temperature: obs.temperature?.value,
-        feelsLike: obs.windChill?.value || obs.temperature?.value,
-        weather: obs.textDescription,
-        alerts: alertsData.features?.map(a => a?.properties?.headline).filter(Boolean) || [],
-        humidity: obs.relativeHumidity?.value,
+      let forecast = null;
+      try {
+        forecast = await NWSFetch(pointData.forecast);
+      } catch (e) {
+        console.warn("⚠️ Failed to fetch forecast:", e.message);
+      }
+
+      const sunTimes = SunCalc.getTimes(new Date(), DEFAULT_LAT, DEFAULT_LON);
+      const firstPeriod = forecast?.properties?.periods?.[0] || {};
+
+      return { //returns all data needed
+        temperature: obs?.temperature?.value ?? null,
+        feelsLike: obs?.windChill?.value ?? obs?.temperature?.value ?? null,
+        weather: obs?.textDescription ?? "Unavailable",
+        alerts: alertsData?.features?.map(a => a?.properties?.headline).filter(Boolean) ?? [],
+        humidity: obs?.relativeHumidity?.value ?? null,
         wind: {
-          speed: obs.windSpeed?.value,
-          direction: obs.windDirection?.value
+          speed: obs?.windSpeed?.value ?? null,
+          direction: obs?.windDirection?.value ?? null,
         },
         precipitation: {
-          type: forecast?.properties?.periods[0]?.shortForecast || null,
-          chance: forecast?.properties?.periods[0]?.probabilityOfPrecipitation?.value || null
+          type: firstPeriod?.shortForecast ?? null,
+          chance: firstPeriod?.probabilityOfPrecipitation?.value ?? null,
         },
-        pressure: obs.barometricPressure?.value,
-        visibility: obs.visibility?.value,
+        pressure: obs?.barometricPressure?.value ?? null,
+        visibility: obs?.visibility?.value ?? null,
         sunrise: sunTimes.sunrise,
         sunset: sunTimes.sunset,
-        cloudCoverage: obs.cloudLayers?.map(c => c.amount).join(", ") || "Unknown",
-        icon: obs.icon || "default-icon.png",
+        cloudCoverage: obs?.cloudLayers?.map(c => c.amount).join(", ") || "Unknown",
+        icon: obs?.icon || "default-icon.png",
       };
     });
 
@@ -79,7 +89,8 @@ router.get("/current", async (req, res) => {
   }
 });
 
-  export default router;
+export default router;
+
 
 // ---------------------
 // TEST BLOCK
