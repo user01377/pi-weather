@@ -107,7 +107,31 @@ router.get("/current", async (req, res) => {
       // feels like changes with seasons
       let feelsLike = obs?.heatIndex?.value ?? obs?.windChill?.value ?? obs?.temperature?.value ?? null;
 
-      return { // returns all data needed
+      // cloud coverage computation
+      let cloudCoverage = null;
+
+      if (Array.isArray(obs?.cloudLayers) && obs.cloudLayers.length > 0) {
+        const cloudMap = { FEW: 0.1875, SCT: 0.4375, BKN: 0.75, OVC: 1.0 };
+
+        let totalThickness = 0;
+        let weightedSum = 0;
+        let prevBase = 0;
+
+        for (const layer of obs.cloudLayers) {
+          const base = layer.base?.value ?? prevBase; // fallback if missing
+          const fraction = cloudMap[layer.amount] ?? 0; // fallback if unknown code
+          const thickness = base - prevBase;
+
+          weightedSum += fraction * thickness;4
+          totalThickness += thickness;
+          prevBase = base;
+        }
+
+        cloudCoverage = totalThickness ? Math.round((weightedSum / totalThickness) * 100) : 0;
+      }
+
+      // returns all data values
+      return { 
         temperature: obs?.temperature?.value != null
           ? Math.round((obs.temperature.value * 9 / 5) + 32) // conversion to fahrenheit
           : null,
@@ -145,9 +169,7 @@ router.get("/current", async (req, res) => {
 
         sunset: sunset_calc,
 
-        cloudCoverage: Array.isArray(obs?.cloudLayers)
-          ? obs.cloudLayers.map(c => c.amount).join(", ")
-          : "Unknown",
+        cloudCoverage,
 
         icon: obs?.icon || "default-icon.png",
 
