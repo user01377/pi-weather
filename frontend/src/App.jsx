@@ -1,70 +1,29 @@
-import { useEffect, useState } from 'react';
-import './App.css'
+import React from 'react';
+import WeatherDiv from './components/WeatherDiv.jsx';
+import Background from './components/Background.jsx';
 
-function Weather() {
-  const [current, setCurrent] = useState(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetch('http://localhost:8000/current')
-      .then(res => res.json())
-      .then(data => {
-        setCurrent(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Error fetching weather:', err);
-        setLoading(false);
-      });
-  }, []);
-
-  if (loading) return <div>Loading...</div>;
-  if (!current) return <div>No data available</div>;
-
-  // Helper function to render objects/arrays
-  const renderValue = (value) => {
-    if (value === null || value === undefined) return 'N/A';
-
-    if (typeof value === 'object') {
-      if (Array.isArray(value)) {
-        // Render array elements as list items
-        return (
-          <ul>
-            {value.map((item, idx) => (
-              <li key={idx}>{JSON.stringify(item)}</li>
-            ))}
-          </ul>
-        );
-      }
-
-      // Render object key/value pairs as list
-      return (
-        <ul>
-          {Object.entries(value).map(([k, v]) => (
-            <li key={k}>
-              <strong>{k}:</strong> {String(v)}
-            </li>
-          ))}
-        </ul>
-      );
-    }
-
-    // Primitive types
-    return String(value);
+function App() {
+  const sampleData = {
+    block1: {
+      item1: "Temperature: 72°F",
+      item2: "Humidity: 40%",
+      item3: "Wind: 5 mph",
+      item4: "Condition: Sunny",
+    },
+    block2: {
+      item1: "Sunrise: 6:30 AM",
+      item2: "Sunset: 7:45 PM",
+      item3: "UV Index: 5",
+      item4: "Visibility: 10 miles",
+    },
   };
 
   return (
-    <div className="mainbody">
-      <h2>Current Weather Data</h2>
-      <ul className="textbody">
-        {Object.entries(current).map(([key, value]) => (
-          <li key={key}>
-            <strong>{key}:</strong> {renderValue(value)}
-          </li>
-        ))}
-      </ul>
+    <div className="app">
+      <Background />
+      <WeatherDiv data={sampleData} />
     </div>
   );
 }
 
-export default Weather;
+export default App;
