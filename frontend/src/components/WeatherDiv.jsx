@@ -11,22 +11,22 @@ export default function WeatherDiv({ data }) {
           <div className="header">AIR CONDITIONS</div>
 
           <div className="quadrant">
-            <div className="quad-header">Temperature</div>
+            <div className="quad-header">Wind</div>
             <div className="quad-value">{data.block1.item1}</div>
           </div>
 
           <div className="quadrant">
-            <div className="quad-header">Humidity</div>
+            <div className="quad-header">Feels Like</div>
             <div className="quad-value">{data.block1.item2}</div>
           </div>
 
           <div className="quadrant">
-            <div className="quad-header">Wind</div>
+            <div className="quad-header">Humidity</div>
             <div className="quad-value">{data.block1.item3}</div>
           </div>
 
           <div className="quadrant">
-            <div className="quad-header">Visibility</div>
+            <div className="quad-header">Chance Of Precipitation</div>
             <div className="quad-value">{data.block1.item4}</div>
           </div>
         </div>
@@ -41,12 +41,12 @@ export default function WeatherDiv({ data }) {
           </div>
 
           <div className="quadrant">
-            <div className="quad-header">UV Index</div>
+            <div className="quad-header">Sunrise & Sunset</div>
             <div className="quad-value">{data.block2.item2}</div>
           </div>
 
           <div className="quadrant">
-            <div className="quad-header">Dew Point</div>
+            <div className="quad-header">Visibility</div>
             <div className="quad-value">{data.block2.item3}</div>
           </div>
 

@@ -14,11 +14,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-color: orange;
   gap: 12px;
   width: 90%;
   max-width: 700px;
   height: 80%;
-  background-color: orange;
 }
 
 /* Each weather block (rectangle) */
@@ -30,7 +30,7 @@
   max-height: 30%;
   background: linear-gradient(145deg, #1e88e5, #1565c0);
   border-radius: 12px;
-  padding: 50px 10px 10px 10px; /* room for header */
+  padding: 40px 10px 10px 10px; /* room for header */
   display: flex;
   justify-content: center;
   align-items: center;
@@ -46,6 +46,7 @@
   font-weight: 700;
   color: #ffffff;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
 /* Quadrants */
@@ -54,36 +55,39 @@
   width: 28%;
   height: 28%;
   border-radius: 10px;
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(4px);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.15), rgba(30, 136, 229, 0.25));
+  backdrop-filter: blur(6px);
   color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
-  padding: 8px 10px;
+  padding: 10px 12px;
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
 .quadrant:hover {
   transform: translateY(-3px);
-  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
 }
 
-/* Header inside each quadrant */
+/* Header inside each quadrant — matches main header style */
 .quad-header {
-  font-size: 0.75rem;
-  font-weight: 500;
-  opacity: 0.85;
-  margin-bottom: 3px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 10px; /* reduce space between header and value */
+    margin-top: -25px; /* move the header up slightly */
 }
+  
 
 /* Value inside each quadrant */
 .quad-value {
   font-size: 1.2rem;
-  font-weight: 700;
+  font-weight: 600;
   line-height: 1.2;
+  color: #f5f5f5;
 }
 
 /* Quadrant positions (4 corners) */
