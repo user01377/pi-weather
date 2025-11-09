@@ -12,6 +12,10 @@ const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) =>
     canvas.width = width;
     canvas.height = height;
 
+    // --- Fill canvas immediately to prevent white flash ---
+    ctx.fillStyle = 'black'; // dark night sky
+    ctx.fillRect(0, 0, width, height);
+
     // Central div exclusion zone
     const DIV_X = width / 2 - divWidth / 2;
     const DIV_Y = height / 2 - divHeight / 2;
@@ -28,8 +32,8 @@ const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) =>
       snowflakes.push({
         x,
         y,
-        vy: 0.3 + Math.random() * 0.7, // vertical speed
-        vx: (Math.random() - 0.5) * 0.2, // slight horizontal drift
+        vy: 0.3 + Math.random() * 0.7,
+        vx: (Math.random() - 0.5) * 0.2,
         radius: 1 + Math.random() * 3,
         opacity: 0.2 + Math.random() * 0.8
       });
@@ -38,28 +42,26 @@ const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) =>
     let frameId;
 
     const animate = () => {
-      ctx.fillStyle = 'black'; // dark night sky
+      // fill each frame
+      ctx.fillStyle = 'black';
       ctx.fillRect(0, 0, width, height);
 
       snowflakes.forEach(s => {
         s.x += s.vx;
         s.y += s.vy;
 
-        // Wrap around horizontally
         if (s.x < 0) s.x += width;
         if (s.x > width) s.x -= width;
-
-        // Wrap from bottom to top
         if (s.y > height) {
           s.y = -s.radius;
           s.x = Math.random() * width;
         }
 
-        // Avoid central div
+        // avoid central div
         if (s.x > DIV_X && s.x < DIV_X + divWidth &&
             s.y > DIV_Y && s.y < DIV_Y + divHeight) {
           s.y -= s.vy * 2;
-          s.x += (s.x < width / 2 ? -divWidth/4 : divWidth/4);
+          s.x += (s.x < width / 2 ? -divWidth / 4 : divWidth / 4);
         }
 
         ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
@@ -78,6 +80,8 @@ const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) =>
       height = window.innerHeight;
       canvas.width = width;
       canvas.height = height;
+      ctx.fillStyle = 'black';
+      ctx.fillRect(0, 0, width, height);
     };
     window.addEventListener('resize', handleResize);
 
@@ -98,6 +102,7 @@ const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) =>
         height: '100%',
         zIndex: -1,
         display: 'block',
+        backgroundColor: 'black', // CSS fallback for initial paint
       }}
     />
   );

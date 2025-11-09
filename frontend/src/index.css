@@ -1,9 +1,10 @@
-/* global.css */
-body, html, #root {
+/* index.css or App.css */
+body {
   margin: 0;
-  padding: 0;
-  width: 100%;
-  height: 100%;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #fff;
+  background-color: #1e1e1e; 
+  color: #fff;               
+}
+
+#root, .app {
+  min-height: 100vh;
 }
