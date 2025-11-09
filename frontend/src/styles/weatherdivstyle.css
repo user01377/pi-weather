@@ -1,6 +1,6 @@
 /* Root variables for easy scaling */
 :root {
-  --weather-gap: 1.5rem;
+  --weather-gap: 0.8rem;
   --quad-padding: 0.6rem 0.8rem;
   --header-font: clamp(0.6rem, 1vw, 0.8rem);
   --quad-header-font: clamp(0.7rem, 1.5vw, 0.9rem);
@@ -24,16 +24,19 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--weather-gap);
-
+  
   /* Size & spacing */
   width: 90%;
-  max-width: 800px;
-  padding: 2rem;
+  max-width: 1000px;
+  padding: 1.3rem;
+
+  min-height: 80vh;  /* at least 80% of viewport height */
+  height: auto;      /* still grows if content is bigger */
 
   /* Card background */
-  background: linear-gradient(145deg, #2e2e2e, #1a1a1a); /* subtle contrast */
+  background: grey; 
   border-radius: 24px;
   border: 1px solid rgba(255, 255, 255, 0.08);
 
@@ -49,9 +52,11 @@
 /* Each weather block (rectangle) */
 .weather-block {
   position: relative;
-  width: 70%;
-  max-width: 80;
-  min-height: 160px;
+  
+  width: 100%;
+  max-width: 70%;
+  min-height: 140px;
+  max-height: 180px;
   
   border-radius: 16px;
   padding: 2.5rem 0.5rem 0.5rem 0.5rem;
@@ -62,11 +67,10 @@
 
   /* Card-style background */
   background: rgba(30, 30, 30, 0.95);
-  border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4),
               inset 0 0 10px rgba(255, 255, 255, 0.03);
 
-  backdrop-filter: blur(6px);
+  /* backdrop-filter: blur(6px); */
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -80,6 +84,10 @@
   color: #fff;
   letter-spacing: 0.5px;
   text-transform: uppercase;
+}
+
+.weather-block:first-child {
+  margin-top: auto; /* pushes first block down, second follows naturally */
 }
 
 /* Quadrant styling */

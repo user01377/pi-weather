@@ -29,7 +29,11 @@ function App() {
         if (!res.ok) throw new Error("Network response was not ok");
         return res.json();
       })
+
       .then((json) => {
+
+        console.log("Raw API data:", json);
+
         const mappedData = {
           block1: {
             item1: (
@@ -38,7 +42,7 @@ function App() {
                 {json.wind?.direction ?? "N/A"}°
               </>
             ),
-            item2: `${json.temperature ?? "N/A"}°`,
+            item2: `${json.feelsLike ?? "N/A"}°`,
             item3: `${json.humidity ?? "N/A"}%`,
             item4: `${json.precipitation ?? 0}%`,
           },
