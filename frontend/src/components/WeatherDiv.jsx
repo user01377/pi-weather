@@ -53,7 +53,7 @@ export default function WeatherDiv({ data }) {
 
         {/* Second rectangle */}
         <div className="weather-block">
-          <div className="header">MISC INFO</div>
+          <div className="header">ENVIRONMENT</div>
 
           <div className="quadrant top-left">
             <div className="quad-content">
