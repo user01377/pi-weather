@@ -56,28 +56,75 @@ router.get("/current", async (req, res) => {
         console.warn("⚠️ Failed to fetch forecast:", e.message);
       }
 
-      const sunTimes = SunCalc.getTimes(new Date(), DEFAULT_LAT, DEFAULT_LON);
       const firstPeriod = forecast?.properties?.periods?.[0] || {};
 
+      // calculating sunrise/sunset in 12hr format
+      const sunTimes = SunCalc.getTimes(new Date(), DEFAULT_LAT, DEFAULT_LON);
+      const sunrise_calc = new Date(sunTimes.sunrise).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/New_York'
+      });
+      const sunset_calc = new Date(sunTimes.sunset).toLocaleTimeString('en-US', {
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true,
+        timeZone: 'America/New_York'
+      });
+
+      let feelsLike = null;
+      if (obs?.heatIndex?.value != null) {
+        feelsLike = obs.heatIndex.value;
+      } else if (obs?.windChill?.value != null) {
+        feelsLike = obs.windChill.value;
+      } else {
+        feelsLike = obs?.temperature?.value ?? null;
+      }
+
       return { //returns all data needed
-        temperature: obs?.temperature?.value ?? null,
-        feelsLike: obs?.windChill?.value ?? obs?.temperature?.value ?? null,
+        temperature: obs?.temperature?.value != null
+        ? Math.round((obs.temperature.value * 9/5) + 32) //conversion to fahrenheit
+        : null,
+
+        feelsLike: feelsLike != null
+        ? Math.round((feelsLike * 9/5) + 32)
+        : null,
+
         weather: obs?.textDescription ?? "Unavailable",
+
         alerts: alertsData?.features?.map(a => a?.properties?.headline).filter(Boolean) ?? [],
-        humidity: obs?.relativeHumidity?.value ?? null,
+
+        humidity: obs?.relativeHumidity?.value != null 
+        ? Math.round(obs.relativeHumidity.value * 10) / 10
+        : null,
+
         wind: {
-          speed: obs?.windSpeed?.value ?? null,
+          speed: obs?.windSpeed?.value != null
+          ? Math.round(obs.windSpeed.value * 10) / 10
+          : null,
           direction: obs?.windDirection?.value ?? null,
         },
+
         precipitation: {
           type: firstPeriod?.shortForecast ?? null,
           chance: firstPeriod?.probabilityOfPrecipitation?.value ?? null,
         },
-        pressure: obs?.barometricPressure?.value ?? null,
-        visibility: obs?.visibility?.value ?? null,
-        sunrise: sunTimes.sunrise,
-        sunset: sunTimes.sunset,
+
+        pressure: obs?.barometricPressure?.value != null
+        ? Math.round((obs.barometricPressure.value * 0.0002953) * 100) / 100 // Pa to inHg
+        : null,
+
+        visibility: obs?.visibility?.value ?? null
+        ? Math.round((obs.visibility.value * 0.000621371) * 100) / 100 // Meters to Miles
+        : null,
+
+        sunrise: sunrise_calc,
+
+        sunset: sunset_calc,
+
         cloudCoverage: obs?.cloudLayers?.map(c => c.amount).join(", ") || "Unknown",
+
         icon: obs?.icon || "default-icon.png",
       };
     });
