@@ -12,7 +12,7 @@ function App() {
     },
     block2: {
       item1: "29.92 inHg",
-      item2: "7:45 PM",
+      item2: "6:30 AM / 7:45 PM",
       item3: "10 NM",
       item4: "56%",
     },
