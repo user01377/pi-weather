@@ -6,6 +6,6 @@ import Background from './background.jsx'
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <Background />
+    <App />
   </StrictMode>,
 )

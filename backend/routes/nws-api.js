@@ -8,7 +8,7 @@ const router = express.Router();
 const DEFAULT_LAT = 43.083308;
 const DEFAULT_LON = -77.676973;
 const STATION_ID = "KROC";
-const CACHE_DURATION = 10 * 1000;
+const CACHE_DURATION = 10 * 1000; // seconds for cache to last
 
 let cache = {};
 
@@ -46,17 +46,50 @@ router.get("/current", async (req, res) => {
       const [obs, pointData, alertsData] = await Promise.all([
         getCurrentObservation(),
         NWSFetch(`https://api.weather.gov/points/${DEFAULT_LAT},${DEFAULT_LON}`),
-        NWSFetch(`https://api.weather.gov/alerts/active?point=${DEFAULT_LAT},${DEFAULT_LON}`)
+        NWSFetch(`https://api.weather.gov/alerts/active?point=${DEFAULT_LAT},${DEFAULT_LON}`),
       ]);
 
-      let forecast = null;
-      try {
-        forecast = await NWSFetch(pointData.forecast);
-      } catch (e) {
-        console.warn("⚠️ Failed to fetch forecast:", e.message);
+      // for the hourly data
+      const hourlyUrl = pointData.forecastHourly;
+      let next8 = [];
+      let currentPop = 0;
+      
+      if (hourlyUrl) {
+        const forecastHourly = await NWSFetch(hourlyUrl);
+        const periods = forecastHourly.periods;
+      
+        if (Array.isArray(periods) && periods.length > 0) {
+          next8 = periods.slice(0, 8).map(period => {
+            const date = new Date(period.startTime);
+            return {
+              hour: date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true,
+                timeZone: 'America/New_York',
+              }),
+              temp: period.temperature,
+              shortForecast: period.shortForecast,
+              icon: period.icon,
+              pop: period.probabilityOfPrecipitation?.value ?? 0,
+            };
+          });
+      
+          // calculating current hour precip chance
+          const now = new Date();
+          const currentHourPeriod = periods.find(period => {
+            const periodDate = new Date(period.startTime);
+            return periodDate.getHours() === now.getHours();
+          });
+      
+          currentPop = currentHourPeriod?.probabilityOfPrecipitation?.value ?? 0;
+        // debugging
+        } else {
+          console.warn("No hourly periods available:", forecastHourly);
+        }
+      } else {
+        console.warn("No hourly URL available in pointData:", pointData);
       }
-
-      const firstPeriod = forecast?.properties?.periods?.[0] || {};
 
       // calculating sunrise/sunset in 12hr format
       const sunTimes = SunCalc.getTimes(new Date(), DEFAULT_LAT, DEFAULT_LON);
@@ -73,7 +106,7 @@ router.get("/current", async (req, res) => {
         timeZone: 'America/New_York'
       });
 
-      // feelsLike changes with seasons
+      // feels like changes with seasons
       let feelsLike = null;
       if (obs?.heatIndex?.value != null) {
         feelsLike = obs.heatIndex.value;
@@ -107,16 +140,13 @@ router.get("/current", async (req, res) => {
           direction: obs?.windDirection?.value ?? null,
         },
 
-        precipitation: {
-          type: firstPeriod?.shortForecast ?? null,
-          chance: firstPeriod?.probabilityOfPrecipitation?.value ?? null,
-        },
+        precipitation: currentPop,
 
         pressure: obs?.barometricPressure?.value != null
         ? Math.round((obs.barometricPressure.value * 0.0002953) * 100) / 100 // Pa to inHg
         : null,
 
-        visibility: obs?.visibility?.value ?? null
+        visibility: obs?.visibility?.value != null
         ? Math.round((obs.visibility.value * 0.000621371) * 100) / 100 // Meters to Miles
         : null,
 
@@ -124,9 +154,13 @@ router.get("/current", async (req, res) => {
 
         sunset: sunset_calc,
 
-        cloudCoverage: obs?.cloudLayers?.map(c => c.amount).join(", ") || "Unknown",
+        cloudCoverage: Array.isArray(obs?.cloudLayers) 
+        ? obs.cloudLayers.map(c => c.amount).join(", ") 
+        : "Unknown",
 
         icon: obs?.icon || "default-icon.png",
+
+        hourly: next8,
       };
     });
 
