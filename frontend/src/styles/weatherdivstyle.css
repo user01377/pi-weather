@@ -23,17 +23,16 @@
 .weather-container {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
+  justify-content: flex-end; /* pushes children to bottom */
+  align-items: flex-start;   /* keeps children left-aligned */
   gap: var(--weather-gap);
-  
+
   /* Size & spacing */
   width: 90%;
   max-width: 1000px;
   padding: 1.3rem;
-
-  min-height: 80vh;  /* at least 80% of viewport height */
-  height: auto;      /* still grows if content is bigger */
+  min-height: 80vh;  /* keeps container at least 80% of viewport */
+  height: auto;
 
   /* Card background */
   background: grey; 
@@ -45,8 +44,7 @@
     0 8px 24px rgba(0, 0, 0, 0.6),
     inset 0 0 15px rgba(255, 255, 255, 0.03);
 
-  /* Makes sure your rendered background shows around the card */
-  backdrop-filter: blur(5px); 
+  backdrop-filter: blur(5px);
 }
 
 /* Each weather block (rectangle) */
@@ -59,7 +57,7 @@
   max-height: 180px;
   
   border-radius: 16px;
-  padding: 2.5rem 0.5rem 0.5rem 0.5rem;
+  padding: 2.5rem 0rem 0rem 0rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -86,10 +84,6 @@
   text-transform: uppercase;
 }
 
-.weather-block:first-child {
-  margin-top: auto; /* pushes first block down, second follows naturally */
-}
-
 /* Quadrant styling */
 .quadrant {
   position: absolute;
@@ -104,7 +98,7 @@
   justify-content: center;
   align-items: flex-start;
   gap: 0.5rem;
-  background-color: rgba(255, 255, 255, 0.08);
+  
   backdrop-filter: blur(3px);
   color: #fff;
   overflow: hidden;
@@ -177,5 +171,25 @@
 }
 
 .quadrant.sun-times .quad-value {
-  font-size: 0.9rem;   /* shrink value text */
+  font-size: 0.9rem;   /* shrinak value text */
+}
+
+ .info-box {
+  box-sizing: border-box; /* includes padding in width calculation */
+  background: black; /* just to see it */
+  flex-grow: 1;
+  width: 100%;
+  max-width: 70%;
+  min-height: 140px;  /* same as bottom blocks */
+  background: black;
+
+ }
+
+ .hourly-column {
+  display: flex;
+  margin-left: auto;
+  flex-direction: column;
+  justify-content: flex-end; 
+  flex-grow: 1;          
+  background: black; /* just to see it */
 }

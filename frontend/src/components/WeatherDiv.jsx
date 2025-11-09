@@ -8,6 +8,9 @@ export default function WeatherDiv({ data }) {
   return (
     <div className="weather-wrapper">
       <div className="weather-container">
+        <div className="info-box">
+            hello world
+        </div>
 
         {/* AIR CONDITIONS Block */}
         <div className="weather-block">
@@ -105,6 +108,7 @@ export default function WeatherDiv({ data }) {
               </div>
             </div>
           </div>
+
 
         </div>
       </div>
