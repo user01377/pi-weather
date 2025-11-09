@@ -73,6 +73,7 @@ router.get("/current", async (req, res) => {
         timeZone: 'America/New_York'
       });
 
+      // feelsLike changes with seasons
       let feelsLike = null;
       if (obs?.heatIndex?.value != null) {
         feelsLike = obs.heatIndex.value;
