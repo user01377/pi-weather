@@ -105,12 +105,13 @@
 
 /* --- TILE GRID --- */
 .tiles-container {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  display: flex;
+  flex-direction: row;
   gap: 1rem;
 }
 
 .tile {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
