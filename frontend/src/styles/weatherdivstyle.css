@@ -1,62 +1,56 @@
+/* Wrapper & Container */
 .weather-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: 1vh; /*to offset the info from the top */
+  padding-top: 1vh;
+  font-family: 'Inter', sans-serif;
+  padding-top: 1rem;
 }
 
 .weather-container {
   display: flex;
   flex-direction: row;
   align-items: stretch;
-  justify-content: space-between; /* ensures clear separation */
+  justify-content: space-between;
   width: 90%;
   max-width: 1200px;
-  margin: 0 auto;
-  gap: 1.5rem; /* visual breathing room */
+  gap: 2rem;
   position: relative;
 }
 
-
-/* --- LEFT COLUMN (Hero + Tiles + Misc) --- */
+/* --- Left Column --- */
 .left-column {
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: 2rem;
 }
 
-/* --- HERO PANEL --- */
+/* --- Hero Panel --- */
 .hero-panel {
   position: relative;
-  border-radius: var(--tile-radius);
-  background: rgba(30, 30, 30, 0.75);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  background: rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(15px);
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
   padding: 2rem;
   overflow: hidden;
-}
-
-.hero-panel {
-  position: relative;
-  z-index: 1;
-  overflow: hidden;
+  animation: fadeIn 0.6s ease forwards;
 }
 
 .hero-panel::after {
   content: "";
   position: absolute;
-  top: 0;
-  right: 0;
-  width: 4rem;
-  height: 100%;
+  top: 0; right: 0;
+  width: 4rem; height: 100%;
   background: linear-gradient(to left, rgba(255,255,255,0.08), transparent);
   z-index: 2;
   pointer-events: none;
 }
-
 
 .hero-main {
   display: flex;
@@ -74,36 +68,38 @@
 
 .hero-temp {
   font-size: 3rem;
-  font-weight: bold;
+  font-weight: 700;
   color: white;
 }
 
 .hero-desc {
   font-size: 1rem;
-  color: rgba(255,255,255,0.8);
+  color: rgba(255,255,255,0.7);
 }
 
-/* --- HOURLY COLUMN --- */
+/* --- Hourly Column --- */
 .hourly-column {
-  flex: 0 0 250px; /* fixed width */
+  flex: 0 0 250px;
   display: flex;
   flex-direction: column;
   justify-content: space-evenly;
-  border-radius: var(--tile-radius);
-  background: rgba(30, 30, 30, 0.75);
-  backdrop-filter: blur(10px);
-  box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 12px rgba(255,255,255,0.05);
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
   padding: 1rem;
+  animation: fadeIn 0.6s ease forwards;
 }
 
-/* --- TILES + MISC PARENT --- */
+/* --- Tiles + Misc Parent --- */
 .tiles-parent {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
-/* --- TILE GRID --- */
+/* Tiles Grid */
 .tiles-container {
   display: flex;
   flex-direction: row;
@@ -115,76 +111,92 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1rem;
-  border-radius: var(--metric-radius);
-  background: rgba(40, 40, 40, 0.4);
-  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  animation: fadeIn 0.6s ease forwards;
+  transition: all 0.3s ease;
 }
 
 .tile-icon {
-  width: 40px;
-  filter: brightness(0) invert(1);
+  width: 50px;
+  height: 50px;
   margin-bottom: 0.5rem;
+  filter: brightness(0) invert(1);
+  transition: transform 0.3s ease;
 }
 
 .tile-header {
-  color: rgba(255,255,255,0.8);
-  font-size: var(--metric-header-font);
+  color: rgba(255,255,255,0.6);
+  font-size: 0.9rem;
 }
 
 .tile-value {
   color: white;
-  font-weight: bold;
-  font-size: var(--metric-value-font);
+  font-weight: 700;
+  font-size: 1.2rem;
 }
 
-/* --- BOTTOM MISC INFO --- */
+/* --- Bottom Misc Info --- */
 .misc-info {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* 2 columns */
-  gap: 2rem;                             /* space between entries */
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
   padding: 1.5rem;
-  border-radius: var(--metric-radius);
-  background: rgba(40, 40, 40, 0.45);
-  backdrop-filter: blur(8px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-  width: 100%;
-  box-sizing: border-box;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  animation: fadeIn 0.6s ease forwards;
 }
 
-/* --- Each Misc Entry --- */
 .misc-entry {
-  display: flex;           /* icon left, text right */
+  display: flex;
   align-items: center;
-  gap: 1.5rem;            /* horizontal space between icon and text */
+  gap: 1.5rem;
+  transition: all 0.3s ease;
 }
 
-/* --- Icon --- */
 .misc-icon {
-  width: 50px;             /* big for monitor */
-  height: 50px;            /* roughly matches header + value */
-  object-fit: contain;
-  filter: brightness(0) invert(1); /* black becomes white */
+  width: 50px;
+  height: 50px;
+  filter: brightness(0) invert(1);
 }
 
-/* --- Text Stack --- */
 .misc-text {
   display: flex;
-  flex-direction: column;  /* header stacked above value */
+  flex-direction: column;
 }
 
 .misc-header {
-  font-size: 1.1rem;
-  color: rgba(255, 255, 255, 0.85);
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.6);
 }
 
 .misc-value {
-  font-size: 1.5rem;
-  font-weight: bold;
+  font-size: 1.4rem;
+  font-weight: 700;
   color: white;
 }
 
+.tile-icon, .misc-icon {
+  width: 60px;
+  height: 60px;
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
 
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive --- */
 @media (max-width: 800px) {
   .weather-container {
     flex-direction: column;
@@ -195,13 +207,14 @@
     width: 100%;
     margin-top: 1.5rem;
   }
+
   .misc-info {
-    grid-template-columns: 1fr; /* stack vertically */
+    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
   .misc-entry {
-    gap: 1rem; /* smaller spacing on small screens */
+    gap: 1rem;
   }
 
   .misc-icon {
@@ -210,7 +223,7 @@
   }
 
   .misc-header {
-    font-size: 1rem;
+    font-size: 0.9rem;
   }
 
   .misc-value {

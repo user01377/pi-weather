@@ -21,9 +21,9 @@ export default function WeatherDiv({ data }) {
     <div className="weather-wrapper">
       <div className="weather-container">
         
-        {/* Left side (hero, tiles, misc info) */}
+        {/* Left Column */}
         <div className="left-column">
-          {/* HERO PANEL */}
+          {/* Hero Panel */}
           <div className="hero-panel">
             <div className="hero-main">
               <div className="hero-icon">🌤</div>
@@ -34,9 +34,8 @@ export default function WeatherDiv({ data }) {
             </div>
           </div>
 
-          {/* TILES + MISC PARENT */}
+          {/* Tiles + Misc */}
           <div className="tiles-parent">
-            {/* Tiles Grid */}
             <div className="tiles-container">
               {metrics.slice(0, 4).map((m, idx) => (
                 <div key={idx} className="tile">
@@ -47,25 +46,21 @@ export default function WeatherDiv({ data }) {
               ))}
             </div>
 
-            {/* Bottom Misc Info */}
             <div className="misc-info">
-            {metrics.slice(4, 8).map((m, idx) => (
-              <div key={idx} className="misc-entry">
-                <img src={m.icon} alt={m.header} className="misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">{m.header}</div>
-                  <div className="misc-value">{m.value}</div>
+              {metrics.slice(4, 8).map((m, idx) => (
+                <div key={idx} className="misc-entry">
+                  <img src={m.icon} alt={m.header} className="misc-icon" />
+                  <div className="misc-text">
+                    <div className="misc-header">{m.header}</div>
+                    <div className="misc-value">{m.value}</div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
-
-
-
+              ))}
+            </div>
           </div>
         </div>
 
-        {/* Right Hourly Column (cuts into hero visually) */}
+        {/* Right Hourly Column */}
         <div className="hourly-column">
           {[1, 2, 3, 4, 5, 6].map((h, idx) => (
             <div key={idx} className="hour">
@@ -75,6 +70,7 @@ export default function WeatherDiv({ data }) {
             </div>
           ))}
         </div>
+
       </div>
     </div>
   );
