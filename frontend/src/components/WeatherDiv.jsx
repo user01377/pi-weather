@@ -7,12 +7,15 @@ export default function WeatherDiv({ data }) {
 
   const metrics = [
     { icon: "/display/wind.svg", header: "Wind", value: data.block1.item1 },
-    { icon: "/display/feelslike.svg", header: "Feels Like", value: data.block1.item2 },
     { icon: "/display/humidity.svg", header: "Humidity", value: data.block1.item3 },
     { icon: "/display/precipitation.svg", header: "Precipitation", value: data.block1.item4 },
+    { icon: "/display/feelslike.svg", header: "Feels Like", value: data.block1.item2 },
     { icon: "/display/pressure.svg", header: "Pressure", value: data.block2.item1 },
-    { icon: "/sunrise.svg", header: "Sunrise", value: sunriseStr },
-    { icon: "/sunset.svg", header: "Sunset", value: sunsetStr },
+    { 
+      icon: "/sunrise.svg", 
+      header: "Sun Times", 
+      value: { sunrise: sunriseStr, sunset: sunsetStr } // object instead of string
+    },
     { icon: "/display/visibility.svg", header: "Visibility", value: data.block2.item3 },
     { icon: "/display/cloudcover.svg", header: "Cloud Cover", value: data.block2.item4 },
   ];
@@ -52,7 +55,15 @@ export default function WeatherDiv({ data }) {
                   <img src={m.icon} alt={m.header} className="misc-icon" />
                   <div className="misc-text">
                     <div className="misc-header">{m.header}</div>
-                    <div className="misc-value">{m.value}</div>
+                    <div className="misc-value">
+                      {typeof m.value === "object" ? (
+                        <div className="sun-times">
+                          <span> {m.value.sunrise}</span> / <span> {m.value.sunset}</span>
+                        </div>
+                      ) : (
+                        m.value
+                      )}
+                    </div>
                   </div>
                 </div>
               ))}

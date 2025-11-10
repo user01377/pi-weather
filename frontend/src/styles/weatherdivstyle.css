@@ -154,6 +154,17 @@
   animation: fadeIn 0.6s ease forwards;
 }
 
+.sun-times {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+.sun-times span {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
 .misc-entry {
   display: flex;
   align-items: center;
