@@ -162,7 +162,7 @@ router.get("/current", async (req, res) => {
           : null,
 
         visibility: obs?.visibility?.value != null
-          ? Math.round((obs.visibility.value * 0.000621371) * 100) / 100 // Meters to Miles
+          ? Math.round((obs.visibility.value * 0.000539957) * 100) / 100 // Meters to NauticalMiles
           : null,
 
         sunrise: sunrise_calc,

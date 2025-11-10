@@ -1,213 +1,168 @@
-/* Root variables for easy scaling */
-:root {
-  --weather-gap: 0.8rem;
-  --quad-padding: 0.6rem 0.8rem;
-  --header-font: clamp(0.6rem, 1vw, 0.8rem);
-  --quad-header-font: clamp(0.7rem, 1.5vw, 0.9rem);
-  --quad-value-font: clamp(1rem, 2vw, 1.2rem);
-  --icon-size: clamp(30px, 5vw, 40px);
-}
-
-/* Centers everything */
 .weather-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding: 1rem;
-  box-sizing: border-box;
+  padding-top: 1vh; /*to offset the info from the top */
 }
 
-/* Container holding both weather blocks */
 .weather-container {
-  position: relative;
   display: flex;
-  flex-direction: column;
-  justify-content: flex-end; /* pushes children to bottom */
-  align-items: flex-start;   /* keeps children left-aligned */
-  gap: var(--weather-gap);
-
-  /* Size & spacing */
-  border-radius: 12px;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between; /* ensures clear separation */
   width: 90%;
-  max-width: 1000px;
-  padding: 1.3rem;
-  min-height: 80vh;  /* keeps container at least 80% of viewport */
-  height: auto;
-
-  /* Depth & separation */
-  box-shadow: 
-    0 10px 28px rgba(0, 0, 0, 0.6),
-    inset 0 0 18px rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(6px);
-}
-
-/* Each weather block (rectangle) */
-.weather-block {
+  max-width: 1200px;
+  margin: 0 auto;
+  gap: 2rem; /* visual breathing room */
   position: relative;
-  
-  width: 100%;
-  max-width: 70%;
-  min-height: 140px;
-  max-height: 180px;
-  
-  border-radius: 16px;
-  padding: 2.5rem 0rem 0rem 0rem;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
+}
 
-  /* Modern glassy background */
+
+/* --- LEFT COLUMN (Hero + Tiles + Misc) --- */
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* --- HERO PANEL --- */
+.hero-panel {
+  position: relative;
+  border-radius: var(--tile-radius);
   background: rgba(30, 30, 30, 0.75);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.45),
-              inset 0 0 12px rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(8px);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-
-  /* Floating animation */
-  animation: floatBlock 6s ease-in-out infinite alternate;
-}
-
-/* Block header */
-.weather-block .header {
-  position: absolute;
-  top: 3%;
-  left: 3%;
-  font-size: var(--header-font);
-  font-weight: 700;
-  color: rgba(255,255,255,0.95);
-  letter-spacing: 0.5px;
-  text-transform: uppercase;
-}
-
-/* Quadrant styling */
-.quadrant {
-  position: absolute;
-  width: 28%;
-  height: 28%;
-  max-width: 180px;
-  max-height: 180px;
-  border-radius: 12px;
-  padding: var(--quad-padding);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 0.5rem;
-  backdrop-filter: blur(4px);
-  color: #fff;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+  padding: 2rem;
   overflow: hidden;
-  background: rgba(40, 40, 40, 0.35);
-
-  /* Floating animation (slower than blocks) */
-  animation: floatQuad 8s ease-in-out infinite alternate;
 }
 
-/* Quadrant positions */
-.weather-block .quadrant.top-left { top: 12%; left: 6%; }
-.weather-block .quadrant.top-right { top: 12%; right: 6%; }
-.weather-block .quadrant.bottom-left { bottom: 8%; left: 6%; }
-.weather-block .quadrant.bottom-right { bottom: 8%; right: 6%; }
+.hero-panel {
+  position: relative;
+  z-index: 1;
+  overflow: hidden;
+}
 
-/* Quadrant content layout */
-.quad-content {
+.hero-panel::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4rem;
+  height: 100%;
+  background: linear-gradient(to left, rgba(255,255,255,0.08), transparent);
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+.hero-main {
   display: flex;
   align-items: center;
-  gap: 1rem;
-  width: 100%;
+  justify-content: space-between;
 }
 
-/* Text column inside quadrant */
-.quad-text {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  gap: 0.25rem;
-  word-break: break-word;
+.hero-icon {
+  font-size: 4rem;
 }
 
-/* Icons */
-.quad-icon {
-  width: var(--icon-size);
-  height: var(--icon-size);
-  flex-shrink: 0;
-  filter: brightness(0) invert(1) drop-shadow(0 0 4px rgba(255,255,255,0.5));
-  opacity: 0.9;
-  transition: transform 0.2s ease, filter 0.2s ease;
+.hero-info {
+  text-align: right;
 }
 
-/* Header and value styling */
-.quad-header {
-  font-size: var(--quad-header-font);
-  font-weight: 600;
-  color: rgba(255,255,255,0.85);
+.hero-temp {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
 }
 
-.quad-value {
-  font-size: var(--quad-value-font);
-  font-weight: 700;
-  color: #fff;
+.hero-desc {
+  font-size: 1rem;
+  color: rgba(255,255,255,0.8);
 }
 
-/* Sunrise & Sunset specific styles */
-.quadrant.sun-times {
-  display: flex;
-  flex-direction: column;
-  gap: 0.01rem;  /* vertical space between sunrise & sunset rows */
-}
-
-.quadrant.sun-times .quad-content {
-  gap: 0.5rem;   /* space between icon and text */
-}
-
-.quadrant.sun-times .quad-icon {
-  width: 25px;   /* shrink icon */
-  height: 25px;
-}
-
-.quadrant.sun-times .quad-header {
-  font-size: 0.65rem;  /* shrink header text */
-}
-
-.quadrant.sun-times .quad-value {
-  font-size: 0.9rem;   /* shrink value text */
-}
-
-.info-box {
-  box-sizing: border-box; /* includes padding in width calculation */
-  flex-grow: 1;
-  width: 100%;
-  max-width: 70%;
-  min-height: 140px;  /* same as bottom blocks */
-}
-
+/* --- HOURLY COLUMN --- */
 .hourly-column {
-  position: absolute;
-  top: 1.3rem;       /* match top padding */
-  right: 1.3rem;     /* match right padding */
-  bottom: 1.3rem;    /* match bottom padding */
-  width: 27%;        /* or whatever width fits your layout */
+  flex: 0 0 250px; /* fixed width */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  border-radius: 16px;
-  background-color: rgba(30, 30, 30, 0.95);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.3), inset 0 0 10px rgba(255,255,255,0.05);
+  justify-content: space-evenly;
+  border-radius: var(--tile-radius);
+  background: rgba(30, 30, 30, 0.75);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5), inset 0 0 12px rgba(255,255,255,0.05);
+  padding: 1rem;
+}
+
+/* --- TILES + MISC PARENT --- */
+.tiles-parent {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+/* --- TILE GRID --- */
+.tiles-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.tile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem;
+  border-radius: var(--metric-radius);
+  background: rgba(40, 40, 40, 0.4);
+  backdrop-filter: blur(8px);
+}
+
+.tile-icon {
+  width: 40px;
+  filter: brightness(0) invert(1);
+  margin-bottom: 0.5rem;
+}
+
+.tile-header {
+  color: rgba(255,255,255,0.8);
+  font-size: var(--metric-header-font);
+}
+
+.tile-value {
+  color: white;
+  font-weight: bold;
+  font-size: var(--metric-value-font);
+}
+
+/* --- BOTTOM MISC INFO --- */
+.misc-info {
+  display: flex;
+  justify-content: space-around;
+  padding: 0.8rem 1rem;
+  border-radius: var(--metric-radius);
+  background: rgba(40, 40, 40, 0.35);
   backdrop-filter: blur(6px);
+  color: white;
+  font-weight: 600;
 }
 
-/* --- Floating Animations --- */
-@keyframes floatBlock {
-  0% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-3px) translateX(2px); }
-  100% { transform: translateY(0px) translateX(0px); }
+.misc-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
 }
 
-@keyframes floatQuad {
-  0% { transform: translateY(0px) translateX(0px); }
-  50% { transform: translateY(-2px) translateX(-1px); }
-  100% { transform: translateY(0px) translateX(0px); }
+@media (max-width: 800px) {
+  .weather-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hourly-column {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
 }
