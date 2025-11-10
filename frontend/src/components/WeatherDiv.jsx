@@ -49,10 +49,19 @@ export default function WeatherDiv({ data }) {
 
             {/* Bottom Misc Info */}
             <div className="misc-info">
-              <div className="misc-item">💨 {data.block1.item1}</div>
-              <div className="misc-item">💧 {data.block1.item3}</div>
-              <div className="misc-item">🌪 {data.block2.item1}</div>
-            </div>
+            {metrics.slice(4, 8).map((m, idx) => (
+              <div key={idx} className="misc-entry">
+                <img src={m.icon} alt={m.header} className="misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">{m.header}</div>
+                  <div className="misc-value">{m.value}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+
+
           </div>
         </div>
 

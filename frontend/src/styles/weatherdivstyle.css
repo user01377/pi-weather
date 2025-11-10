@@ -15,7 +15,7 @@
   width: 90%;
   max-width: 1200px;
   margin: 0 auto;
-  gap: 2rem; /* visual breathing room */
+  gap: 1.5rem; /* visual breathing room */
   position: relative;
 }
 
@@ -107,7 +107,7 @@
 .tiles-container {
   display: flex;
   flex-direction: row;
-  gap: 1rem;
+  gap: 1.5rem;
 }
 
 .tile {
@@ -140,21 +140,50 @@
 
 /* --- BOTTOM MISC INFO --- */
 .misc-info {
-  display: flex;
-  justify-content: space-around;
-  padding: 0.8rem 1rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr); /* 2 columns */
+  gap: 2rem;                             /* space between entries */
+  padding: 1.5rem;
   border-radius: var(--metric-radius);
-  background: rgba(40, 40, 40, 0.35);
-  backdrop-filter: blur(6px);
-  color: white;
-  font-weight: 600;
+  background: rgba(40, 40, 40, 0.45);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  box-sizing: border-box;
 }
 
-.misc-item {
-  display: flex;
+/* --- Each Misc Entry --- */
+.misc-entry {
+  display: flex;           /* icon left, text right */
   align-items: center;
-  gap: 0.3rem;
+  gap: 1.5rem;            /* horizontal space between icon and text */
 }
+
+/* --- Icon --- */
+.misc-icon {
+  width: 50px;             /* big for monitor */
+  height: 50px;            /* roughly matches header + value */
+  object-fit: contain;
+  filter: brightness(0) invert(1); /* black becomes white */
+}
+
+/* --- Text Stack --- */
+.misc-text {
+  display: flex;
+  flex-direction: column;  /* header stacked above value */
+}
+
+.misc-header {
+  font-size: 1.1rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.misc-value {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
 
 @media (max-width: 800px) {
   .weather-container {
@@ -165,5 +194,26 @@
   .hourly-column {
     width: 100%;
     margin-top: 1.5rem;
+  }
+  .misc-info {
+    grid-template-columns: 1fr; /* stack vertically */
+    gap: 1rem;
+  }
+
+  .misc-entry {
+    gap: 1rem; /* smaller spacing on small screens */
+  }
+
+  .misc-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .misc-header {
+    font-size: 1rem;
+  }
+
+  .misc-value {
+    font-size: 1.2rem;
   }
 }
