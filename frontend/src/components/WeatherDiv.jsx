@@ -12,6 +12,10 @@ export default function WeatherDiv({ data }) {
             hello world
         </div>
 
+        <div className="hourly-column">
+          
+        </div>
+
         {/* AIR CONDITIONS Block */}
         <div className="weather-block">
           <div className="header">AIR CONDITIONS</div>
