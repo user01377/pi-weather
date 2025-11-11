@@ -1,24 +1,28 @@
-/* --- Shared Panel Styles --- */
 .panel {
-  background: rgba(255,255,255, 0.08);
-  backdrop-filter: blur(12px);
+  position: relative;              /* for layering pseudo-elements */
+  background: rgba(255, 255, 255, 0.08);  /* very faint white */
+  backdrop-filter: blur(9px);     /* frosted effect */
   border-radius: 16px;
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  animation: fadeIn 0.6s ease forwards;
+  border: 1px solid rgba(255, 255, 255, 0.15); /* thin ice edge */
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);  /* soft depth */
+  animation: fadeIn 1s ease forwards;
   padding: 1.5rem;
+  overflow: hidden;
 }
 
-/* .panel::after {
+/* Optional ice streak highlight */
+.panel::after {
   content: "";
   position: absolute;
-  top: 0; left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 60%);
+  inset: 0;
+  border-radius: inherit;
   pointer-events: none;
-  border-radius: inherit; 
-} */
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.015) 0%,
+    rgba(255,255,255,0) 60%
+  );
+}
 
 
 /* --- Shared Icon Styles --- */
@@ -73,16 +77,6 @@
   
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
 }
-
-/* .hero-panel::after {
-  content: "";
-  position: absolute;
-  top: 0; right: 0;
-  width: 4rem; height: 100%;
-  z-index: 2;
-  background: linear-gradient(to left, rgba(255,255,255,0.08), transparent);
-  pointer-events: none;
-} */
 
 .hero-main {
   display: flex;

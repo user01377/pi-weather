@@ -1,8 +1,7 @@
 /* index.css or App.css */
 body {
   margin: 0;
-  background-color: #1e1e1e; 
- 
+  background: linear-gradient(180deg, #0c1e3a 0%, #050a12 100%);
   color: #fff;               
 }
 html, body {
