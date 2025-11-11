@@ -1,111 +1,196 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 
-const SnowBackground = ({ divWidth = 400, divHeight = 300, snowCount = 200 }) => {
+export default function Background() {
   const canvasRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d');
 
-    let width = window.innerWidth;
-    let height = window.innerHeight;
-    canvas.width = width;
-    canvas.height = height;
+    let width = canvas.width = window.innerWidth;
+    let height = canvas.height = window.innerHeight;
 
-    // --- Fill canvas immediately to prevent white flash ---
-    ctx.fillStyle = 'black'; // dark night sky
-    ctx.fillRect(0, 0, width, height);
+    const handleResize = () => {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+    };
+    window.addEventListener('resize', handleResize);
 
-    // Central div exclusion zone
-    const DIV_X = width / 2 - divWidth / 2;
-    const DIV_Y = height / 2 - divHeight / 2;
-
-    // Snowflake particles
-    const snowflakes = [];
-    for (let i = 0; i < snowCount; i++) {
-      let x, y;
-      do {
-        x = Math.random() * width;
-        y = Math.random() * height;
-      } while (x > DIV_X && x < DIV_X + divWidth && y > DIV_Y && y < DIV_Y + divHeight);
-
-      snowflakes.push({
-        x,
-        y,
-        vy: 0.3 + Math.random() * 0.7,
-        vx: (Math.random() - 0.5) * 0.2,
-        radius: 1 + Math.random() * 3,
-        opacity: 0.2 + Math.random() * 0.8
+    // ----------------------------
+    // Bokeh particles
+    // ----------------------------
+    const orbs = [];
+    for (let i = 0; i < 25; i++) {
+      orbs.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 30 + 20,
+        dx: (Math.random() - 0.5) * 0.05,
+        dy: (Math.random() - 0.5) * 0.05,
+        color: `rgba(180,220,255,${Math.random() * 0.1 + 0.05})`,
+      });
+    }
+    for (let i = 0; i < 40; i++) {
+      orbs.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 15 + 7,
+        dx: (Math.random() - 0.5) * 0.1,
+        dy: (Math.random() - 0.5) * 0.1,
+        color: `rgba(200,230,255,${Math.random() * 0.15 + 0.05})`,
+      });
+    }
+    for (let i = 0; i < 60; i++) {
+      orbs.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        r: Math.random() * 6 + 1,
+        dx: (Math.random() - 0.5) * 0.2,
+        dy: (Math.random() - 0.5) * 0.2,
+        color: `rgba(220,240,255,${Math.random() * 0.2 + 0.03})`,
       });
     }
 
-    let frameId;
+    // ----------------------------
+    // Shimmer streaks
+    // ----------------------------
+    const streaks = Array.from({ length: 25 }, () => ({
+      x: Math.random() * width,
+      y: Math.random() * height,
+      length: Math.random() * 50 + 20,
+      speed: Math.random() * 0.2 + 0.1,
+      angle: Math.random() * Math.PI * 2,
+      color: 'rgba(200,230,255,0.05)',
+    }));
+
+    let shimmerOffset1 = -width;
+    let shimmerOffset2 = -width * 0.5;
+    const shimmerSpeed1 = 0.2;
+    const shimmerSpeed2 = 0.15;
+
+    // ----------------------------
+    // Noise overlay
+    // ----------------------------
+    const noiseCanvas = document.createElement('canvas');
+    const noiseCtx = noiseCanvas.getContext('2d');
+    noiseCanvas.width = 200;
+    noiseCanvas.height = 200;
+
+    const generateNoise = () => {
+      const imageData = noiseCtx.createImageData(noiseCanvas.width, noiseCanvas.height);
+      for (let i = 0; i < imageData.data.length; i += 4) {
+        const val = 230 + Math.random() * 25; // light frost
+        imageData.data[i] = val;
+        imageData.data[i + 1] = val;
+        imageData.data[i + 2] = val;
+        imageData.data[i + 3] = 5; // very subtle alpha
+      }
+      noiseCtx.putImageData(imageData, 0, 0);
+    };
+    generateNoise();
+
+    let noiseOffsetX = 0;
+    let noiseOffsetY = 0;
+
+    // ----------------------------
+    // Animation loop
+    // ----------------------------
+    let animationFrameId;
 
     const animate = () => {
-      // fill each frame
-      ctx.fillStyle = 'black';
+      ctx.clearRect(0, 0, width, height);
+
+      // Gradient background (icy blue → dark blue)
+      const gradient = ctx.createLinearGradient(0, 0, width, height);
+      const time = Date.now() * 0.0001;
+      gradient.addColorStop(0, `rgba(${50 + 50 * Math.sin(time)}, ${60 + 60 * Math.cos(time)}, 100, 1)`);
+      gradient.addColorStop(1, 'rgba(10,20,50,1)');
+      ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      snowflakes.forEach(s => {
-        s.x += s.vx;
-        s.y += s.vy;
-
-        if (s.x < 0) s.x += width;
-        if (s.x > width) s.x -= width;
-        if (s.y > height) {
-          s.y = -s.radius;
-          s.x = Math.random() * width;
-        }
-
-        // avoid central div
-        if (s.x > DIV_X && s.x < DIV_X + divWidth &&
-            s.y > DIV_Y && s.y < DIV_Y + divHeight) {
-          s.y -= s.vy * 2;
-          s.x += (s.x < width / 2 ? -divWidth / 4 : divWidth / 4);
-        }
-
-        ctx.fillStyle = `rgba(255,255,255,${s.opacity})`;
+      // Draw bokeh
+      orbs.forEach(o => {
+        const orbGradient = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+        orbGradient.addColorStop(0, o.color);
+        orbGradient.addColorStop(1, 'rgba(200,230,255,0)');
+        ctx.fillStyle = orbGradient;
         ctx.beginPath();
-        ctx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
         ctx.fill();
+
+        o.x += o.dx;
+        o.y += o.dy;
+        if (o.x > width) o.x = 0;
+        if (o.x < 0) o.x = width;
+        if (o.y > height) o.y = 0;
+        if (o.y < 0) o.y = height;
       });
 
-      frameId = requestAnimationFrame(animate);
+      // Draw streaks
+      streaks.forEach(s => {
+        ctx.save();
+        ctx.translate(s.x, s.y);
+        ctx.rotate(s.angle);
+        ctx.beginPath();
+        ctx.moveTo(0, 0);
+        ctx.lineTo(s.length, 0);
+        ctx.strokeStyle = s.color;
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.restore();
+
+        s.x += Math.cos(s.angle) * s.speed;
+        s.y += Math.sin(s.angle) * s.speed;
+        if (s.x > width) s.x = 0;
+        if (s.x < 0) s.x = width;
+        if (s.y > height) s.y = 0;
+        if (s.y < 0) s.y = height;
+      });
+
+      // Draw shimmers
+      [[shimmerOffset1, shimmerSpeed1], [shimmerOffset2, shimmerSpeed2]].forEach(([offset, speed], i) => {
+        const shimmerWidth = width * 0.2;
+        const shimmerGradient = ctx.createLinearGradient(offset, 0, offset + shimmerWidth, height);
+        shimmerGradient.addColorStop(0, 'rgba(220,240,255,0)');
+        shimmerGradient.addColorStop(0.5, 'rgba(220,240,255,0.04)');
+        shimmerGradient.addColorStop(1, 'rgba(220,240,255,0)');
+        ctx.fillStyle = shimmerGradient;
+        ctx.fillRect(0, 0, width, height);
+
+        if (i === 0) shimmerOffset1 += speed;
+        else shimmerOffset2 += speed;
+
+        if (shimmerOffset1 > width) shimmerOffset1 = -shimmerWidth;
+        if (shimmerOffset2 > width) shimmerOffset2 = -shimmerWidth;
+      });
+
+      // Draw animated noise
+      noiseOffsetX += 0.02;
+      noiseOffsetY += 0.01;
+      ctx.globalAlpha = 0.04; // very subtle
+      ctx.drawImage(noiseCanvas, noiseOffsetX % 200, noiseOffsetY % 200, width, height);
+      ctx.globalAlpha = 1;
+
+      animationFrameId = requestAnimationFrame(animate);
     };
 
     animate();
 
-    const handleResize = () => {
-      width = window.innerWidth;
-      height = window.innerHeight;
-      canvas.width = width;
-      canvas.height = height;
-      ctx.fillStyle = 'black';
-      ctx.fillRect(0, 0, width, height);
-    };
-    window.addEventListener('resize', handleResize);
-
     return () => {
-      cancelAnimationFrame(frameId);
       window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animationFrameId);
     };
-  }, [divWidth, divHeight, snowCount]);
+  }, []);
 
-  return (
-    <canvas
-      ref={canvasRef}
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        zIndex: -1,
-        display: 'block',
-        backgroundColor: 'black', // CSS fallback for initial paint
-      }}
-    />
-  );
-};
+  const canvasStyle = {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    zIndex: -1,
+    display: 'block'
+  };
 
-export default SnowBackground;
+  return <canvas ref={canvasRef} style={canvasStyle} />;
+}

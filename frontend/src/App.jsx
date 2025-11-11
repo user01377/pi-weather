@@ -75,7 +75,7 @@ function App() {
 
   return (
     <div className="app">
-      {/* <Background /> */}
+      <Background />
       {error && <div style={{ color: "red" }}>Error loading weather data</div>}
       <WeatherDiv data={data} />
     </div>
