@@ -13,65 +13,80 @@ export default function Background() {
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      initOffscreenCanvases();
+      // Resize shimmer canvases
+      shimmerData.forEach(s => {
+        s.canvas.width = s.width;
+        s.canvas.height = height;
+      });
     };
     window.addEventListener('resize', handleResize);
 
     // ----------------------------
-    // Bokeh particles
+    // Orb configuration
     // ----------------------------
     const orbConfigs = [
-      { count: 25, r: [20, 50], speed: 0.05, alpha: [0.05, 0.15] },
-      { count: 40, r: [7, 22], speed: 0.1, alpha: [0.05, 0.2] },
-      { count: 60, r: [1, 7], speed: 0.2, alpha: [0.03, 0.23] },
+      {
+        count: 50,
+        r: [2, 6],
+        speed: 0.5,
+        alpha: [0.1, 0.5],
+        colors: [
+          'rgba(255,200,200,ALPHA)',
+          'rgba(200,255,220,ALPHA)',
+          'rgba(200,220,255,ALPHA)'
+        ]
+      },
+      {
+        count: 40,
+        r: [15, 27],
+        speed: 0.2,
+        alpha: [0.05, 0.3],
+        colors: [
+          'rgba(255,255,200,ALPHA)',
+          'rgba(200,255,255,ALPHA)'
+        ]
+      },
+      {
+        count: 30,
+        r: [30, 50],
+        speed: 0.12,
+        alpha: [0.05, 0.3],
+        colors: [
+          'rgba(255,255,200,ALPHA)',
+          'rgba(200,255,255,ALPHA)'
+        ]
+      }
     ];
 
+    // ----------------------------
+    // Bokeh particles
+    // ----------------------------
     const orbs = orbConfigs.flatMap(cfg =>
-      Array.from({ length: cfg.count }, () => ({
-        x: Math.random() * width,
-        y: Math.random() * height,
-        r: Math.random() * (cfg.r[1] - cfg.r[0]) + cfg.r[0],
-        dx: (Math.random() - 0.5) * cfg.speed,
-        dy: (Math.random() - 0.5) * cfg.speed,
-        color: `rgba(180,220,255,${Math.random() * (cfg.alpha[1] - cfg.alpha[0]) + cfg.alpha[0]})`,
-      }))
+      Array.from({ length: cfg.count }, () => {
+        const baseR = Math.random() * (cfg.r[1] - cfg.r[0]) + cfg.r[0];
+        const colorTemplate = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
+        const match = colorTemplate.match(/rgba\((\d+),(\d+),(\d+),ALPHA\)/);
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+
+        return {
+          x: Math.random() * width,
+          y: Math.random() * height,
+          dx: (Math.random() - 0.5) * cfg.speed,
+          dy: (Math.random() - 0.5) * cfg.speed,
+          baseR,
+          r: baseR,
+          rgb: { r, g, b },
+          alphaRange: cfg.alpha,
+          pulsePhase: Math.random() * Math.PI * 2,
+          pulseSpeed: 0.02 + Math.random() * 0.02
+        };
+      })
     );
 
-    // Offscreen canvas for bokeh
-    let bokehCanvas = document.createElement('canvas');
-    let bokehCtx = bokehCanvas.getContext('2d');
-    const initOffscreenCanvases = () => {
-      bokehCanvas.width = width;
-      bokehCanvas.height = height;
-
-      // Pre-render orbs
-      bokehCtx.clearRect(0, 0, width, height);
-      orbs.forEach(o => {
-        const orbGradient = bokehCtx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
-        orbGradient.addColorStop(0, o.color);
-        orbGradient.addColorStop(1, 'rgba(200,230,255,0)');
-        bokehCtx.fillStyle = orbGradient;
-        bokehCtx.beginPath();
-        bokehCtx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
-        bokehCtx.fill();
-      });
-
-      // Pre-render shimmer
-      shimmerData.forEach(s => {
-        s.width = width * 0.2;             // only as wide as the gradient
-        s.canvas.width = s.width;
-        s.canvas.height = height;
-        const grad = s.canvasCtx.createLinearGradient(0, 0, s.width, height);
-        grad.addColorStop(0, 'rgba(220,240,255,0)');
-        grad.addColorStop(0.5, 'rgba(220,240,255,0.04)');
-        grad.addColorStop(1, 'rgba(220,240,255,0)');
-        s.canvasCtx.fillStyle = grad;
-        s.canvasCtx.fillRect(0, 0, s.width, height);
-      });
-    };
-
     // ----------------------------
-    // Shimmer streaks
+    // Streaks
     // ----------------------------
     const streaks = Array.from({ length: 25 }, () => ({
       x: Math.random() * width,
@@ -82,54 +97,65 @@ export default function Background() {
       color: 'rgba(200,230,255,0.05)',
     }));
 
-    let shimmerData = [
+    // ----------------------------
+    // Shimmers
+    // ----------------------------
+    const shimmerData = [
       { offset: -width, speed: 0.2, canvas: document.createElement('canvas'), canvasCtx: null, width: width * 0.2 },
       { offset: -width * 0.5, speed: 0.15, canvas: document.createElement('canvas'), canvasCtx: null, width: width * 0.2 },
     ];
-    shimmerData.forEach(s => (s.canvasCtx = s.canvas.getContext('2d')));
-
-    // ----------------------------
-    // Noise overlay
-    // ----------------------------
-    const noiseCanvas = document.createElement('canvas');
-    const noiseCtx = noiseCanvas.getContext('2d');
-    noiseCanvas.width = noiseCanvas.height = 200;
-
-    const generateNoise = () => {
-      const imageData = noiseCtx.createImageData(200, 200);
-      const data = imageData.data;
-      for (let i = 0; i < data.length; i += 4) {
-        const val = 230 + Math.random() * 25;
-        data[i] = data[i + 1] = data[i + 2] = val;
-        data[i + 3] = 5;
-      }
-      noiseCtx.putImageData(imageData, 0, 0);
-    };
-    generateNoise();
-    const noisePattern = ctx.createPattern(noiseCanvas, 'repeat');
-
-    let noiseOffsetX = 0;
-    let noiseOffsetY = 0;
-
-    initOffscreenCanvases();
+    shimmerData.forEach(s => {
+      const grad = ctx.createLinearGradient(s.offset, 0, s.offset + 100, 0);
+      grad.addColorStop(0, 'rgba(220,240,255,0)');
+      grad.addColorStop(0.5, 'rgba(220,240,255,0.04)');
+      grad.addColorStop(1, 'rgba(220,240,255,0)');
+      ctx.fillStyle = grad;
+      ctx.fillRect(s.offset, 0, 100, height);
+    
+      s.offset += s.speed;
+      if (s.offset > width) s.offset = -100;
+    });
 
     // ----------------------------
     // Animation loop
     // ----------------------------
     let animationFrameId;
     const animate = () => {
-      // Background gradient
       const time = Date.now() * 0.0001;
+
+      // Background gradient
       const gradient = ctx.createLinearGradient(0, 0, width, height);
       gradient.addColorStop(0, `rgba(${50 + 50 * Math.sin(time)}, ${60 + 60 * Math.cos(time)}, 100, 1)`);
       gradient.addColorStop(1, 'rgba(10,20,50,1)');
       ctx.fillStyle = gradient;
       ctx.fillRect(0, 0, width, height);
 
-      // Draw pre-rendered bokeh
-      ctx.drawImage(bokehCanvas, 0, 0);
+      // --- Bokeh ---
+      orbs.forEach(o => {
+        o.x += o.dx; o.y += o.dy;
+        if (o.x > width) o.x = 0;
+        if (o.x < 0) o.x = width;
+        if (o.y > height) o.y = 0;
+        if (o.y < 0) o.y = height;
 
-      // Draw streaks
+        o.pulsePhase += o.pulseSpeed;
+        const alpha = o.alphaRange[0] + ((o.alphaRange[1] - o.alphaRange[0]) / 2) + ((o.alphaRange[1] - o.alphaRange[0]) / 2) * Math.sin(o.pulsePhase);
+
+        const centerColor = `rgba(${o.rgb.r},${o.rgb.g},${o.rgb.b},${alpha.toFixed(3)})`;
+        const outerColor = `rgba(${o.rgb.r},${o.rgb.g},${o.rgb.b},0.3)`;
+
+        const orbGradient = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+        orbGradient.addColorStop(0, centerColor);
+        orbGradient.addColorStop(0.7, outerColor);
+        orbGradient.addColorStop(1, 'rgba(0,0,0,0)');
+
+        ctx.fillStyle = orbGradient;
+        ctx.beginPath();
+        ctx.arc(o.x, o.y, o.r, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // --- Streaks ---
       streaks.forEach(s => {
         ctx.save();
         ctx.translate(s.x, s.y);
@@ -150,22 +176,12 @@ export default function Background() {
         if (s.y < 0) s.y = height;
       });
 
-      // Draw shimmers
+      // --- Shimmers ---
       shimmerData.forEach(s => {
         ctx.drawImage(s.canvas, s.offset, 0);
         s.offset += s.speed;
         if (s.offset > width) s.offset = -s.width;
       });
-
-      // Draw noise
-      noiseOffsetX += 0.02;
-      noiseOffsetY += 0.01;
-      ctx.globalAlpha = 0.04;
-      ctx.translate(noiseOffsetX % 200, noiseOffsetY % 200);
-      ctx.fillStyle = noisePattern;
-      ctx.fillRect(-noiseOffsetX % 200, -noiseOffsetY % 200, width + 200, height + 200);
-      ctx.resetTransform();
-      ctx.globalAlpha = 1;
 
       animationFrameId = requestAnimationFrame(animate);
     };
@@ -178,7 +194,7 @@ export default function Background() {
     };
   }, []);
 
-  const canvasStyle = {
+  return <canvas ref={canvasRef} style={{
     position: 'fixed',
     top: 0,
     left: 0,
@@ -186,7 +202,5 @@ export default function Background() {
     height: '100%',
     zIndex: -1,
     display: 'block',
-  };
-
-  return <canvas ref={canvasRef} style={canvasStyle} />;
+  }} />;
 }
