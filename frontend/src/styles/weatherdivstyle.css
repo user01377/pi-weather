@@ -1,9 +1,9 @@
 .panel {
   position: relative;              /* for layering pseudo-elements */
   background: rgba(255, 255, 255, 0.04);  /* very faint white */
-  backdrop-filter: blur(14px);     /* frosted effect */
+  backdrop-filter: blur(11px);     /* frosted effect */
   border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.041);
+  border: 1px solid rgba(255, 255, 255, 0.024);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);  /* soft depth */
   animation: fadeIn 1s ease forwards;
   padding: 1.5rem;
