@@ -12,34 +12,36 @@ export default function Background() {
 
     // --- Orb configurations ---
     const orbConfigs = [
-      { count: 90, r: [2, 6], speed: 0.2, alpha: [0.1, 0.5], colors: ['rgba(255,200,200,ALPHA)','rgba(200,255,220,ALPHA)','rgba(200,220,255,ALPHA)'] },
-      { count: 11, r: [15, 27], speed: 0.25, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] },
-      { count: 9, r: [30, 50], speed: 0.5, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] }
+      { count: 100, r: [2, 6], speed: 0.2, alpha: [0.1, 0.5], colors: ['rgba(255,200,200,ALPHA)','rgba(200,255,220,ALPHA)','rgba(200,220,255,ALPHA)'] },
+      { count: 14, r: [15, 27], speed: 0.25, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] },
+      { count: 9, r: [39, 55], speed: 0.5, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] }
     ];
 
-    // --- Create orbs ---
+    // --- Create orbs (pre-render all sizes) ---
     const orbs = orbConfigs.flatMap(cfg => 
       Array.from({ length: cfg.count }, () => {
         const baseR = Math.random() * (cfg.r[1] - cfg.r[0]) + cfg.r[0];
         const colorTemplate = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
         const [r, g, b] = colorTemplate.match(/\d+/g).map(Number);
 
-        let preCanvas = null, scale = 1;
+        const scale = 1.7;            // visual scale
+        const resolutionScale = 1.5;    // higher = sharper
+    
+        // pre-render canvas
+        const preCanvas = document.createElement('canvas');
+        const size = baseR * 2 * scale * resolutionScale;
+        preCanvas.width = preCanvas.height = size;
+        const preCtx = preCanvas.getContext('2d');
+        preCtx.scale(resolutionScale, resolutionScale); // scale drawing
+        const grad = preCtx.createRadialGradient(baseR*scale, baseR*scale, 0, baseR*scale, baseR*scale, baseR*scale);
+        grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
+        grad.addColorStop(0.4, `rgba(${r},${g},${b},0.3)`);
+        grad.addColorStop(1, 'rgba(0,0,0,0)');
 
-        if (baseR <= 10) {
-          scale = 3;
-          preCanvas = document.createElement('canvas');
-          preCanvas.width = preCanvas.height = baseR * 2 * scale;
-          const preCtx = preCanvas.getContext('2d');
-          const grad = preCtx.createRadialGradient(baseR*scale, baseR*scale, 0, baseR*scale, baseR*scale, baseR*scale);
-          grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
-          grad.addColorStop(0.7, `rgba(${r},${g},${b},0.3)`);
-          grad.addColorStop(1, 'rgba(0,0,0,0)');
-          preCtx.fillStyle = grad;
-          preCtx.beginPath();
-          preCtx.arc(baseR*scale, baseR*scale, baseR*scale, 0, Math.PI*2);
-          preCtx.fill();
-        }
+        preCtx.fillStyle = grad;
+        preCtx.beginPath();
+        preCtx.arc(baseR*scale, baseR*scale, baseR*scale, 0, Math.PI*2);
+        preCtx.fill();
 
         return {
           x: Math.random() * width,
@@ -53,10 +55,11 @@ export default function Background() {
           pulseSpeed: 0.02 + Math.random() * 0.02,
           canvas: preCanvas,
           scale,
-          liveDraw: baseR > 10
+          liveDraw: false // we no longer need liveDraw
         };
       })
     );
+
 
     // --- Streaks ---
     const streaks = Array.from({ length: 20 }, () => ({
@@ -88,7 +91,7 @@ export default function Background() {
 
 // --- Animation ---
 let frameId;
-const fps = 30; // limit FPS here
+const fps = 23; // limit FPS here
 const interval = 1000 / fps;
 let lastTime = Date.now();
 
@@ -99,7 +102,7 @@ const animate = () => {
   if (delta >= interval) {
     lastTime = now - (delta % interval); // adjust for drift
 
-    const t = Date.now() * 0.00021;
+    const t = Date.now() * 0.00022;
 
     // Background gradient
     const gradient = ctx.createLinearGradient(-width*0.2, -height*0.2, width*1.2, height*1.2);

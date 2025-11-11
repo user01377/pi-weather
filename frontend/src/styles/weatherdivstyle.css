@@ -3,7 +3,7 @@
   background: rgba(255, 255, 255, 0.04);  /* very faint white */
   backdrop-filter: blur(11px);     /* frosted effect */
   border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.024);
+  border: 1px solid rgba(255, 255, 255, 0.08);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.35);  /* soft depth */
   animation: fadeIn 1s ease forwards;
   padding: 1.5rem;
@@ -17,19 +17,28 @@
   inset: 0;
   border-radius: inherit;
   pointer-events: none;
+
+  /* Ultra-smooth, subtle shimmer gradient */
   background: linear-gradient(
     135deg,
-    rgba(255,255,255,0.015) 0%,
-    rgba(255,255,255,0) 60%
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.055) 10%,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.045) 30%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.035) 50%,
+    rgba(255, 255, 255, 0.03) 60%,
+    rgba(255, 255, 255, 0.025) 70%,
+    rgba(255, 255, 255, 0.02) 80%,
+    rgba(255, 255, 255, 0.01) 90%,
+    rgba(255, 255, 255, 0) 100%
   );
 }
-
-
 /* --- Shared Icon Styles --- */
 .icon {
   width: 60px;
   height: 60px;
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba((251, 192, 147),0.6));
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
@@ -54,7 +63,7 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: 1rem;
+  padding-top: .3rem;
   font-family: 'Inter', sans-serif;
 }
 
@@ -64,7 +73,7 @@
   align-items: stretch;
   justify-content: space-between;
   width: 90%;
-  max-width: 1200px;
+  max-width: 85%;
   gap: 2rem;
   position: relative;
 }
@@ -122,7 +131,6 @@
   justify-content: space-between;
   align-items: stretch;
   gap: 1.5rem;
-  flex-wrap: nowrap; /* ensures a single horizontal row */
 }
 
 .tile {
@@ -154,15 +162,14 @@
 .misc-info {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
+  gap: 1.5rem;
 }
 
-/* Misc Entry */
 .misc-entry {
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  transition: all 0.3s ease;
+  flex: 1;
+  min-height: 60px; /* ensures each entry has some vertical weight */
+  padding: 1rem;
+  border-radius: 12px;
 }
 
 .misc-text {
