@@ -9,7 +9,13 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-  overflow: hidden; /* prevents scrolling */
+  overflow-y: hidden; /* prevents scrolling */
+}
+
+@media (max-width: 800px) {
+  html, body {
+    overflow-y: auto; /* only scroll when stacked */
+  }
 }
 
 #root, .app {

@@ -1,6 +1,6 @@
 /* --- Shared Panel Styles --- */
 .panel {
-  background: rgba(255,255,255,0.05);
+  background: rgba(255,255,255, 0.08);
   backdrop-filter: blur(12px);
   border-radius: 16px;
   border: 1px solid rgba(255,255,255,0.15);
@@ -8,6 +8,18 @@
   animation: fadeIn 0.6s ease forwards;
   padding: 1.5rem;
 }
+
+/* .panel::after {
+  content: "";
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, rgba(255,255,255,0.08), transparent 60%);
+  pointer-events: none;
+  border-radius: inherit; 
+} */
+
 
 /* --- Shared Icon Styles --- */
 .icon {
@@ -58,18 +70,19 @@
   position: relative;
   overflow: hidden;
   padding: 2rem;
+  
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
 }
 
-.hero-panel::after {
+/* .hero-panel::after {
   content: "";
   position: absolute;
   top: 0; right: 0;
   width: 4rem; height: 100%;
-  background: linear-gradient(to left, rgba(255,255,255,0.08), transparent);
   z-index: 2;
+  background: linear-gradient(to left, rgba(255,255,255,0.08), transparent);
   pointer-events: none;
-}
+} */
 
 .hero-main {
   display: flex;
@@ -112,15 +125,21 @@
 
 .tiles-container {
   display: flex;
+  justify-content: space-between;
+  align-items: stretch;
   gap: 1.5rem;
+  flex-wrap: nowrap; /* ensures a single horizontal row */
 }
 
 .tile {
-  flex: 1;
+  flex: 1 1 0;                 /* all tiles share equal space */
+  min-width: 0;                /* allows even shrinking instead of overflow */
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;                  /* consistent space between icon, header, and value */
+  justify-content: center;
+  white-space: nowrap;
+  gap: 0.5rem;
   transition: all 0.3s ease;
 }
 
@@ -214,6 +233,10 @@
 
 /* --- Responsive --- */
 @media (max-width: 800px) {
+  .weather-wrapper {
+    height: auto;        /* let content dictate total height */
+    min-height: 100vh;   /* still fill the screen initially */
+  }
   .weather-container {
     flex-direction: column;
     align-items: center;
