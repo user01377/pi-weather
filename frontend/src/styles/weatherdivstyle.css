@@ -1,13 +1,45 @@
-/* Wrapper & Container */
+/* --- Shared Panel Styles --- */
+.panel {
+  background: rgba(255,255,255,0.05);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  border: 1px solid rgba(255,255,255,0.15);
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+  animation: fadeIn 0.6s ease forwards;
+  padding: 1.5rem;
+}
+
+/* --- Shared Icon Styles --- */
+.icon {
+  width: 60px;
+  height: 60px;
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.tile-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Misc-specific highlights */
+.misc-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Sun icon highlights */
+.sun-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* --- Wrapper & Container --- */
 .weather-wrapper {
   display: flex;
   justify-content: center;
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: 1vh;
-  font-family: 'Inter', sans-serif;
   padding-top: 1rem;
+  font-family: 'Inter', sans-serif;
 }
 
 .weather-container {
@@ -21,25 +53,12 @@
   position: relative;
 }
 
-/* --- Left Column --- */
-.left-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
 /* --- Hero Panel --- */
 .hero-panel {
   position: relative;
-  background: rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(15px);
-  border-radius: 16px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
-  padding: 2rem;
   overflow: hidden;
-  animation: fadeIn 0.6s ease forwards;
+  padding: 2rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
 }
 
 .hero-panel::after {
@@ -77,32 +96,22 @@
   color: rgba(255,255,255,0.7);
 }
 
-/* --- Hourly Column --- */
-.hourly-column {
-  flex: 0 0 250px;
+/* --- Left Column & Tiles --- */
+.left-column {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  padding: 1rem;
-  animation: fadeIn 0.6s ease forwards;
+  gap: 2rem;
 }
 
-/* --- Tiles + Misc Parent --- */
 .tiles-parent {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
 
-/* Tiles Grid */
 .tiles-container {
   display: flex;
-  flex-direction: row;
   gap: 1.5rem;
 }
 
@@ -111,23 +120,11 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  animation: fadeIn 0.6s ease forwards;
+  gap: 0.5rem;                  /* consistent space between icon, header, and value */
   transition: all 0.3s ease;
 }
 
-.tile-icon {
-  width: 50px;
-  height: 50px;
-  margin-bottom: 0.5rem;
-  filter: brightness(0) invert(1);
-  transition: transform 0.3s ease;
-}
+/* Tile Content */
 
 .tile-header {
   color: rgba(255,255,255,0.6);
@@ -145,37 +142,14 @@
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   gap: 2rem;
-  padding: 1.5rem;
-  border-radius: 16px;
-  background: rgba(255,255,255,0.05);
-  backdrop-filter: blur(12px);
-  border: 1px solid rgba(255,255,255,0.15);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-  animation: fadeIn 0.6s ease forwards;
 }
 
-.sun-times {
-  display: flex;
-  justify-content: space-between;
-  gap: 0.5rem;
-}
-.sun-times span {
-  display: flex;
-  align-items: center;
-  gap: 0.25rem;
-}
-
+/* Misc Entry */
 .misc-entry {
   display: flex;
   align-items: center;
   gap: 1.5rem;
   transition: all 0.3s ease;
-}
-
-.misc-icon {
-  width: 50px;
-  height: 50px;
-  filter: brightness(0) invert(1);
 }
 
 .misc-text {
@@ -184,8 +158,8 @@
 }
 
 .misc-header {
-  font-size: 1rem;
-  color: rgba(255, 255, 255, 0.6);
+  font-size: 0.9rem;
+  color: rgba(255,255,255,0.6);
 }
 
 .misc-value {
@@ -194,11 +168,42 @@
   color: white;
 }
 
-.tile-icon, .misc-icon {
-  width: 60px;
-  height: 60px;
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
-  transition: transform 0.3s ease, filter 0.3s ease;
+/* --- Sun Times Horizontal --- */
+.sun-times-entry {
+  display: flex;
+  gap: 2rem;
+}
+
+.sun-pair {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.sun-times-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sun-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+
+.sun-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* --- Hourly Column --- */
+.hourly-column {
+  flex: 0 0 250px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
 }
 
 /* --- Animations --- */

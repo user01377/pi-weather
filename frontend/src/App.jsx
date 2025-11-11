@@ -7,14 +7,20 @@ function App() {
 
   const [data, setData] = useState({
     block1: {
-      item1: <>Loading...<br />Loading...</>, // wind speed/direction
+      item1: (
+        <>
+          Loading...
+          <br />
+          Loading...
+        </>
+      ),
       item2: "Loading...",
       item3: "Loading...",
       item4: "Loading...",
     },
     block2: {
       item1: "Loading...",
-      item2: "Loading...",
+      item2: { sunrise: "Loading...", sunset: "Loading..." },
       item3: "Loading...",
       item4: "Loading...",
     },
@@ -48,7 +54,10 @@ function App() {
           },
           block2: {
             item1: `${json.pressure ?? "N/A"} inHg`,
-            item2: `${json.sunrise ?? "N/A"} / ${json.sunset ?? "N/A"}`,
+            item2: { 
+              sunrise: json.sunrise ?? "N/A", 
+              sunset: json.sunset ?? "N/A" 
+            },
             item3: `${json.visibility ?? "N/A"} NM`,
             item4: `${json.cloudCoverage ?? "N/A"}%`,
           },
