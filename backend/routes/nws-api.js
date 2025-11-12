@@ -148,6 +148,10 @@ router.get("/current", async (req, res) => {
           ? Math.round(obs.relativeHumidity.value * 10) / 10
           : null,
 
+        dewpoint: obs?.dewpoint?.value != null
+        ? Math.round((obs.dewpoint.value * 9 / 5) + 32) // conversion to fahrenheit
+        : null,
+
         wind: {
           speed: obs?.windSpeed?.value != null
             ? Math.round(obs.windSpeed.value * 10) / 10
