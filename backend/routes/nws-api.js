@@ -148,6 +148,10 @@ router.get("/current", async (req, res) => {
           ? Math.round(obs.relativeHumidity.value * 10) / 10
           : null,
 
+        dewpoint: obs?.dewpoint?.value != null
+        ? Math.round((obs.dewpoint.value * 9 / 5) + 32) // conversion to fahrenheit
+        : null,
+
         wind: {
           speed: obs?.windSpeed?.value != null
             ? Math.round(obs.windSpeed.value * 10) / 10
@@ -162,7 +166,7 @@ router.get("/current", async (req, res) => {
           : null,
 
         visibility: obs?.visibility?.value != null
-          ? Math.round((obs.visibility.value * 0.000621371) * 100) / 100 // Meters to Miles
+          ? Math.round((obs.visibility.value * 0.000539957) * 100) / 100 // Meters to NauticalMiles
           : null,
 
         sunrise: sunrise_calc,
