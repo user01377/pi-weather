@@ -2,22 +2,30 @@ import React from "react";
 import "../styles/weatherdivstyle.css";
 
 export default function WeatherDiv({ data }) {
-  const metrics = [
-    { icon: "/display/wind.svg", header: "Wind", value: data.block1.item1 },
-    { icon: "/display/humidity.svg", header: "Humidity", value: data.block1.item3 },
-    { icon: "/display/precipitation.svg", header: "Precipitation", value: data.block1.item4 },
-    { icon: "/display/feelslike.svg", header: "Feels Like", value: data.block1.item2 },
-    { icon: "/display/pressure.svg", header: "Pressure", value: data.block2.item1 },
-    { 
+  if (!data) return null;
+
+  // Metrics for tiles
+  const tileMetrics = [
+    { icon: "/display/wind.svg", header: "Wind", value: data.tiles.wind },
+    { icon: "/display/humidity.svg", header: "Humidity", value: data.tiles.humidity },
+    { icon: "/display/precipitation.svg", header: "Precipitation", value: data.tiles.precipitation },
+    { icon: "/display/feelslike.svg", header: "Feels Like", value: data.tiles.feelsLike },
+  ];
+
+  // Metrics for misc info
+  const miscMetrics = [
+    { icon: "/display/pressure.svg", header: "Pressure", value: data.misc.pressure },
+    { icon: "/display/visibility.svg", header: "Visibility", value: data.misc.visibility },
+    { icon: "NOT YET ADDED", header: "Dewpoint", value: data.misc.dewpoint },
+    { icon: "/display/cloudcover.svg", header: "Cloud Cover", value: data.misc.cloudCoverage },
+    {
       icon: null,
       header: "Sun Times",
-      value: { 
-        sunrise: { icon: "/sunrise.svg", time: data.block2.item2.sunrise ?? "Loading..." }, 
-        sunset: { icon: "/sunset.svg", time: data.block2.item2.sunset ?? "Loading..." } 
-      } 
+      value: {
+        sunrise: { icon: "/sunrise.svg", time: data.misc.suntimes.sunrise },
+        sunset: { icon: "/sunset.svg", time: data.misc.suntimes.sunset },
+      },
     },
-    { icon: "/display/visibility.svg", header: "Visibility", value: data.block2.item3 },
-    { icon: "/display/cloudcover.svg", header: "Cloud Cover", value: data.block2.item4 },
   ];
 
   return (
@@ -30,10 +38,20 @@ export default function WeatherDiv({ data }) {
           {/* Hero Panel */}
           <div className="panel hero-panel">
             <div className="hero-main">
-              <div className="hero-icon">🌤</div>
+              <div className="hero-icon">
+                {data.hero.icon ? <img src={data.hero.icon} alt={data.hero.weatherDesc} /> : "🌤"}
+              </div>
               <div className="hero-info">
-                <div className="hero-temp">72°F</div>
-                <div className="hero-desc">Mostly Sunny</div>
+                <div>Rochester</div>
+                <div className="hero-temp">{data.hero.temperature}</div>
+                <div className="hero-desc">{data.hero.weatherDesc}</div>
+                {data.hero.alerts.length > 0 && (
+                  <div className="hero-alerts">
+                    {data.hero.alerts.map((alert, idx) => (
+                      <div key={idx} className="alert">{alert}</div>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
           </div>
@@ -43,7 +61,7 @@ export default function WeatherDiv({ data }) {
 
             {/* Tiles */}
             <div className="tiles-container">
-              {metrics.slice(0, 4).map((m, idx) => (
+              {tileMetrics.map((m, idx) => (
                 <div key={idx} className="panel tile">
                   <img src={m.icon} alt={m.header} className="icon tile-icon" />
                   <div className="tile-header">{m.header}</div>
@@ -54,12 +72,11 @@ export default function WeatherDiv({ data }) {
 
             {/* Misc Info */}
             <div className="panel misc-info">
-              {metrics.slice(4, 8).map((m, idx) => {
+              {miscMetrics.map((m, idx) => {
                 const isSunTimes = typeof m.value === "object";
                 if (isSunTimes) {
                   return (
                     <div key={idx} className="misc-entry sun-times-entry">
-
                       {/* Sunrise */}
                       <div className="sun-pair">
                         <img src={m.value.sunrise.icon} alt="Sunrise" className="icon sun-icon" />
@@ -68,7 +85,6 @@ export default function WeatherDiv({ data }) {
                           <span className="sun-value">{m.value.sunrise.time}</span>
                         </div>
                       </div>
-
                       {/* Sunset */}
                       <div className="sun-pair">
                         <img src={m.value.sunset.icon} alt="Sunset" className="icon sun-icon" />
@@ -77,7 +93,6 @@ export default function WeatherDiv({ data }) {
                           <span className="sun-value">{m.value.sunset.time}</span>
                         </div>
                       </div>
-
                     </div>
                   );
                 } else {
@@ -99,13 +114,17 @@ export default function WeatherDiv({ data }) {
 
         {/* Hourly Column */}
         <div className="panel hourly-column">
-          {[1, 2, 3, 4, 5, 6].map((h, idx) => (
-            <div key={idx} className="hour">
-              <div>{h + 12}:00 PM</div>
-              <div>🌤</div>
-              <div>70°F</div>
-            </div>
-          ))}
+          {data.hourly.length > 0 ? (
+            data.hourly.map((hour, idx) => (
+              <div key={idx} className="hour">
+                <div>{hour.time ?? "N/A"}</div>
+                <div>{hour.icon ? <img src={hour.icon} alt={hour.weather} /> : "🌤"}</div>
+                <div>{hour.temperature ?? "N/A"}°</div>
+              </div>
+            ))
+          ) : (
+            <div>No hourly data available</div>
+          )}
         </div>
 
       </div>
