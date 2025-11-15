@@ -1,13 +1,34 @@
-function getCustomIcon(iconUrl) {
-    const lower = iconUrl.toLowerCase();
-  
-    if (lower.includes('snow')) return '/assets/snow.svg';
-    if (lower.includes('thunder')) return '/assets/thunder.svg';
-    if (lower.includes('rain')) return '/assets/rain.svg';
-    if (lower.includes('fog')) return '/assets/fog.svg';
-    if (lower.includes('cloud')) return '/assets/cloud.svg';
-    if (lower.includes('night')) return '/assets/team.svg';
+import { useMemo } from "react";
 
-    return '/assets/day.svg';
+function hashString(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) {
+    hash = (hash * 31 + str.charCodeAt(i)) % 1000;
   }
-  
+  return hash / 1000;
+}
+
+export function GetCustomIcon({ iconUrl, alt, className }) {
+  const lower = (iconUrl || "").toLowerCase();
+
+  const src = useMemo(() => {
+    let result = "/day.svg";
+
+    const pickDeterministicNightIcon = () => {
+      const h = hashString(lower); // 0–1 pseudo-random but deterministic
+      return h < 0.6 ? "/moon.svg" : "/team.png"; // weighted
+    };
+
+    if (lower.includes("snow")) result = "/snow.svg";
+    else if (lower.includes("thunder")) result = "/thunder.svg";
+    else if (lower.includes("rain")) result = "/rain.svg";
+    else if (lower.includes("fog")) result = "/foggy.svg";
+    else if (lower.includes("cloud")) result = "/cloudy.svg";
+    else if (lower.includes("night")) result = pickDeterministicNightIcon();
+    else console.warn(`No matching icon: "${iconUrl}"`);
+
+    return result;
+  }, [lower]);
+
+  return <img src={src} alt={alt || "weather icon"} className={className} />;
+}
