@@ -69,15 +69,18 @@ export default function WeatherDiv({ data }) {
           <div className="tiles-parent">
 
             {/* Tiles */}
-            <div className="tiles-container">
+            <div className="tiles-row">
               {tileMetrics.map((m, idx) => (
-                <div key={idx} className="panel tile">
-                  <img src={m.icon} alt={m.header} className="icon tile-icon" />
-                  <div className="tile-header">{m.header}</div>
+                <div key={idx} className="tile-panel">
+                  <div className="tile-top-row">
+                    <img src={m.icon} alt={m.header} className="tile-icon" />
+                    <div className="tile-header">{m.header}</div>
+                  </div>
                   <div className="tile-value">{m.value}</div>
                 </div>
               ))}
             </div>
+
 
             {/* Misc Info */}
             <div className="panel misc-info">
@@ -133,6 +136,7 @@ export default function WeatherDiv({ data }) {
             </div>
 
           </div>
+
           <div className="last-updated">
             {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
                 hour: "2-digit",
@@ -140,6 +144,7 @@ export default function WeatherDiv({ data }) {
                 hour12: true
               })} — KROC INTL METAR`}
           </div>
+          
         </div>
         
 
