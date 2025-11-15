@@ -37,7 +37,7 @@
 .icon {
   width: 60px;
   height: 60px;
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba((251, 192, 147),0.6));
+  
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
@@ -112,7 +112,7 @@
   display: block;
 }
 
-img[src$=".svg"] {
+.hero-icon-box img[src$=".svg"] {
   filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
 }
 
@@ -194,7 +194,7 @@ img[src$=".svg"] {
 /* --- Bottom Misc Info --- */
 .misc-info {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 1.5rem;
 }
 
@@ -230,7 +230,7 @@ img[src$=".svg"] {
 .sun-pair {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 2rem;
 }
 
 .sun-times-text {
@@ -252,12 +252,148 @@ img[src$=".svg"] {
 }
 
 /* --- Hourly Column --- */
-.hourly-column {
-  flex: 0 0 250px;
+.hourly-column-panel {
+  flex: 0 1 275px;        /* allow vertical growth, keep base width */
   display: flex;
   flex-direction: column;
-  justify-content: space-evenly;
+  padding: 1rem;
+  /* remove height: 100% */
+  overflow-y: auto;        /* scroll if content overflows */
 }
+
+/* Scrollable content inside panel */
+.hourly-column-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;       /* let it fill available height */
+}
+
+/* Each row as a single box inside the panel */
+.hour-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: stretch; 
+  padding: 0.5rem 0.75rem;
+  border-radius: 10px;
+  position: relative;
+  flex: 1 1 0;          /* key: allow row to grow evenly */
+  min-height: 0;        /* needed to allow flex-grow properly */
+}
+
+/* Divider between rows using pseudo-element */
+.hour-row:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: 0;               /* bottom of the row */
+  left: 0;
+  width: 100%;
+  height: 1px;             /* thickness of the divider */
+  background: rgba(255, 255, 255, 0.04);  /* subtle divider */
+}
+
+/* LEFT SIDE: take remaining width */
+.hour-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;                     /* grow to fill row */
+  min-width: 0;                /* allow text to shrink */
+  padding-right: 0.75rem;
+  border-right: 1px solid rgba(255, 255, 255, 0.2); /* vertical divider */
+}
+
+/* LEFT TEXT stacked vertically */
+.hour-left-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+}
+
+.hour-time {
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.hour-desc {
+  font-size: 0.8rem;
+  opacity: 0.5;
+  white-space: normal;         /* allow wrapping */
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* ICON */
+.hourly-icon-box {
+  width: 4.356rem;
+  height: 4.356rem;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hourly-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hourly-icon-box img[src$=".svg"] {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+
+.animate-icon {
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+/* RIGHT SIDE: fixed width */
+.hour-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.2rem;
+  flex-shrink: 0;              /* don't shrink */
+  width: 50px;                 /* fixed width so divider is even */
+  padding-left: 0.75rem;
+}
+
+.hour-pop, .hour-temp {
+  font-size: 0.9rem;
+}
+
+.hour-temp {
+  font-weight: 500;
+}
+
+.hour-pop {
+  opacity: 0.5;
+}
+
+.animate-icon {
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+.last-updated {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.5);
+  text-align: left;
+  margin-top: -1.23rem; /* pulls it up to hug misc-info */
+}
+
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5px); }
+}
+
+/* Text metrics */
+.hour-time { font-weight: 600; font-size: 0.9rem; }
+.hour-desc { font-size: 0.8rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
+.hour-pop, .hour-temp { font-size: 0.9rem; font-weight: 500; }
+
 
 /* --- Animations --- */
 @keyframes fadeIn {

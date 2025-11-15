@@ -17,7 +17,7 @@ export default function WeatherDiv({ data }) {
   const miscMetrics = [
     { icon: "/display/pressure.svg", header: "Pressure", value: data.misc.pressure },
     { icon: "/display/visibility.svg", header: "Visibility", value: data.misc.visibility },
-    { icon: "NOT YET ADDED", header: "Dewpoint", value: data.misc.dewpoint },
+    { icon: "display/dewpoint.svg", header: "Dewpoint", value: data.misc.dewpoint },
     { icon: "/display/cloudcover.svg", header: "Cloud Cover", value: data.misc.cloudCoverage },
     {
       icon: null,
@@ -81,59 +81,96 @@ export default function WeatherDiv({ data }) {
 
             {/* Misc Info */}
             <div className="panel misc-info">
-              {miscMetrics.map((m, idx) => {
-                const isSunTimes = typeof m.value === "object";
-                if (isSunTimes) {
-                  return (
-                    <div key={idx} className="misc-entry sun-times-entry">
-                      {/* Sunrise */}
-                      <div className="sun-pair">
-                        <img src={m.value.sunrise.icon} alt="Sunrise" className="icon sun-icon" />
-                        <div className="sun-times-text">
-                          <span className="sun-label">Sunrise</span>
-                          <span className="sun-value">{m.value.sunrise.time}</span>
-                        </div>
-                      </div>
-                      {/* Sunset */}
-                      <div className="sun-pair">
-                        <img src={m.value.sunset.icon} alt="Sunset" className="icon sun-icon" />
-                        <div className="sun-times-text">
-                          <span className="sun-label">Sunset</span>
-                          <span className="sun-value">{m.value.sunset.time}</span>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                } else {
-                  return (
-                    <div key={idx} className="misc-entry">
-                      {m.icon && <img src={m.icon} alt={m.header} className="icon misc-icon" />}
-                      <div className="misc-text">
-                        <div className="misc-header">{m.header}</div>
-                        <div className="misc-value">{m.value}</div>
-                      </div>
-                    </div>
-                  );
-                }
-              })}
-            </div>
+              {/* Row 1 */}
+              <div className="misc-entry">
+                <img src={miscMetrics[0].icon} alt={miscMetrics[0].header} className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">{miscMetrics[0].header}</div>
+                  <div className="misc-value">{miscMetrics[0].value}</div>
+                </div>
+              </div>
 
+              <div className="misc-entry">
+                <img src={miscMetrics[1].icon} alt={miscMetrics[1].header} className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">{miscMetrics[1].header}</div>
+                  <div className="misc-value">{miscMetrics[1].value}</div>
+                </div>
+              </div>
+
+              <div className="misc-entry">
+                <img src={miscMetrics.find(m => typeof m.value === "object").value.sunrise.icon} alt="Sunrise" className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">Sunrise</div>
+                  <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunrise.time}</div>
+                </div>
+              </div>
+
+              {/* Row 2 */}
+              <div className="misc-entry">
+                <img src={miscMetrics[2].icon} alt={miscMetrics[2].header} className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">{miscMetrics[2].header}</div>
+                  <div className="misc-value">{miscMetrics[2].value}</div>
+                </div>
+              </div>
+
+              <div className="misc-entry">
+                <img src={miscMetrics[3].icon} alt={miscMetrics[3].header} className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">{miscMetrics[3].header}</div>
+                  <div className="misc-value">{miscMetrics[3].value}</div>
+                </div>
+              </div>
+
+              <div className="misc-entry">
+                <img src={miscMetrics.find(m => typeof m.value === "object").value.sunset.icon} alt="Sunset" className="icon misc-icon" />
+                <div className="misc-text">
+                  <div className="misc-header">Sunset</div>
+                  <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunset.time}</div>
+                </div>
+              </div>
+            </div>
+            <div className="last-updated">
+              {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                  hour12: true
+                })} — KROC INTL METAR`}
+            </div>
           </div>
         </div>
 
         {/* Hourly Column */}
-        <div className="panel hourly-column">
-          {data.hourly.length > 0 ? (
-            data.hourly.map((hour, idx) => (
-              <div key={idx} className="hour">
-                <div>{hour.time ?? "N/A"}</div>
-                <div>{hour.icon ? <img src={hour.icon} alt={hour.weather} /> : "🌤"}</div>
-                <div>{hour.temperature ?? "N/A"}°</div>
+        <div className="panel hourly-column-panel">
+          <div className="hourly-column-content">
+            {data.hourly.map((h, idx) => (
+              <div key={idx} className={`hour-row ${idx % 2 === 0 ? "even" : "odd"}`}>
+                
+                {/* LEFT SIDE: icon + stacked hour & forecast */}
+                <div className="hour-left">
+                  <div className="hourly-icon-box">
+                    <GetCustomIcon
+                      iconUrl={h.icon}
+                      alt={h.shortForecast}
+                      className="hourly-icon-img animate-icon"
+                    />
+                  </div>
+                  <div className="hour-left-text">
+                    <div className="hour-time">{h.hour}</div>
+                    <div className="hour-desc">{h.shortForecast}</div>
+                  </div>
+                </div>
+
+                {/* RIGHT SIDE: temp + precipitation chance stacked */}
+                <div className="hour-right">
+                  <div className="hour-temp">{h.temp}°</div>
+                  <div className="hour-pop">Precip: {h.pop}%</div>
+                </div>
+
               </div>
-            ))
-          ) : (
-            <div>No hourly data available</div>
-          )}
+            ))}
+          </div>
         </div>
 
       </div>
