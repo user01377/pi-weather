@@ -131,15 +131,17 @@ export default function WeatherDiv({ data }) {
                 </div>
               </div>
             </div>
-            <div className="last-updated">
-              {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  hour12: true
-                })} — KROC INTL METAR`}
-            </div>
+
+          </div>
+          <div className="last-updated">
+            {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
+                hour: "2-digit",
+                minute: "2-digit",
+                hour12: true
+              })} — KROC INTL METAR`}
           </div>
         </div>
+        
 
         {/* Hourly Column */}
         <div className="panel hourly-column-panel">
