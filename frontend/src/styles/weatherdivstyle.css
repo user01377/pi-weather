@@ -11,7 +11,7 @@
 }
 
 /* Optional ice streak highlight */
-/* .panel::after {
+.panel::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -32,7 +32,8 @@
     rgba(255, 255, 255, 0.01) 90%,
     rgba(255, 255, 255, 0) 100%
   );
-} */
+}
+
 /* --- Shared Icon Styles --- */
 .icon {
   width: 60px;
@@ -63,7 +64,6 @@
   width: 100%;
   min-height: 100vh;
   padding-top: .3rem;
-  font-family: 'Inter', sans-serif;
 }
 
 .weather-container {
@@ -253,7 +253,7 @@
 
 /* --- Hourly Column --- */
 .hourly-column-panel {
-  flex: 0 1 275px;        /* allow vertical growth, keep base width */
+  flex: 0 1 350px;        /* allow vertical growth, keep base width */
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -265,7 +265,7 @@
 .hourly-column-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.67rem;
   flex: 1 1 auto;       /* let it fill available height */
 }
 
@@ -273,7 +273,7 @@
 .hour-row {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; 
+  align-items: center; 
   padding: 0.5rem 0.75rem;
   border-radius: 10px;
   position: relative;
@@ -285,23 +285,24 @@
 .hour-row:not(:last-child)::after {
   content: "";
   position: absolute;
-  bottom: 0;               /* bottom of the row */
-  left: 0;
-  width: 100%;
-  height: 1px;             /* thickness of the divider */
-  background: rgba(255, 255, 255, 0.04);  /* subtle divider */
+  bottom: 0;
+  left: 1rem;        
+  right: 1rem;       
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04); 
 }
+
 
 /* LEFT SIDE: take remaining width */
 .hour-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.67rem;
   flex: 1;                     /* grow to fill row */
   min-width: 0;                /* allow text to shrink */
   padding-right: 0.75rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.2); /* vertical divider */
 }
+
 
 /* LEFT TEXT stacked vertically */
 .hour-left-text {
@@ -309,6 +310,10 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
+  max-width: calc(100% - 70px); /* leave space for icon + right column */
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional, cut overflow text */
+  white-space: normal;      /* wrap text to multiple lines */
 }
 
 .hour-time {
@@ -322,6 +327,7 @@
   white-space: normal;         /* allow wrapping */
   overflow-wrap: break-word;
   max-width: 100%;
+  padding-top: 0.22rem;
 }
 
 /* ICON */
@@ -349,28 +355,27 @@
   animation: float 2s ease-in-out infinite alternate;
 }
 
-/* RIGHT SIDE: fixed width */
 .hour-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  gap: 0.2rem;
-  flex-shrink: 0;              /* don't shrink */
-  width: 50px;                 /* fixed width so divider is even */
-  padding-left: 0.75rem;
-}
-
-.hour-pop, .hour-temp {
-  font-size: 0.9rem;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  width: 125px;  
 }
 
 .hour-temp {
-  font-weight: 500;
+  font-size: 1.9rem;       /* larger font for temperature */
+  font-weight: 600;
+  white-space: nowrap;     /* prevent wrapping */
 }
 
 .hour-pop {
-  opacity: 0.5;
+  font-size: 0.85rem;      /* smaller, secondary info */
+  opacity: 0.6;
+  text-align: right;
+  white-space: nowrap;      /* don’t wrap */
 }
 
 .animate-icon {
@@ -389,12 +394,6 @@
   from { transform: translateY(0px); }
   to { transform: translateY(-5px); }
 }
-
-/* Text metrics */
-.hour-time { font-weight: 600; font-size: 0.9rem; }
-.hour-desc { font-size: 0.8rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
-.hour-pop, .hour-temp { font-size: 0.9rem; font-weight: 500; }
-
 
 /* --- Animations --- */
 @keyframes fadeIn {
@@ -440,3 +439,5 @@
     font-size: 1.2rem;
   }
 }
+
+

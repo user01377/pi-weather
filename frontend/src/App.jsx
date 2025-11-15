@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 import Background from "./components/Background.jsx";
 

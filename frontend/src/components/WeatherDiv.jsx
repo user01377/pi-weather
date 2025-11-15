@@ -146,34 +146,39 @@ export default function WeatherDiv({ data }) {
         {/* Hourly Column */}
         <div className="panel hourly-column-panel">
           <div className="hourly-column-content">
-            {data.hourly.map((h, idx) => (
-              <div key={idx} className={`hour-row ${idx % 2 === 0 ? "even" : "odd"}`}>
-                
-                {/* LEFT SIDE: icon + stacked hour & forecast */}
-                <div className="hour-left">
-                  <div className="hourly-icon-box">
-                    <GetCustomIcon
-                      iconUrl={h.icon}
-                      alt={h.shortForecast}
-                      className="hourly-icon-img animate-icon"
-                    />
-                  </div>
-                  <div className="hour-left-text">
-                    <div className="hour-time">{h.hour}</div>
-                    <div className="hour-desc">{h.shortForecast}</div>
-                  </div>
-                </div>
+            {data.hourly.map((h, idx) => {
+              // Format hour to 12-hour format like 9AM, 12PM
+              const hourFormatted = h.hour.replace(/^0/, '').split(':')[0] + h.hour.slice(-2);
 
-                {/* RIGHT SIDE: temp + precipitation chance stacked */}
-                <div className="hour-right">
-                  <div className="hour-temp">{h.temp}°</div>
-                  <div className="hour-pop">Precip: {h.pop}%</div>
-                </div>
+              return (
+                <div key={idx} className={`hour-row ${idx % 2 === 0 ? "even" : "odd"}`}>
 
-              </div>
-            ))}
+                  {/* LEFT SIDE: icon + stacked hour & forecast */}
+                  <div className="hour-left">
+                    <div className="hourly-icon-box">
+                      <GetCustomIcon
+                        iconUrl={h.icon}
+                        alt={h.shortForecast}
+                        className="hourly-icon-img animate-icon"
+                      />
+                    </div>
+                    <div className="hour-left-text">
+                      <div className="hour-time">{hourFormatted}</div>
+                      <div className="hour-desc">{h.shortForecast}</div>
+                    </div>
+                  </div>
+                  {/* RIGHT SIDE: temp + precipitation chance stacked */}
+                  <div className="hour-right">
+                    <div className="hour-temp">{h.temp}°</div>
+                    <div className="hour-pop">Precip: {h.pop}%</div>
+                  </div>
+
+                </div>
+              );
+            })}
           </div>
         </div>
+
 
       </div>
     </div>
