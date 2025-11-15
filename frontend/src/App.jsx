@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 import Background from "./components/Background.jsx";
+import { degreesToCardinal16 } from "./utils/degreetocardinal.jsx";
 
 function App() {
   // initial placeholder data so not empty
@@ -61,13 +62,12 @@ useEffect(() => {
         },
 
         tiles: {
-          wind: (
-            <>
-              {json.wind?.speed ?? "N/A"} mp/h
-              <br />
-              {json.wind?.direction ?? "N/A"}°
-            </>
-          ),
+          wind: {
+            value: json.wind?.speed ?? "N/A",
+            subValue: json.wind?.direction !== undefined
+              ? degreesToCardinal16(json.wind.direction)
+              : "N/A"
+          },
           humidity: `${json.humidity ?? "N/A"}%`,
           precipitation: `${json.precipitation ?? 0}%`,
           feelsLike: `${json.feelsLike ?? "N/A"}°`,

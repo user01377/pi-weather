@@ -7,7 +7,12 @@ export default function WeatherDiv({ data }) {
 
   // metrics for the tiles
   const tileMetrics = [
-    { icon: "/display/wind.svg", header: "Wind", value: data.tiles.wind },
+    {
+      icon: "/display/wind.svg",
+      header: "Wind",
+      value: `${data.tiles.wind.value} mp/h`,       // only the number/string
+      subValue: data.tiles.wind.subValue  // optional secondary value
+    },
     { icon: "/display/humidity.svg", header: "Humidity", value: data.tiles.humidity },
     { icon: "/display/precipitation.svg", header: "Precipitation", value: data.tiles.precipitation },
     { icon: "/display/feelslike.svg", header: "Feels Like", value: data.tiles.feelsLike },
@@ -65,21 +70,29 @@ export default function WeatherDiv({ data }) {
 
 
 
-          {/* Tiles + Misc */}
-          <div className="tiles-parent">
-
             {/* Tiles */}
             <div className="tiles-row">
-              {tileMetrics.map((m, idx) => (
-                <div key={idx} className="tile-panel">
-                  <div className="tile-top-row">
-                    <img src={m.icon} alt={m.header} className="tile-icon" />
-                    <div className="tile-header">{m.header}</div>
+            {tileMetrics.map(({ icon, header, value, subValue }, idx) => (
+              <div key={idx} className="panel tile-panel">
+                <div className="tile-top-row">
+                  <img src={icon} alt={header} className="tile-icon" />
+
+                  <div className="tile-text">
+                    <div className="tile-header">{header}</div>
+
+                    <div className="tile-value-row">
+                      <span className="tile-value">{value}</span>
+                      <span className="tile-subvalue">{subValue}</span>
+                    </div>
+
                   </div>
-                  <div className="tile-value">{m.value}</div>
                 </div>
-              ))}
+              </div>
+            ))}
             </div>
+
+
+
 
 
             {/* Misc Info */}
@@ -135,7 +148,6 @@ export default function WeatherDiv({ data }) {
               </div>
             </div>
 
-          </div>
 
           <div className="last-updated">
             {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {

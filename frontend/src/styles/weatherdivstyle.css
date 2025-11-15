@@ -11,7 +11,7 @@
 }
 
 /* Optional ice streak highlight */
-.panel::after {
+/* .panel::after {
   content: "";
   position: absolute;
   inset: 0;
@@ -32,7 +32,7 @@
     rgba(255, 255, 255, 0.01) 90%,
     rgba(255, 255, 255, 0) 100%
   );
-}
+} */
 
 /* --- Shared Icon Styles --- */
 .icon {
@@ -153,56 +153,75 @@
   gap: 2rem;
 }
 
-.tiles-parent {
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-}
 
 .tiles-row {
   display: flex;
-  justify-content: space-between; /* spread evenly */
-  align-items: center;
-  gap: 1rem;                      /* spacing between tiles */
-  width: 100%;
-  padding: 0 1rem;                /* optional side padding */
-  margin-top: 1rem;
+  justify-content: space-between; /* spread tiles evenly */
+  align-items: flex-start;        /* align top edges */
+  gap: 1rem;
+  width: 100%;                    /* match hero & misc width */
+  margin: 0;                       /* remove extra margin */
+  padding: 0;                      /* remove inner padding if any */
 }
 
-/* Tile structure */
 .tile-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 0.4rem;
-  flex: 1;                         /* make all tiles equal width */
-  padding: 1rem;
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(11px);
-  border-radius: 15px;
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  flex: 1;                         /* all tiles equal width */
+  min-width: 120px;                 /* prevents shrinking too much */
 }
 
-/* Top row: icon + header */
 .tile-top-row {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 1.2rem;
 }
 
-/* Icon consistent sizing */
+/* Icon */
 .tile-icon {
-  width: 32px;
-  height: 32px;
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-  opacity: 0.9;
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
 }
 
-/* Header next to icon */
+/* Text stacked next to icon */
+.tile-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tile-value-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem; /* controls spacing between value and subValue */
+}
+
+.tile-value {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: white;
+}
+
+.tile-subvalue {
+  margin-left: 4px;
+  font-size: 0.9rem;        /* smaller than value */
+  font-weight: 500;         /* lighter than value */
+  color: rgba(255,255,255,0.7);  /* slightly muted */
+}
+
+/* Header (smaller, muted) */
 .tile-header {
   font-size: 0.9rem;
   font-weight: 500;
   color: rgba(255,255,255,0.75);
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers value under icon */
+  gap: 0.2rem;        /* spacing between icon and value */
 }
 
 /* Value under the row, centered under text */
@@ -210,8 +229,8 @@
   font-size: 1.4rem;
   font-weight: 600;
   color: white;
-  margin-left: 0; /* no need to offset; flex row will center naturally */
-  text-align: left; /* align with top row header */
+  text-align: center;
+  margin: 0;          /* no extra offset */
 }
 
 /* --- Bottom Misc Info --- */
