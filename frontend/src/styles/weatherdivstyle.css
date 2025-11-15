@@ -63,7 +63,7 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: .3rem;
+  padding-top: .2rem;
 }
 
 .weather-container {
@@ -74,7 +74,7 @@
   width: 90%;
   max-width: 85%;
   max-height: 90%;
-  gap: 2rem;
+  gap: 1rem;
   position: relative;
 }
 
@@ -150,7 +150,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: 1.25rem;
 }
 
 
@@ -158,7 +158,7 @@
   display: flex;
   justify-content: space-between; /* spread tiles evenly */
   align-items: flex-start;        /* align top edges */
-  gap: 1rem;
+  gap: 0.85rem;
   width: 100%;                    /* match hero & misc width */
   margin: 0;                       /* remove extra margin */
   padding: 0;                      /* remove inner padding if any */
@@ -236,13 +236,14 @@
 /* --- Bottom Misc Info --- */
 .misc-info {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 horizontal columns */
   gap: 1.5rem;
 }
-
 .misc-entry {
-  flex: 1;
-  min-height: 60px; /* ensures each entry has some vertical weight */
+  display: flex;            /* horizontal layout */
+  align-items: center;      /* vertically center icon and text */
+  gap: 0.75rem;             /* space between icon and text */
+  min-height: 60px;
   padding: 1rem;
   border-radius: 12px;
 }
@@ -250,6 +251,7 @@
 .misc-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;  /* center text vertically if entry height > text */
 }
 
 .misc-header {
