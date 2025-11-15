@@ -53,7 +53,7 @@ useEffect(() => {
 
       const mappedData = {
         hero: {
-          icon: json.icon ?? "",
+          icon: json.icon ?? "", 
           temperature: `${json.temperature ?? "N/A"}°`,
           weatherDesc: json.weather ?? "N/A",
           alerts: json.alerts ?? [],
