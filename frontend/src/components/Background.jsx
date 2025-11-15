@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-export default function Background() {
+const WeatherWaveDashboard = ({ weather = 'sunny' }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
@@ -10,177 +10,102 @@ export default function Background() {
     let width = canvas.width = window.innerWidth;
     let height = canvas.height = window.innerHeight;
 
-    // --- Orb configurations ---
-    const orbConfigs = [
-      { count: 100, r: [2, 6], speed: 0.2, alpha: [0.1, 0.5], colors: ['rgba(255,200,200,ALPHA)','rgba(200,255,220,ALPHA)','rgba(200,220,255,ALPHA)'] },
-      { count: 14, r: [15, 27], speed: 0.25, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] },
-      { count: 9, r: [39, 55], speed: 0.5, alpha: [0.05, 0.3], colors: ['rgba(255,255,200,ALPHA)','rgba(200,255,255,ALPHA)'] }
+    // --- Day/Night Gradient ---
+    let gradientProgress = 0;
+    const gradientSpeed = 0.00002; // slow day/night loop
+    const nightColor = [10, 15, 50];
+    const dayColor = [135, 206, 235];
+
+    const lerpColor = (color1, color2, t) => color1.map((c, i) => c + (color2[i] - c) * t);
+    const rgbToString = (rgb) => `rgb(${Math.round(rgb[0])},${Math.round(rgb[1])},${Math.round(rgb[2])})`;
+
+    // --- Layered Sine Waves ---
+    const layers = [
+      { baseY: height / 2, amplitude: 20, wavelength: 300, speed: 0.002, phase: 0, color: 'rgba(255,255,255,0.2)' },
+      { baseY: height / 2 + 30, amplitude: 40, wavelength: 500, speed: 0.0015, phase: 0, color: 'rgba(255,255,255,0.15)' },
+      { baseY: height / 2 - 20, amplitude: 60, wavelength: 800, speed: 0.001, phase: 0, color: 'rgba(255,255,255,0.1)' },
     ];
 
-    // --- Create orbs (pre-render all sizes) ---
-    const orbs = orbConfigs.flatMap(cfg => 
-      Array.from({ length: cfg.count }, () => {
-        const baseR = Math.random() * (cfg.r[1] - cfg.r[0]) + cfg.r[0];
-        const colorTemplate = cfg.colors[Math.floor(Math.random() * cfg.colors.length)];
-        const [r, g, b] = colorTemplate.match(/\d+/g).map(Number);
+    // --- Particles for rain/snow ---
+    const particles = [];
+    const particleCount = 120;
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vy: weather === 'rain' ? 2 + Math.random() * 2 : 0.5 + Math.random(),
+        size: weather === 'rain' ? 2 : 4 + Math.random() * 2,
+      });
+    }
 
-        const scale = 1.7;            // visual scale
-        const resolutionScale = 1.5;    // higher = sharper
-    
-        // pre-render canvas
-        const preCanvas = document.createElement('canvas');
-        const size = baseR * 2 * scale * resolutionScale;
-        preCanvas.width = preCanvas.height = size;
-        const preCtx = preCanvas.getContext('2d');
-        preCtx.scale(resolutionScale, resolutionScale); // scale drawing
-        const grad = preCtx.createRadialGradient(baseR*scale, baseR*scale, 0, baseR*scale, baseR*scale, baseR*scale);
-        grad.addColorStop(0, `rgba(${r},${g},${b},1)`);
-        grad.addColorStop(0.4, `rgba(${r},${g},${b},0.3)`);
-        grad.addColorStop(1, 'rgba(0,0,0,0)');
-
-        preCtx.fillStyle = grad;
-        preCtx.beginPath();
-        preCtx.arc(baseR*scale, baseR*scale, baseR*scale, 0, Math.PI*2);
-        preCtx.fill();
-
-        return {
-          x: Math.random() * width,
-          y: Math.random() * height,
-          dx: (Math.random() - 0.5) * cfg.speed,
-          dy: (Math.random() - 0.5) * cfg.speed,
-          r: baseR,
-          rgb: { r, g, b },
-          alphaRange: cfg.alpha,
-          pulsePhase: Math.random() * Math.PI * 2,
-          pulseSpeed: 0.02 + Math.random() * 0.02,
-          canvas: preCanvas,
-          scale,
-          liveDraw: false // we no longer need liveDraw
-        };
-      })
-    );
-
-
-    // --- Streaks ---
-    const streaks = Array.from({ length: 20 }, () => ({
-      x: Math.random() * width,
-      y: Math.random() * height,
-      length: Math.random() * 50 + 20,
-      speed: Math.random() * 0.2 + 0.1,
-      angle: Math.random() * Math.PI * 2,
-      color: 'rgba(200,230,255,0.05)',
-    }));
-
-    // --- Shimmers ---
-    const shimmerData = [
-      { offset: -width, speed: 0.2, width: width * 0.2 },
-      { offset: -width * 0.5, speed: 0.15, width: width * 0.2 },
-    ].map(s => {
-      const c = document.createElement('canvas');
-      c.width = s.width;
-      c.height = height;
-      const cCtx = c.getContext('2d');
-      const grad = cCtx.createLinearGradient(0, 0, s.width, height);
-      grad.addColorStop(0, 'rgba(220,240,255,0)');
-      grad.addColorStop(0.5, 'rgba(220,240,255,0.04)');
-      grad.addColorStop(1, 'rgba(220,240,255,0)');
-      cCtx.fillStyle = grad;
-      cCtx.fillRect(0,0,s.width,height);
-      return { ...s, canvas: c };
-    });
-
-// --- Animation ---
-let frameId;
-const fps = 23; // limit FPS here
-const interval = 1000 / fps;
-let lastTime = Date.now();
-
-const animate = () => {
-  const now = Date.now();
-  const delta = now - lastTime;
-
-  if (delta >= interval) {
-    lastTime = now - (delta % interval); // adjust for drift
-
-    const t = Date.now() * 0.00022;
-
-    // Background gradient
-    const gradient = ctx.createLinearGradient(-width*0.2, -height*0.2, width*1.2, height*1.2);
-    const r = 50 + 30*Math.sin(t) + 20*Math.sin(t*0.3);
-    const g = 60 + 30*Math.cos(t*1.2) + 15*Math.sin(t*0.5);
-    const b = 80 + 20*Math.sin(t*0.7) + 20*Math.cos(t*0.4);
-    gradient.addColorStop(0, `rgba(${r},${g},${b},1)`);
-    gradient.addColorStop(1, 'rgba(10,20,50,1)');
-    ctx.fillStyle = gradient;
-    ctx.fillRect(0,0,width,height);
-
-    // Draw orbs
-    orbs.forEach(o => {
-      o.x = (o.x + o.dx + width) % width;
-      o.y = (o.y + o.dy + height) % height;
-
-      o.pulsePhase += o.pulseSpeed;
-      const alpha = o.alphaRange[0] + (o.alphaRange[1]-o.alphaRange[0])/2 + (o.alphaRange[1]-o.alphaRange[0])/2*Math.sin(o.pulsePhase);
-      ctx.globalAlpha = alpha;
-
-      if (o.liveDraw) {
-        const g = ctx.createRadialGradient(o.x,o.y,0,o.x,o.y,o.r);
-        g.addColorStop(0, `rgba(${o.rgb.r},${o.rgb.g},${o.rgb.b},1)`);
-        g.addColorStop(0.7, `rgba(${o.rgb.r},${o.rgb.g},${o.rgb.b},0.3)`);
-        g.addColorStop(1, 'rgba(0,0,0,0)');
-        ctx.fillStyle = g;
-        ctx.beginPath();
-        ctx.arc(o.x,o.y,o.r,0,Math.PI*2);
-        ctx.fill();
-      } else {
-        ctx.drawImage(o.canvas, o.x - o.r*o.scale, o.y - o.r*o.scale);
-      }
-
-      ctx.globalAlpha = 1;
-    });
-
-    // Draw streaks
-    streaks.forEach(s => {
-      ctx.save();
-      ctx.translate(s.x, s.y);
-      ctx.rotate(s.angle);
+    // --- Draw a smooth sine wave with gradient effect ---
+    const drawSinWave = ({ baseY, amplitude, wavelength, phase, color }) => {
       ctx.beginPath();
-      ctx.moveTo(0,0);
-      ctx.lineTo(s.length,0);
-      ctx.strokeStyle = s.color;
-      ctx.lineWidth = 1;
+      for (let x = 0; x <= width; x += 2) {
+        // Combine a secondary sine for natural motion
+        const y = baseY + amplitude * Math.sin((x / wavelength) * 2 * Math.PI + phase)
+                        + (amplitude / 4) * Math.sin((x / (wavelength / 2)) * 2 * Math.PI + phase * 1.5);
+        ctx.lineTo(x, y);
+      }
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.shadowColor = color;
+      ctx.shadowBlur = 4;
       ctx.stroke();
-      ctx.restore();
+    };
 
-      s.x = (s.x + Math.cos(s.angle)*s.speed + width) % width;
-      s.y = (s.y + Math.sin(s.angle)*s.speed + height) % height;
-    });
+    const drawParticles = () => {
+      ctx.fillStyle = weather === 'rain' ? 'rgba(255,255,255,0.3)' : 'rgba(255,255,255,0.5)';
+      particles.forEach(p => {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fill();
+        p.y += p.vy;
+        if (p.y > height) p.y = -p.size;
+      });
+    };
 
-    // Draw shimmers
-    shimmerData.forEach(s => {
-      ctx.drawImage(s.canvas, s.offset, 0);
-      s.offset += s.speed;
-      if(s.offset > width) s.offset = -s.width;
-    });
-  }
+    let animationFrameId;
+    const animate = () => {
+      ctx.clearRect(0, 0, width, height);
 
-  frameId = requestAnimationFrame(animate);
-};
+      // Update gradient
+      gradientProgress += gradientSpeed;
+      if (gradientProgress > 1) gradientProgress = 0;
+      const bgColor = rgbToString(lerpColor(nightColor, dayColor, gradientProgress));
+      ctx.fillStyle = bgColor;
+      ctx.fillRect(0, 0, width, height);
+
+      // Animate sine waves with amplitude drift
+      layers.forEach(layer => {
+        layer.phase += layer.speed;
+        // Slowly vary amplitude for organic motion
+        layer.amplitude += Math.sin(Date.now() * 0.0001 + layer.phase) * 0.1;
+        drawSinWave(layer);
+      });
+
+      // Draw weather particles
+      if (weather === 'rain' || weather === 'snow') drawParticles();
+
+      animationFrameId = requestAnimationFrame(animate);
+    };
+
     animate();
 
-    // --- Resize handler ---
     const handleResize = () => {
       width = canvas.width = window.innerWidth;
       height = canvas.height = window.innerHeight;
-      shimmerData.forEach(s => s.canvas.height = height);
+      layers.forEach((layer, i) => layer.baseY = height / 2 + (i - 1) * 30);
     };
     window.addEventListener('resize', handleResize);
 
     return () => {
+      cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
-      cancelAnimationFrame(frameId);
     };
-  }, []);
+  }, [weather]);
 
-  return <canvas ref={canvasRef} style={{ position:'fixed', top:0, left:0, width:'100%', height:'100%', zIndex:-1, display:'block' }} />;
-}
+  return <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />;
+};
+
+export default WeatherWaveDashboard;

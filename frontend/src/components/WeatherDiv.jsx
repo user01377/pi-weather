@@ -1,10 +1,11 @@
 import React from "react";
 import "../styles/weatherdivstyle.css";
+import { GetCustomIcon } from "../utils/icon-mapping.jsx";
 
 export default function WeatherDiv({ data }) {
   if (!data) return null;
 
-  // Metrics for tiles
+  // metrics for the tiles
   const tileMetrics = [
     { icon: "/display/wind.svg", header: "Wind", value: data.tiles.wind },
     { icon: "/display/humidity.svg", header: "Humidity", value: data.tiles.humidity },
@@ -12,7 +13,7 @@ export default function WeatherDiv({ data }) {
     { icon: "/display/feelslike.svg", header: "Feels Like", value: data.tiles.feelsLike },
   ];
 
-  // Metrics for misc info
+  // metrics for misc info div
   const miscMetrics = [
     { icon: "/display/pressure.svg", header: "Pressure", value: data.misc.pressure },
     { icon: "/display/visibility.svg", header: "Visibility", value: data.misc.visibility },
@@ -38,23 +39,31 @@ export default function WeatherDiv({ data }) {
           {/* Hero Panel */}
           <div className="panel hero-panel">
             <div className="hero-main">
-              <div className="hero-icon">
-                {data.hero.icon ? <img src={data.hero.icon} alt={data.hero.weatherDesc} /> : "🌤"}
-              </div>
-              <div className="hero-info">
-                <div>Rochester</div>
+
+              {/* Left: Icon */}
+              {data.hero.icon && (
+                <div className="hero-icon-box">
+                  <GetCustomIcon
+                    iconUrl={data.hero.icon}
+                    alt={data.hero.weatherDesc}
+                    className="hero-icon-img"
+                  />
+                </div>
+              )}
+
+              {/* Middle: City */}
+              <div className="hero-city">Rochester</div>
+
+              {/* Right: Temp + Desc */}
+              <div className="hero-right">
                 <div className="hero-temp">{data.hero.temperature}</div>
                 <div className="hero-desc">{data.hero.weatherDesc}</div>
-                {data.hero.alerts.length > 0 && (
-                  <div className="hero-alerts">
-                    {data.hero.alerts.map((alert, idx) => (
-                      <div key={idx} className="alert">{alert}</div>
-                    ))}
-                  </div>
-                )}
               </div>
+
             </div>
           </div>
+
+
 
           {/* Tiles + Misc */}
           <div className="tiles-parent">
