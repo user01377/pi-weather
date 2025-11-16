@@ -70,7 +70,7 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
       ctx.strokeStyle = color;
       ctx.lineWidth = 2;
       ctx.shadowColor = color;
-      ctx.shadowBlur = 4;
+      ctx.shadowBlur = 2;
       ctx.stroke();
     };
 
@@ -123,7 +123,7 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
       // --- Wave color interpolation ---
       const targetWaveRGB = parseColor(targetSettings.waveColor || '#ffffff');
       const currentWaveRGB = parseColor(current.currentWaveColor);
-      const lerpedWaveRGB = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.02));
+      const lerpedWaveRGB = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.05));
       current.currentWaveColor = `rgb(${Math.round(lerpedWaveRGB[0])},${Math.round(lerpedWaveRGB[1])},${Math.round(lerpedWaveRGB[2])})`;
 
       // --- Wave layers ---
