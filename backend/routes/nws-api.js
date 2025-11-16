@@ -158,7 +158,7 @@ router.get("/current", async (req, res) => {
 
         wind: {
           speed: obs?.windSpeed?.value != null
-            ? Math.round(obs.windSpeed.value * 10) / 10
+          ? Math.round(obs.windSpeed.value * 0.621371 * 10) / 10
             : null,
           direction: obs?.windDirection?.value ?? null,
         },
@@ -186,7 +186,6 @@ router.get("/current", async (req, res) => {
         lastUpdated: new Date().toISOString(),
       };
     });
-
     res.json(data);
   } catch (err) {
     console.error(err);
