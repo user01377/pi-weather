@@ -116,7 +116,7 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => { // = "clear" for redun
         if (now >= nextFlashTime) {
           ctx.fillStyle = 'rgba(255,255,255,0.15)';
           ctx.fillRect(0, 0, width, height);
-          nextFlashTime = now + Math.random() * 7000 + 3000; // next flash 3-10s
+          nextFlashTime = now + Math.random() * 7000 + 9000; 
         }
       }
 

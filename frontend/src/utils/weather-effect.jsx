@@ -5,11 +5,11 @@ export const getWeatherEffect = (weather) => {
         particleColor: 'rgba(173,216,230,0.3)', // light blue drops
         particleSpeed: [2, 4],
         particleSize: [2, 2],
-        waveColor: 'rgba(100,100,255,0.3)',
+        waveColor: 'rgba(100,100,255,0.4)',
         layers: [
-          { amplitude: 20, wavelength: 300, speed: 0.002 },
-          { amplitude: 40, wavelength: 500, speed: 0.0015 },
-          { amplitude: 60, wavelength: 700, speed: 0.001 },
+          { amplitude: 23, wavelength: 315, speed: 0.002 },
+          { amplitude: 45, wavelength: 500, speed: 0.0015 },
+          { amplitude: 62, wavelength: 700, speed: 0.001 },
         ],
       };
 
@@ -18,11 +18,11 @@ export const getWeatherEffect = (weather) => {
         particleColor: 'rgba(255,255,255,0.6)', // white snowflakes
         particleSpeed: [0.5, 1.5],
         particleSize: [4, 6],
-        waveColor: 'rgba(255,255,255,0.3)',
+        waveColor: 'rgba(255,255,255,0.35)',
         layers: [
-          { amplitude: 15, wavelength: 350, speed: 0.0015 },
-          { amplitude: 35, wavelength: 550, speed: 0.001 },
-          { amplitude: 55, wavelength: 750, speed: 0.0008 },
+          { amplitude: 18, wavelength: 300, speed: 0.002 },
+          { amplitude: 33, wavelength: 500, speed: 0.0015 },
+          { amplitude: 64, wavelength: 700, speed: 0.001 },
         ],
       };
 
@@ -33,9 +33,9 @@ export const getWeatherEffect = (weather) => {
         particleSize: [0, 0],
         waveColor: 'rgba(200,200,200,0.7)',
         layers: [
-          { amplitude: 22, wavelength: 280, speed: 0.0012 }, // subtle faster first layer
-          { amplitude: 38, wavelength: 520, speed: 0.0009 }, // middle layer gentle drift
-          { amplitude: 50, wavelength: 750, speed: 0.0007 }, // slow large background wave
+          { amplitude: 25, wavelength: 600, speed: 0.0012 }, // subtle faster first layer
+          { amplitude: 40, wavelength: 500, speed: 0.0009 }, // middle layer gentle drift
+          { amplitude: 65, wavelength: 750, speed: 0.0007 }, // slow large background wave
         ],
       };
 
@@ -60,9 +60,9 @@ export const getWeatherEffect = (weather) => {
           particleSize: [0, 0],
           waveColor: 'rgba(255,255,255,0.2)',
           layers: [
-            { amplitude: 22, wavelength: 300, speed: 0.0012 },
-            { amplitude: 42, wavelength: 540, speed: 0.0009 },
-            { amplitude: 60, wavelength: 780, speed: 0.0007 },
+            { amplitude: 22, wavelength: 313, speed: 0.0012 },
+            { amplitude: 39, wavelength: 544, speed: 0.0009 },
+            { amplitude: 62, wavelength: 786, speed: 0.0007 },
           ],
         };
   }

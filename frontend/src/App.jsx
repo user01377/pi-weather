@@ -29,7 +29,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Background weather="clear"/>  // {weatherWord}
+      <Background weather={weatherWord}/>
 
       {isError && (
         <div style={{ color: "red" }}>
