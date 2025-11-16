@@ -155,12 +155,15 @@ router.get("/current", async (req, res) => {
         dewpoint: obs?.dewpoint?.value != null
         ? Math.round((obs.dewpoint.value * 9 / 5) + 32) // conversion to fahrenheit
         : null,
-
+        
         wind: {
           speed: obs?.windSpeed?.value != null
-          ? Math.round(obs.windSpeed.value * 0.621371 * 10) / 10
-            : null,
-          direction: obs?.windDirection?.value ?? null,
+            ? Math.round(obs.windSpeed.value * 0.621371 * 10) / 10
+            : obs?.windGust?.value != null
+              ? Math.round(obs.windGust.value * 0.621371 * 10) / 10
+              : null,
+              
+          direction: obs?.windDirection?.value ?? null
         },
 
         precipitation: currentPop,
