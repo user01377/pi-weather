@@ -12,8 +12,8 @@ export default function WeatherDiv({ data, loading, isFetching }) {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
-          height: "100vh", // full height to center vertically
-          backgroundColor: "rgba(0, 0, 0, 0.6)", // subtle dark overlay
+          height: "100vh",
+          backgroundColor: "rgba(0, 0, 0, 0.6)",
         }}
       >
         <div
@@ -21,19 +21,54 @@ export default function WeatherDiv({ data, loading, isFetching }) {
           style={{
             padding: "2rem 3rem",
             borderRadius: "15px",
-            backgroundColor: "#DBDBDB", // bright background
-            color: "black",
-            fontSize: "2rem",
-            fontWeight: "bold",
+            backgroundColor: "#f5f5f5",
+            color: "#333",
+            fontSize: "1.8rem",
+            fontWeight: "600",
             textAlign: "center",
-            boxShadow: "0 0 20px rgba(0,0,0,0.4)",
+            boxShadow: "0 8px 25px rgba(0,0,0,0.3)",
+            display: "flex",
+            flexDirection: "column",
+            gap: "1.5rem",
+            width: "300px",
           }}
         >
-          Loading weather data...
+          <div>Loading Data...</div>
+  
+          {/* Animated loading bar */}
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e0e0e0",
+              borderRadius: "4px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                width: "0%",
+                height: "100%",
+                background: "linear-gradient(90deg, #4facfe, #00f2fe)",
+                animation: "loadingAnimation 1.5s ease-in-out infinite",
+              }}
+            />
+          </div>
         </div>
+  
+        <style>
+          {`
+            @keyframes loadingAnimation {
+              0% { transform: translateX(-100%); width: 50%; }
+              50% { transform: translateX(25%); width: 75%; }
+              100% { transform: translateX(100%); width: 50%; }
+            }
+          `}
+        </style>
       </div>
     );
   }
+  
 
   // metrics for the tiles
   const tileMetrics = [
@@ -178,6 +213,7 @@ export default function WeatherDiv({ data, loading, isFetching }) {
             {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
                 hour: "2-digit",
                 minute: "2-digit",
+                second: "2-digit",
                 hour12: true
               })} — KROC INTL METAR`}
           </div>
