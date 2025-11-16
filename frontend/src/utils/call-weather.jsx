@@ -1,14 +1,14 @@
 import { degreesToCardinal16 } from "./degreetocardinal.jsx";
 
 export async function fetchWeather() {
-  const res = await fetch("http://localhost:8000/current");
+  const res = await fetch("/current");
 
   if (!res.ok) {
     throw new Error("Network response was not ok");
   }
 
   const json = await res.json();
-  console.log("Raw API data:", json); // remove in production so no printy json data 
+  // console.log("Raw API data:", json); 
 
   // mapping from app.jsx moved to this helper jsx
   const mappedData = {

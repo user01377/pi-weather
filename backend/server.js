@@ -25,6 +25,4 @@ server.get('/', (req, res) => {
 
 server.use('/', apiRouter);
 
-server.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
-});
+server.listen(PORT);
