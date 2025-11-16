@@ -66,7 +66,7 @@ useEffect(() => {
             value: json.wind?.speed ?? "N/A",
             subValue: json.wind?.direction !== undefined
               ? degreesToCardinal16(json.wind.direction)
-              : "N/A"
+              : "gust"
           },
           humidity: `${json.humidity ?? "N/A"}%`,
           precipitation: `${json.precipitation ?? 0}%`,
