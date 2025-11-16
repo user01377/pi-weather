@@ -10,7 +10,7 @@ export default function WeatherDiv({ data }) {
     {
       icon: "/display/wind.svg",
       header: "Wind",
-      value: `${data.tiles.wind.value} mp/h`,       // only the number/string
+      value: `${data.tiles.wind.value}mp/h`,       // only the number/string
       subValue: data.tiles.wind.subValue  // optional secondary value
     },
     { icon: "/display/humidity.svg", header: "Humidity", value: data.tiles.humidity },

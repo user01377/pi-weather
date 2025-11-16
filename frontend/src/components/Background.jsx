@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 
-const WeatherWaveDashboard = ({ weather = 'sunny' }) => {
+const WeatherWaveDashboard = ({ weather = 'snow' }) => {
   const canvasRef = useRef(null);
 
   useEffect(() => {
