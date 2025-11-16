@@ -26,6 +26,7 @@ export default function App() {
 
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
+  // const weatherWord = "";
 
   return (
     <div className="app">

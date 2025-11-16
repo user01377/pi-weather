@@ -13,16 +13,16 @@ const WeatherWaveDashboard = ({ weather = "clear", sunrise, sunset }) => {
     let height = canvas.height = window.innerHeight;
 
     const nightColor = [10, 15, 50];
-    const dayColor = [135, 206, 235];
+    const dayColor = [125, 185, 209];
 
     const lerp = (start, end, t) => start + (end - start) * t;
     const lerpColor = (c1, c2, t) => c1.map((v, i) => lerp(v, c2[i], t));
     const rgbToString = (rgb) => `rgb(${Math.round(rgb[0])},${Math.round(rgb[1])},${Math.round(rgb[2])})`;
 
     const parseColor = (c) => {
-      if (!c) return [255, 255, 255];
-      const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
-      return m ? [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])] : [255, 255, 255];
+      if (!c) return [255, 255, 255, 1];
+      const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+      return m ? [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] !== undefined ? parseFloat(m[4]) : 1] : [255, 255, 255, 1];
     };
 
     // Initialize current settings if not set
@@ -71,11 +71,32 @@ const WeatherWaveDashboard = ({ weather = "clear", sunrise, sunset }) => {
     const getTimeGradientFromSun = (sunriseStr, sunsetStr) => {
       const sunriseDate = parseTimeString(sunriseStr);
       const sunsetDate = parseTimeString(sunsetStr);
-      if (!sunriseDate || !sunsetDate) return 1; // fallback to full day
+      if (!sunriseDate || !sunsetDate) return 1; // fallback to day
     
       const now = new Date();
-      if (now < sunriseDate || now > sunsetDate) return 0; // night
-      return (now - sunriseDate) / (sunsetDate - sunriseDate); // 0 → 1 during day
+    
+      const fadeMinutes = 90; // duration of sunset/sunrise fade in minutes
+      const fadeMs = fadeMinutes * 60 * 1000;
+    
+      // --- Sunrise fade ---
+      const sunriseFadeEnd = new Date(sunriseDate.getTime() + fadeMs);
+      if (now >= sunriseDate && now <= sunriseFadeEnd) {
+        return (now - sunriseDate) / fadeMs; // 0 → 1 during fade
+      }
+    
+      // --- Daytime ---
+      if (now > sunriseFadeEnd && now < sunsetDate) {
+        return 1; // fully day
+      }
+    
+      // --- Sunset fade ---
+      const sunsetFadeStart = new Date(sunsetDate.getTime() - fadeMs);
+      if (now >= sunsetFadeStart && now <= sunsetDate) {
+        return 1 - (now - sunsetFadeStart) / fadeMs; // 1 → 0 during fade
+      }
+    
+      // --- Night ---
+      return 0; // fully night
     };
 
     const drawSinWave = ({ baseY, amplitude, wavelength, phase, color }) => {
@@ -142,8 +163,9 @@ const WeatherWaveDashboard = ({ weather = "clear", sunrise, sunset }) => {
       // --- Wave color interpolation ---
       const targetWaveRGB = parseColor(targetSettings.waveColor || '#ffffff');
       const currentWaveRGB = parseColor(current.currentWaveColor);
-      const lerpedWaveRGB = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.05));
-      current.currentWaveColor = `rgb(${Math.round(lerpedWaveRGB[0])},${Math.round(lerpedWaveRGB[1])},${Math.round(lerpedWaveRGB[2])})`;
+      const lerpedWave = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.05));
+      current.currentWaveColor = `rgba(${Math.round(lerpedWave[0])},${Math.round(lerpedWave[1])},${Math.round(lerpedWave[2])},${lerpedWave[3].toFixed(2)})`;
+      
 
       // --- Wave layers ---
       const targetLayers = targetSettings.layers || [];
