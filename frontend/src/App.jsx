@@ -1,35 +1,46 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React from "react";
 
-function App() {
-  const [count, setCount] = useState(0)
+import "./index.css";
+import WeatherDiv from "./components/WeatherDiv.jsx";
+import Background from "./components/Background.jsx";
+
+import { useQuery } from "@tanstack/react-query";
+import { fetchWeather } from "./utils/call-weather.jsx";
+import { getWeatherKeyword } from './utils/background-iconmapping.jsx';
+
+export default function App() {
+  const {
+    data,
+    isLoading,
+    isError,
+    error,
+  } = useQuery({
+    queryKey: ["weather"],         // Unique key for caching
+    queryFn: fetchWeather,          // Your API helper
+    refetchInterval: 240_000,        // Auto-refresh every 4 mins
+    staleTime: 90_000,              // Data considered fresh for 1.5 mins
+    refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
+    retry: 2,
+    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+  });
+
+  const weatherIconUrl = data?.hero?.icon;
+  const weatherWord = getWeatherKeyword(weatherIconUrl);
+  // const weatherWord = "";
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="app">
+      <Background weather={weatherWord || "clear"} sunrise={data?.misc?.suntimes?.sunrise || "06:00 AM"} sunset={data?.misc?.suntimes?.sunset || "06:00 PM"} />
 
-export default App
+      {isError && (
+        <div style={{ color: "red" }}>
+          Error loading weather data: {error.message}
+        </div>
+      )}
+
+      {!isError && (
+        <WeatherDiv data={data} loading={isLoading} />
+      )}
+    </div>
+  );
+}

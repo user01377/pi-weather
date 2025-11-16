@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "main": "server.js",
+  "type": "module",
   "scripts": {
     "test": "node -e \"console.log('placeholder test')\""
   },
@@ -17,6 +18,11 @@
   },
   "homepage": "https://github.com/user01377/pi-weather#readme",
   "dependencies": {
-    "express": "^5.1.0"
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.1.0",
+    "morgan": "^1.10.1",
+    "node-fetch": "^3.3.2",
+    "suncalc": "^1.9.0"
   }
 }

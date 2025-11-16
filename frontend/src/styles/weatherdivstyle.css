@@ -1,0 +1,485 @@
+.panel {
+  position: relative;              /* for layering pseudo-elements */
+  background: rgba(255, 255, 255, 0.04);  /* very faint white */
+  backdrop-filter: blur(11px);     /* frosted effect */
+  border-radius: 15px;
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);  /* soft depth */
+  animation: fadeIn 1s ease forwards;
+  padding: 1.5rem;
+  overflow: hidden;
+  margin-bottom: 0;
+}
+
+
+/* Optional ice streak highlight */
+/* .panel::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    rgba(255, 255, 255, 0.055) 10%,
+    rgba(255, 255, 255, 0.05) 20%,
+    rgba(255, 255, 255, 0.045) 30%,
+    rgba(255, 255, 255, 0.04) 40%,
+    rgba(255, 255, 255, 0.035) 50%,
+    rgba(255, 255, 255, 0.03) 60%,
+    rgba(255, 255, 255, 0.025) 70%,
+    rgba(255, 255, 255, 0.02) 80%,
+    rgba(255, 255, 255, 0.01) 90%,
+    rgba(255, 255, 255, 0) 100%
+  );
+} */
+
+/* --- Shared Icon Styles --- */
+.icon {
+  width: 78x;
+  height: 78px;
+  
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.tile-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Misc-specific highlights */
+.misc-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Sun icon highlights */
+.sun-icon.icon {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* --- Wrapper & Container --- */
+.weather-wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  padding-top: .2rem;
+}
+
+.weather-container {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: space-between;
+  width: 90%;
+  max-width: 85%;
+  max-height: 90%;
+  gap: 1.5rem;
+  position: relative;
+}
+
+.hero-main {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  gap: 2rem;
+}
+
+/* --- Hero Panel --- */
+.hero-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 2.5rem 2rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+}
+
+.hero-icon-box {
+  width: 170px;           /* fixed size */
+  height: 170px;
+  flex-shrink: 0;         /* prevent shrinking */
+  flex-grow: 0;           /* prevent growing */
+  overflow: hidden;       /* clip anything bigger than the box */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* preserves aspect ratio, scales to fit */
+  display: block;
+}
+
+.hero-icon-box img[src$=".svg"] {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+.hero-city {
+  font-size: 4rem;
+  font-weight: 200;
+  margin-left: 0.25rem;
+  flex-shrink: 0;   /* prevents city text from collapsing */
+}
+
+.hero-right {
+  display: flex;
+  flex-direction: column;
+  align-items: center;   /* center temp and desc horizontally */
+  justify-content: center; /* ensures vertical centering inside the block */
+  margin-left: auto;       /* push to far right */
+}
+
+.hero-temp {
+  font-size: 5.5rem;
+  font-weight: 500;
+  line-height: 1; /* prevents extra vertical space */
+}
+
+.hero-desc {
+  font-size: 1.3rem;
+  opacity: 0.7;
+  margin-top: 0.1rem;
+  margin-bottom: -.75rem; /* small spacing under temp */
+  line-height: 1;      /* ensures it doesn’t add extra height */
+}
+
+/* --- Left Column & Tiles --- */
+.left-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.tiles-row {
+  display: flex;
+  justify-content: space-between; /* spread tiles evenly */
+  align-items: flex-start;        /* align top edges */
+  gap: 1.25rem;
+  width: 100%;                    /* match hero & misc width */
+  margin: 0;                       /* remove extra margin */
+  padding: 0;                      /* remove inner padding if any */
+}
+
+.tile-panel {
+  flex: 1;                         /* all tiles equal width */
+  min-width: 120px;                 /* prevents shrinking too much */
+  padding: 1.8rem;
+}
+
+.tile-top-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+/* Icon */
+.tile-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Text stacked next to icon */
+.tile-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.tile-value-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem; /* controls spacing between value and subValue */
+  flex-wrap: nowrap;
+}
+
+.tile-subvalue {
+  margin-left: 2px;
+  font-size: 0.9rem;        /* smaller than value */
+  font-weight: 300;         /* lighter than value */
+  color: rgba(255,255,255,0.7);  /* slightly muted */
+}
+
+
+/* Header (smaller, muted) */
+.tile-header {
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
+}
+
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers value under icon */
+  gap: 0.2rem;        /* spacing between icon and value */
+}
+
+/* Value under the row, centered under text */
+.tile-value {
+  font-size: 1.7rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin: 0;          /* no extra offset */
+}
+
+/* --- Bottom Misc Info --- */
+.misc-info {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr); /* 3 horizontal columns */
+  gap: 1.5rem;
+}
+
+.misc-entry {
+  display: flex;            /* horizontal layout */
+  align-items: center;      /* vertically center icon and text */
+  gap: 1rem;             /* space between icon and text */
+  min-height: 60px;
+  padding: 1rem;
+  border-radius: 12px;
+}
+
+.misc-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;  /* center text vertically if entry height > text */
+  gap: 0.5rem;
+}
+
+.misc-header {
+  font-size: 0.95rem;
+  color: rgba(255,255,255,0.6);
+}
+
+.misc-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* --- Sun Times Horizontal --- */
+.sun-times-entry {
+  display: flex;
+  gap: 2rem;
+}
+
+.sun-pair {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+}
+
+.sun-times-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sun-label {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.6);
+}
+
+.sun-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: white;
+}
+
+/* --- Hourly Column --- */
+.hourly-column-panel {
+  flex: 0 1 350px;        /* allow vertical growth, keep base width */
+  display: flex;
+  flex-direction: column;
+  padding: 1rem;
+  /* remove height: 100% */
+  overflow-y: auto;        /* scroll if content overflows */
+}
+
+/* Scrollable content inside panel */
+.hourly-column-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.67rem;
+  flex: 1 1 auto;       /* let it fill available height */
+}
+
+/* Each row as a single box inside the panel */
+.hour-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center; 
+  border-radius: 10px;
+  position: relative;
+  flex: 1 1 0;          /* key: allow row to grow evenly */
+  min-height: 0;        /* needed to allow flex-grow properly */
+}
+
+/* Divider between rows using pseudo-element */
+.hour-row:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  bottom: -0.2rem;
+  left: 1rem;        
+  right: 1rem;       
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04); 
+}
+
+
+/* LEFT SIDE: take remaining width */
+.hour-left {
+  display: flex;
+  align-items: center;
+  gap: 0.67rem;
+  flex: 1;                     /* grow to fill row */
+  min-width: 0;                /* allow text to shrink */
+  padding-right: 0.75rem;
+}
+
+
+/* LEFT TEXT stacked vertically */
+.hour-left-text {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-width: 0;
+  max-width: calc(100% - 70px); /* leave space for icon + right column */
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional, cut overflow text */
+  white-space: normal;      /* wrap text to multiple lines */
+}
+
+.hour-time {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.hour-desc {
+  font-size: 0.8rem;
+  opacity: 0.65;
+  white-space: normal;         /* allow wrapping */
+  overflow-wrap: break-word;
+  max-width: 100%;
+  padding-top: 0.22rem;
+}
+
+/* ICON */
+.hourly-icon-box {
+  width: 4.356rem;
+  height: 4.356rem;
+  flex-shrink: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.hourly-icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.hourly-icon-box img[src$=".svg"] {
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+
+.animate-icon {
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+.hour-right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  width: 125px;  
+}
+
+.hour-temp {
+  font-size: 2.35rem;       /* larger font for temperature */
+  white-space: nowrap;     /* prevent wrapping */
+}
+
+.hour-pop {
+  font-size: 0.85rem;      /* smaller, secondary info */
+  opacity: 0.75;
+  text-align: right;
+  white-space: nowrap;      /* don’t wrap */
+}
+
+.animate-icon {
+  animation: float 2s ease-in-out infinite alternate;
+}
+
+.last-updated {
+  position: absolute;
+  top: 100.5%;
+  left: 0.25%;
+  font-size: 0.75rem;
+  color: rgba(255,255,255);
+}
+
+@keyframes float {
+  from { transform: translateY(0px); }
+  to { transform: translateY(-5px); }
+}
+
+/* --- Animations --- */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Responsive --- */
+@media (max-width: 800px) {
+  .weather-wrapper {
+    height: auto;        /* let content dictate total height */
+    min-height: 100vh;   /* still fill the screen initially */
+  }
+  .weather-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .hourly-column {
+    width: 100%;
+    margin-top: 1.5rem;
+  }
+
+  .misc-info {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .misc-entry {
+    gap: 1rem;
+  }
+
+  .misc-icon {
+    width: 40px;
+    height: 40px;
+  }
+
+  .misc-header {
+    font-size: 0.9rem;
+  }
+
+  .misc-value {
+    font-size: 1.2rem;
+  }
+}
+
+
