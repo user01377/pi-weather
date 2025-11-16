@@ -25,7 +25,14 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
     else if (lower.includes("rain")) result = "/rain.svg";
     else if (lower.includes("fog")) result = "/foggy.svg";
     else if (lower.includes("night/cloud")) result = "/night-cloudy.svg";
-    else if (lower.includes("cloud")) result = "/cloudy.svg";
+    else if (
+      lower.includes('/few') ||
+      lower.includes('/sct') ||
+      lower.includes('/bkn') ||
+      lower.includes('/ovc')
+  ) {
+    result = "/cloudy.svg";
+}
     else if (lower.includes("night")) result = pickDeterministicNightIcon();
     else console.warn(`No matching icon: "${iconUrl}"`);
 
