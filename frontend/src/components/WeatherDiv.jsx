@@ -2,16 +2,46 @@ import React from "react";
 import "../styles/weatherdivstyle.css";
 import { GetCustomIcon } from "../utils/icon-mapping.jsx";
 
-export default function WeatherDiv({ data }) {
-  if (!data) return null;
+export default function WeatherDiv({ data, loading, isFetching }) {
+  // Initial loading state
+  if (loading || !data) {
+    return (
+      <div
+        className="weather-wrapper"
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh", // full height to center vertically
+          backgroundColor: "rgba(0, 0, 0, 0.6)", // subtle dark overlay
+        }}
+      >
+        <div
+          className="weather-container"
+          style={{
+            padding: "2rem 3rem",
+            borderRadius: "15px",
+            backgroundColor: "#DBDBDB", // bright background
+            color: "black",
+            fontSize: "2rem",
+            fontWeight: "bold",
+            textAlign: "center",
+            boxShadow: "0 0 20px rgba(0,0,0,0.4)",
+          }}
+        >
+          Loading weather data...
+        </div>
+      </div>
+    );
+  }
 
   // metrics for the tiles
   const tileMetrics = [
     {
       icon: "/display/wind.svg",
       header: "Wind",
-      value: `${data.tiles.wind.value}mp/h`,       // only the number/string
-      subValue: data.tiles.wind.subValue  // optional secondary value
+      value: `${data.tiles.wind.value}mp/h`,
+      subValue: data.tiles.wind.subValue,
     },
     { icon: "/display/humidity.svg", header: "Humidity", value: data.tiles.humidity },
     { icon: "/display/precipitation.svg", header: "Precipitation", value: data.tiles.precipitation },
@@ -37,6 +67,11 @@ export default function WeatherDiv({ data }) {
   return (
     <div className="weather-wrapper">
       <div className="weather-container">
+
+        {/* Refresh indicator for background updates */}
+        {isFetching && (
+          <div className="refreshing-indicator">Updating...</div>
+        )}
 
         {/* Left Column */}
         <div className="left-column">
@@ -68,86 +103,76 @@ export default function WeatherDiv({ data }) {
             </div>
           </div>
 
-
-
-            {/* Tiles */}
-            <div className="tiles-row">
+          {/* Tiles */}
+          <div className="tiles-row">
             {tileMetrics.map(({ icon, header, value, subValue }, idx) => (
               <div key={idx} className="panel tile-panel">
                 <div className="tile-top-row">
                   <img src={icon} alt={header} className="tile-icon" />
-
                   <div className="tile-text">
                     <div className="tile-header">{header}</div>
-
                     <div className="tile-value-row">
                       <span className="tile-value">{value}</span>
                       <span className="tile-subvalue">{subValue}</span>
                     </div>
-
                   </div>
                 </div>
               </div>
             ))}
-            </div>
+          </div>
 
-
-
-
-
-            {/* Misc Info */}
-            <div className="panel misc-info">
-              {/* Row 1 */}
-              <div className="misc-entry">
-                <img src={miscMetrics[0].icon} alt={miscMetrics[0].header} className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">{miscMetrics[0].header}</div>
-                  <div className="misc-value">{miscMetrics[0].value}</div>
-                </div>
-              </div>
-
-              <div className="misc-entry">
-                <img src={miscMetrics[1].icon} alt={miscMetrics[1].header} className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">{miscMetrics[1].header}</div>
-                  <div className="misc-value">{miscMetrics[1].value}</div>
-                </div>
-              </div>
-
-              <div className="misc-entry">
-                <img src={miscMetrics.find(m => typeof m.value === "object").value.sunrise.icon} alt="Sunrise" className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">Sunrise</div>
-                  <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunrise.time}</div>
-                </div>
-              </div>
-
-              {/* Row 2 */}
-              <div className="misc-entry">
-                <img src={miscMetrics[2].icon} alt={miscMetrics[2].header} className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">{miscMetrics[2].header}</div>
-                  <div className="misc-value">{miscMetrics[2].value}</div>
-                </div>
-              </div>
-
-              <div className="misc-entry">
-                <img src={miscMetrics[3].icon} alt={miscMetrics[3].header} className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">{miscMetrics[3].header}</div>
-                  <div className="misc-value">{miscMetrics[3].value}</div>
-                </div>
-              </div>
-
-              <div className="misc-entry">
-                <img src={miscMetrics.find(m => typeof m.value === "object").value.sunset.icon} alt="Sunset" className="icon misc-icon" />
-                <div className="misc-text">
-                  <div className="misc-header">Sunset</div>
-                  <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunset.time}</div>
-                </div>
+          {/* Misc Info */}
+          <div className="panel misc-info">
+            {/* Row 1 */}
+            <div className="misc-entry">
+              <img src={miscMetrics[0].icon} alt={miscMetrics[0].header} className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">{miscMetrics[0].header}</div>
+                <div className="misc-value">{miscMetrics[0].value}</div>
               </div>
             </div>
 
+            <div className="misc-entry">
+              <img src={miscMetrics[1].icon} alt={miscMetrics[1].header} className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">{miscMetrics[1].header}</div>
+                <div className="misc-value">{miscMetrics[1].value}</div>
+              </div>
+            </div>
+
+            <div className="misc-entry">
+              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunrise.icon} alt="Sunrise" className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">Sunrise</div>
+                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunrise.time}</div>
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="misc-entry">
+              <img src={miscMetrics[2].icon} alt={miscMetrics[2].header} className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">{miscMetrics[2].header}</div>
+                <div className="misc-value">{miscMetrics[2].value}</div>
+              </div>
+            </div>
+
+            <div className="misc-entry">
+              <img src={miscMetrics[3].icon} alt={miscMetrics[3].header} className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">{miscMetrics[3].header}</div>
+                <div className="misc-value">{miscMetrics[3].value}</div>
+              </div>
+            </div>
+
+            <div className="misc-entry">
+              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunset.icon} alt="Sunset" className="icon misc-icon" />
+              <div className="misc-text">
+                <div className="misc-header">Sunset</div>
+                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunset.time}</div>
+              </div>
+            </div>
+          </div>
 
           <div className="last-updated">
             {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
@@ -156,21 +181,16 @@ export default function WeatherDiv({ data }) {
                 hour12: true
               })} — KROC INTL METAR`}
           </div>
-          
+
         </div>
-        
 
         {/* Hourly Column */}
         <div className="panel hourly-column-panel">
           <div className="hourly-column-content">
             {data.hourly.map((h, idx) => {
-              // Format hour to 12-hour format like 9AM, 12PM
               const hourFormatted = h.hour.replace(/^0/, '').split(':')[0] + h.hour.slice(-2);
-
               return (
                 <div key={idx} className={`hour-row ${idx % 2 === 0 ? "even" : "odd"}`}>
-
-                  {/* LEFT SIDE: icon + stacked hour & forecast */}
                   <div className="hour-left">
                     <div className="hourly-icon-box">
                       <GetCustomIcon
@@ -184,18 +204,15 @@ export default function WeatherDiv({ data }) {
                       <div className="hour-desc">{h.shortForecast}</div>
                     </div>
                   </div>
-                  {/* RIGHT SIDE: temp + precipitation chance stacked */}
                   <div className="hour-right">
                     <div className="hour-temp">{h.temp}°</div>
                     <div className="hour-pop">Precip: {h.pop}%</div>
                   </div>
-
                 </div>
               );
             })}
           </div>
         </div>
-
 
       </div>
     </div>
