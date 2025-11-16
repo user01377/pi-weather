@@ -8,7 +8,9 @@
   animation: fadeIn 1s ease forwards;
   padding: 1.5rem;
   overflow: hidden;
+  margin-bottom: 1.5rem;
 }
+
 
 /* Optional ice streak highlight */
 /* .panel::after {
@@ -36,8 +38,8 @@
 
 /* --- Shared Icon Styles --- */
 .icon {
-  width: 60px;
-  height: 60px;
+  width: 70px;
+  height: 70px;
   
   transition: transform 0.3s ease, filter 0.3s ease;
 }
@@ -74,7 +76,7 @@
   width: 90%;
   max-width: 85%;
   max-height: 90%;
-  gap: 1rem;
+  gap: 1.5rem;
   position: relative;
 }
 
@@ -90,7 +92,6 @@
   position: relative;
   overflow: hidden;
   padding: 2rem;
-  
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
 }
 
@@ -150,9 +151,7 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
 }
-
 
 .tiles-row {
   display: flex;
@@ -197,12 +196,6 @@
   gap: 0.3rem; /* controls spacing between value and subValue */
 }
 
-.tile-value {
-  font-size: 1.4rem;
-  font-weight: 600;
-  color: white;
-}
-
 .tile-subvalue {
   margin-left: 4px;
   font-size: 0.9rem;        /* smaller than value */
@@ -212,7 +205,7 @@
 
 /* Header (smaller, muted) */
 .tile-header {
-  font-size: 0.9rem;
+  font-size: 0.93rem;
   font-weight: 500;
   color: rgba(255,255,255,0.75);
 }
@@ -226,7 +219,7 @@
 
 /* Value under the row, centered under text */
 .tile-value {
-  font-size: 1.4rem;
+  font-size: 1.8rem;
   font-weight: 600;
   color: white;
   text-align: center;
@@ -243,7 +236,7 @@
 .misc-entry {
   display: flex;            /* horizontal layout */
   align-items: center;      /* vertically center icon and text */
-  gap: 1.2rem;             /* space between icon and text */
+  gap: 0.75rem;             /* space between icon and text */
   min-height: 60px;
   padding: 1rem;
   border-radius: 12px;
@@ -257,12 +250,12 @@
 }
 
 .misc-header {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: rgba(255,255,255,0.6);
 }
 
 .misc-value {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: white;
 }
