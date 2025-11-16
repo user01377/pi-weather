@@ -182,7 +182,7 @@ router.get("/current", async (req, res) => {
 
         cloudCoverage,
 
-        icon: obs?.icon || "default-icon.png",
+        icon: obs?.icon || "err-icon.png",
 
         hourly: next8,
 

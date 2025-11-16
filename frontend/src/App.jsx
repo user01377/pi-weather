@@ -1,9 +1,12 @@
 import React from "react";
+
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 import Background from "./components/Background.jsx";
+
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/call-weather.jsx";
+import { getWeatherKeyword } from './utils/background-iconmapping.jsx';
 
 export default function App() {
   const {
@@ -21,9 +24,12 @@ export default function App() {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 
+  const weatherIconUrl = data?.hero?.icon;
+  const weatherWord = getWeatherKeyword(weatherIconUrl);
+
   return (
     <div className="app">
-      <Background />
+      <Background weather="clear"/>  // {weatherWord}
 
       {isError && (
         <div style={{ color: "red" }}>
