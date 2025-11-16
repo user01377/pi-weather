@@ -158,9 +158,9 @@ router.get("/current", async (req, res) => {
         
         wind: {
           speed: obs?.windSpeed?.value != null
-            ? Math.round(obs.windSpeed.value * 0.621371 * 10) / 10
+            ? Math.round(obs.windSpeed.value * 0.621371)
             : obs?.windGust?.value != null
-              ? Math.round(obs.windGust.value * 0.621371 * 10) / 10
+              ? Math.round(obs.windGust.value * 0.621371)
               : null,
               
           direction: obs?.windDirection?.value ?? null

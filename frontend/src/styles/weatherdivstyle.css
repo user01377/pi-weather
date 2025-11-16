@@ -201,7 +201,7 @@
 }
 
 .tile-subvalue {
-  margin-left: 9px;
+  margin-left: 2px;
   font-size: 0.9rem;        /* smaller than value */
   font-weight: 300;         /* lighter than value */
   color: rgba(255,255,255,0.7);  /* slightly muted */
