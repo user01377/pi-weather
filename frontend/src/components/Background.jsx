@@ -3,7 +3,7 @@ import { getWeatherEffect } from '../utils/weather-effect.jsx';
 
 const WeatherWaveDashboard = ({ weather = "clear" }) => {
   const canvasRef = useRef(null);
-  const currentSettingsRef = useRef(null); // tracks all current state
+  const currentSettingsRef = useRef(null); // tracks current animation state
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -16,31 +16,38 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
     const dayColor = [135, 206, 235];
 
     const lerp = (start, end, t) => start + (end - start) * t;
-    const lerpColor = (c1, c2, t) => (c1 || [135,206,235]).map((v, i) => lerp(v, (c2 || [135,206,235])[i], t));
+    const lerpColor = (c1, c2, t) => c1.map((v, i) => lerp(v, c2[i], t));
     const rgbToString = (rgb) => `rgb(${Math.round(rgb[0])},${Math.round(rgb[1])},${Math.round(rgb[2])})`;
 
-    // Initialize currentSettingsRef if empty
+    const parseColor = (c) => {
+      if (!c) return [255, 255, 255];
+      const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/);
+      return m ? [parseInt(m[1]), parseInt(m[2]), parseInt(m[3])] : [255, 255, 255];
+    };
+
+    // Initialize current settings if not set
     if (!currentSettingsRef.current) {
-      const initialSettings = getWeatherEffect(weather) || {};
+      const initialSettings = getWeatherEffect(weather);
       currentSettingsRef.current = {
         bgColor: dayColor.slice(),
         particlesAlpha: initialSettings.particleColor ? 1 : 0,
-        layers: (initialSettings.layers || []).map((layer, i) => ({ 
-          ...layer, 
+        layers: (initialSettings.layers || []).map((layer, i) => ({
+          ...layer,
           phase: Math.random() * Math.PI * 2,
           baseY: height / 2 + (i - 1) * 30
         })),
         particles: [],
+        currentWaveColor: initialSettings.waveColor || '#ffffff',
+        weatherType: weather,
       };
 
-      // Initialize particles
       if (initialSettings.particleColor) {
         for (let i = 0; i < 120; i++) {
           currentSettingsRef.current.particles.push({
             x: Math.random() * width,
             y: Math.random() * height,
-            vy: (initialSettings.particleSpeed?.[0] ?? 1) + Math.random() * ((initialSettings.particleSpeed?.[1] ?? 3) - (initialSettings.particleSpeed?.[0] ?? 1)),
-            size: (initialSettings.particleSize?.[0] ?? 1) + Math.random() * ((initialSettings.particleSize?.[1] ?? 3) - (initialSettings.particleSize?.[0] ?? 1)),
+            vy: initialSettings.particleSpeed[0] + Math.random() * (initialSettings.particleSpeed[1] - initialSettings.particleSpeed[0]),
+            size: initialSettings.particleSize[0] + Math.random() * (initialSettings.particleSize[1] - initialSettings.particleSize[0]),
           });
         }
       }
@@ -48,9 +55,7 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
 
     const getTimeGradient = () => {
       const hour = new Date().getHours();
-      let t;
-      if (hour >= 6 && hour <= 18) t = (hour - 6) / 12;
-      else t = hour > 18 ? (hour - 18) / 12 : (hour + 6) / 12;
+      let t = hour >= 6 && hour <= 18 ? (hour - 6) / 12 : hour > 18 ? (hour - 18) / 12 : (hour + 6) / 12;
       return hour >= 6 && hour <= 18 ? t : 1 - t;
     };
 
@@ -88,69 +93,73 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
 
     const animate = () => {
       const targetSettings = getWeatherEffect(weather) || {};
+      const current = currentSettingsRef.current;
+
+      // --- Reset particles if weather changed ---
+      if (current.weatherType !== weather) {
+        current.particles = [];
+        current.weatherType = weather;
+        if (targetSettings.particleColor) {
+          for (let i = 0; i < 120; i++) {
+            current.particles.push({
+              x: Math.random() * width,
+              y: Math.random() * height,
+              vy: targetSettings.particleSpeed[0] + Math.random() * (targetSettings.particleSpeed[1] - targetSettings.particleSpeed[0]),
+              size: targetSettings.particleSize[0] + Math.random() * (targetSettings.particleSize[1] - targetSettings.particleSize[0]),
+            });
+          }
+        }
+      }
 
       ctx.clearRect(0, 0, width, height);
 
-      // --- Background interpolation ---
+      // --- Background ---
       const tTime = getTimeGradient();
-      const currentBg = currentSettingsRef.current.bgColor || dayColor.slice();
-      const targetBg = targetSettings.bgColor || dayColor;
-      currentSettingsRef.current.bgColor = lerpColor(currentBg, targetBg, 0.02);
-      const bg = lerpColor(nightColor, currentSettingsRef.current.bgColor, tTime);
+      current.bgColor = lerpColor(current.bgColor, targetSettings.bgColor || dayColor, 0.02);
+      const bg = lerpColor(nightColor, current.bgColor, tTime);
       ctx.fillStyle = rgbToString(bg);
       ctx.fillRect(0, 0, width, height);
 
-      // --- Layers interpolation ---
-      const targetLayers = targetSettings.layers || [];
+      // --- Wave color interpolation ---
+      const targetWaveRGB = parseColor(targetSettings.waveColor || '#ffffff');
+      const currentWaveRGB = parseColor(current.currentWaveColor);
+      const lerpedWaveRGB = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.02));
+      current.currentWaveColor = `rgb(${Math.round(lerpedWaveRGB[0])},${Math.round(lerpedWaveRGB[1])},${Math.round(lerpedWaveRGB[2])})`;
 
-      // Match current layers to target
-      while (currentSettingsRef.current.layers.length < targetLayers.length) {
-        const i = currentSettingsRef.current.layers.length;
-        currentSettingsRef.current.layers.push({
+      // --- Wave layers ---
+      const targetLayers = targetSettings.layers || [];
+      while (current.layers.length < targetLayers.length) {
+        const i = current.layers.length;
+        current.layers.push({
           ...targetLayers[i],
           phase: Math.random() * Math.PI * 2,
           baseY: height / 2 + (i - 1) * 30
         });
       }
-      if (currentSettingsRef.current.layers.length > targetLayers.length) {
-        currentSettingsRef.current.layers.splice(targetLayers.length);
+      if (current.layers.length > targetLayers.length) {
+        current.layers.splice(targetLayers.length);
       }
 
-      // Interpolate layers
-      currentSettingsRef.current.layers.forEach((layer, i) => {
+      current.layers.forEach((layer, i) => {
         const targetLayer = targetLayers[i] || layer;
-        layer.amplitude = lerp(layer.amplitude ?? 20, targetLayer.amplitude ?? 20, 0.02);
-        layer.speed = lerp(layer.speed ?? 0.01, targetLayer.speed ?? 0.01, 0.02);
+        layer.amplitude = lerp(layer.amplitude, targetLayer.amplitude, 0.02);
+        layer.speed = lerp(layer.speed, targetLayer.speed, 0.02);
         layer.phase += layer.speed;
-        drawSinWave({ ...layer, color: targetSettings.waveColor || '#ffffff' });
+        drawSinWave({ ...layer, color: current.currentWaveColor });
       });
 
-      // --- Particle interpolation ---
-      const targetAlpha = targetSettings.particleColor ? 1 : 0;
-      currentSettingsRef.current.particlesAlpha = lerp(currentSettingsRef.current.particlesAlpha ?? 0, targetAlpha, 0.02);
-
-      const desiredCount = targetSettings.particleColor ? 120 : 0;
-      while (currentSettingsRef.current.particles.length < desiredCount) {
-        currentSettingsRef.current.particles.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          vy: (targetSettings.particleSpeed?.[0] ?? 1) + Math.random() * ((targetSettings.particleSpeed?.[1] ?? 3) - (targetSettings.particleSpeed?.[0] ?? 1)),
-          size: (targetSettings.particleSize?.[0] ?? 1) + Math.random() * ((targetSettings.particleSize?.[1] ?? 3) - (targetSettings.particleSize?.[0] ?? 1)),
-        });
-      }
-      if (currentSettingsRef.current.particles.length > desiredCount) {
-        currentSettingsRef.current.particles.splice(0, currentSettingsRef.current.particles.length - desiredCount);
-      }
-
-      currentSettingsRef.current.particles.forEach(p => {
-        const targetSpeed = (targetSettings.particleSpeed?.[0] ?? 1) + Math.random() * ((targetSettings.particleSpeed?.[1] ?? 3) - (targetSettings.particleSpeed?.[0] ?? 1));
-        p.vy = lerp(p.vy ?? 1, targetSpeed, 0.02);
+      // --- Particles ---
+      current.particlesAlpha = lerp(current.particlesAlpha, targetSettings.particleColor ? 1 : 0, 0.02);
+      current.particles.forEach(p => {
+        const targetVy = targetSettings.particleSpeed[0] + Math.random() * (targetSettings.particleSpeed[1] - targetSettings.particleSpeed[0]);
+        p.vy = lerp(p.vy, targetVy, 0.02);
+        const targetSize = targetSettings.particleSize[0] + Math.random() * (targetSettings.particleSize[1] - targetSettings.particleSize[0]);
+        p.size = lerp(p.size, targetSize, 0.02);
       });
-
-      drawParticles(currentSettingsRef.current.particles, targetSettings.particleColor, currentSettingsRef.current.particlesAlpha);
+      drawParticles(current.particles, targetSettings.particleColor, current.particlesAlpha);
 
       // --- Storm flashes ---
-      if (weather?.toLowerCase() === 'storm') {
+      if (weather.toLowerCase() === 'storm') {
         const now = Date.now();
         if (now >= nextFlashTime) {
           ctx.fillStyle = 'rgba(255,255,255,0.15)';
