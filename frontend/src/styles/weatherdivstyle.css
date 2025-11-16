@@ -8,7 +8,9 @@
   animation: fadeIn 1s ease forwards;
   padding: 1.5rem;
   overflow: hidden;
+  margin-bottom: 0;
 }
+
 
 /* Optional ice streak highlight */
 /* .panel::after {
@@ -33,10 +35,11 @@
     rgba(255, 255, 255, 0) 100%
   );
 } */
+
 /* --- Shared Icon Styles --- */
 .icon {
-  width: 60px;
-  height: 60px;
+  width: 78x;
+  height: 78px;
   
   transition: transform 0.3s ease, filter 0.3s ease;
 }
@@ -62,8 +65,7 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: .3rem;
-  font-family: 'Inter', sans-serif;
+  padding-top: .2rem;
 }
 
 .weather-container {
@@ -74,7 +76,7 @@
   width: 90%;
   max-width: 85%;
   max-height: 90%;
-  gap: 2rem;
+  gap: 1.5rem;
   position: relative;
 }
 
@@ -83,20 +85,20 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  gap: 2rem;
 }
 
 /* --- Hero Panel --- */
 .hero-panel {
   position: relative;
   overflow: hidden;
-  padding: 2rem;
-  
+  padding: 2.5rem 2rem;
   box-shadow: 0 12px 40px rgba(0,0,0,0.3);
 }
 
 .hero-icon-box {
-  width: 120px;           /* fixed size */
-  height: 120px;
+  width: 170px;           /* fixed size */
+  height: 170px;
   flex-shrink: 0;         /* prevent shrinking */
   flex-grow: 0;           /* prevent growing */
   overflow: hidden;       /* clip anything bigger than the box */
@@ -117,9 +119,9 @@
 }
 
 .hero-city {
-  font-size: 3rem;
-  font-weight: 100;
-  margin-left: 1rem;
+  font-size: 4rem;
+  font-weight: 200;
+  margin-left: 0.25rem;
   flex-shrink: 0;   /* prevents city text from collapsing */
 }
 
@@ -132,7 +134,7 @@
 }
 
 .hero-temp {
-  font-size: 5rem;
+  font-size: 5.5rem;
   font-weight: 500;
   line-height: 1; /* prevents extra vertical space */
 }
@@ -140,10 +142,10 @@
 .hero-desc {
   font-size: 1.3rem;
   opacity: 0.7;
-  margin-top: 0.4rem; /* small spacing under temp */
+  margin-top: 0.1rem;
+  margin-bottom: -.75rem; /* small spacing under temp */
   line-height: 1;      /* ensures it doesn’t add extra height */
 }
-
 
 /* --- Left Column & Tiles --- */
 .left-column {
@@ -153,54 +155,94 @@
   gap: 2rem;
 }
 
-.tiles-parent {
+.tiles-row {
   display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
+  justify-content: space-between; /* spread tiles evenly */
+  align-items: flex-start;        /* align top edges */
+  gap: 1.25rem;
+  width: 100%;                    /* match hero & misc width */
+  margin: 0;                       /* remove extra margin */
+  padding: 0;                      /* remove inner padding if any */
 }
 
-.tiles-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: stretch;
-  gap: 1.5rem;
+.tile-panel {
+  flex: 1;                         /* all tiles equal width */
+  min-width: 120px;                 /* prevents shrinking too much */
+  padding: 1.8rem;
 }
 
-.tile {
-  flex: 1 1 0;                 /* all tiles share equal space */
-  min-width: 0;                /* allows even shrinking instead of overflow */
+.tile-top-row {
   display: flex;
-  flex-direction: column;
   align-items: center;
+  gap: 1rem;
+}
+
+/* Icon */
+.tile-icon {
+  width: 60px;
+  height: 60px;
+  object-fit: contain;
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+}
+
+/* Text stacked next to icon */
+.tile-text {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  white-space: nowrap;
   gap: 0.5rem;
-  transition: all 0.3s ease;
 }
 
-/* Tile Content */
+.tile-value-row {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.3rem; /* controls spacing between value and subValue */
+  flex-wrap: nowrap;
+}
 
+.tile-subvalue {
+  margin-left: 2px;
+  font-size: 0.9rem;        /* smaller than value */
+  font-weight: 300;         /* lighter than value */
+  color: rgba(255,255,255,0.7);  /* slightly muted */
+}
+
+
+/* Header (smaller, muted) */
 .tile-header {
-  color: rgba(255,255,255,0.6);
-  font-size: 0.9rem;
+  font-size: 0.93rem;
+  font-weight: 500;
+  color: rgba(255,255,255,0.75);
 }
 
+.icon-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* centers value under icon */
+  gap: 0.2rem;        /* spacing between icon and value */
+}
+
+/* Value under the row, centered under text */
 .tile-value {
+  font-size: 1.7rem;
+  font-weight: 600;
   color: white;
-  font-weight: 700;
-  font-size: 1.2rem;
+  text-align: center;
+  margin: 0;          /* no extra offset */
 }
 
 /* --- Bottom Misc Info --- */
 .misc-info {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(3, 1fr); /* 3 horizontal columns */
   gap: 1.5rem;
 }
 
 .misc-entry {
-  flex: 1;
-  min-height: 60px; /* ensures each entry has some vertical weight */
+  display: flex;            /* horizontal layout */
+  align-items: center;      /* vertically center icon and text */
+  gap: 1rem;             /* space between icon and text */
+  min-height: 60px;
   padding: 1rem;
   border-radius: 12px;
 }
@@ -208,15 +250,17 @@
 .misc-text {
   display: flex;
   flex-direction: column;
+  justify-content: center;  /* center text vertically if entry height > text */
+  gap: 0.5rem;
 }
 
 .misc-header {
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: rgba(255,255,255,0.6);
 }
 
 .misc-value {
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 700;
   color: white;
 }
@@ -253,7 +297,7 @@
 
 /* --- Hourly Column --- */
 .hourly-column-panel {
-  flex: 0 1 275px;        /* allow vertical growth, keep base width */
+  flex: 0 1 350px;        /* allow vertical growth, keep base width */
   display: flex;
   flex-direction: column;
   padding: 1rem;
@@ -265,7 +309,7 @@
 .hourly-column-content {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.67rem;
   flex: 1 1 auto;       /* let it fill available height */
 }
 
@@ -273,8 +317,7 @@
 .hour-row {
   display: flex;
   justify-content: space-between;
-  align-items: stretch; 
-  padding: 0.5rem 0.75rem;
+  align-items: center; 
   border-radius: 10px;
   position: relative;
   flex: 1 1 0;          /* key: allow row to grow evenly */
@@ -285,23 +328,24 @@
 .hour-row:not(:last-child)::after {
   content: "";
   position: absolute;
-  bottom: 0;               /* bottom of the row */
-  left: 0;
-  width: 100%;
-  height: 1px;             /* thickness of the divider */
-  background: rgba(255, 255, 255, 0.04);  /* subtle divider */
+  bottom: -0.2rem;
+  left: 1rem;        
+  right: 1rem;       
+  height: 1px;
+  background: rgba(255, 255, 255, 0.04); 
 }
+
 
 /* LEFT SIDE: take remaining width */
 .hour-left {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.67rem;
   flex: 1;                     /* grow to fill row */
   min-width: 0;                /* allow text to shrink */
   padding-right: 0.75rem;
-  border-right: 1px solid rgba(255, 255, 255, 0.2); /* vertical divider */
 }
+
 
 /* LEFT TEXT stacked vertically */
 .hour-left-text {
@@ -309,19 +353,24 @@
   flex-direction: column;
   justify-content: center;
   min-width: 0;
+  max-width: calc(100% - 70px); /* leave space for icon + right column */
+  overflow: hidden;
+  text-overflow: ellipsis; /* optional, cut overflow text */
+  white-space: normal;      /* wrap text to multiple lines */
 }
 
 .hour-time {
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 1rem;
 }
 
 .hour-desc {
   font-size: 0.8rem;
-  opacity: 0.5;
+  opacity: 0.65;
   white-space: normal;         /* allow wrapping */
   overflow-wrap: break-word;
   max-width: 100%;
+  padding-top: 0.22rem;
 }
 
 /* ICON */
@@ -349,28 +398,26 @@
   animation: float 2s ease-in-out infinite alternate;
 }
 
-/* RIGHT SIDE: fixed width */
 .hour-right {
   display: flex;
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  gap: 0.2rem;
-  flex-shrink: 0;              /* don't shrink */
-  width: 50px;                 /* fixed width so divider is even */
-  padding-left: 0.75rem;
-}
-
-.hour-pop, .hour-temp {
-  font-size: 0.9rem;
+  gap: 0.3rem;
+  flex-shrink: 0;
+  width: 125px;  
 }
 
 .hour-temp {
-  font-weight: 500;
+  font-size: 2.35rem;       /* larger font for temperature */
+  white-space: nowrap;     /* prevent wrapping */
 }
 
 .hour-pop {
-  opacity: 0.5;
+  font-size: 0.85rem;      /* smaller, secondary info */
+  opacity: 0.75;
+  text-align: right;
+  white-space: nowrap;      /* don’t wrap */
 }
 
 .animate-icon {
@@ -382,19 +429,13 @@
   top: 100.5%;
   left: 0.25%;
   font-size: 0.75rem;
-  color: rgba(255,255,255,0.5);
+  color: rgba(255,255,255);
 }
 
 @keyframes float {
   from { transform: translateY(0px); }
   to { transform: translateY(-5px); }
 }
-
-/* Text metrics */
-.hour-time { font-weight: 600; font-size: 0.9rem; }
-.hour-desc { font-size: 0.8rem; opacity: 0.7; overflow: hidden; text-overflow: ellipsis; max-width: 100px; }
-.hour-pop, .hour-temp { font-size: 0.9rem; font-weight: 500; }
-
 
 /* --- Animations --- */
 @keyframes fadeIn {
@@ -440,3 +481,5 @@
     font-size: 1.2rem;
   }
 }
+
+

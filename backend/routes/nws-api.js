@@ -62,21 +62,25 @@ router.get("/current", async (req, res) => {
 
         if (Array.isArray(periods) && periods.length > 0) {
           // map next 8 hours
-          next8 = periods.slice(0, 8).map(period => {
-            const date = new Date(period.startTime);
-            return {
-              hour: date.toLocaleTimeString('en-US', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-                timeZone: 'America/New_York',
-              }),
-              temp: period.temperature,
-              shortForecast: period.shortForecast,
-              icon: period.icon,
-              pop: period.probabilityOfPrecipitation?.value ?? 0,
-            };
-          });
+          const now = new Date();
+          next8 = periods
+            .filter(period => new Date(period.startTime) >= now)  // only future/current hours
+            .slice(0, 8)                                          // take the next 8
+            .map(period => {
+              const date = new Date(period.startTime);
+              return {
+                hour: date.toLocaleTimeString('en-US', {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: true,
+                  timeZone: 'America/New_York',
+                }),
+                temp: period.temperature,
+                shortForecast: period.shortForecast,
+                icon: period.icon,
+                pop: period.probabilityOfPrecipitation?.value ?? 0,
+              };
+            });
 
           // calculating current hour precip chance
           const nowHour = new Date().getHours();
@@ -151,12 +155,15 @@ router.get("/current", async (req, res) => {
         dewpoint: obs?.dewpoint?.value != null
         ? Math.round((obs.dewpoint.value * 9 / 5) + 32) // conversion to fahrenheit
         : null,
-
+        
         wind: {
           speed: obs?.windSpeed?.value != null
-            ? Math.round(obs.windSpeed.value * 10) / 10
-            : null,
-          direction: obs?.windDirection?.value ?? null,
+            ? Math.round(obs.windSpeed.value * 0.621371)
+            : obs?.windGust?.value != null
+              ? Math.round(obs.windGust.value * 0.621371)
+              : null,
+              
+          direction: obs?.windDirection?.value ?? null
         },
 
         precipitation: currentPop,
@@ -175,14 +182,13 @@ router.get("/current", async (req, res) => {
 
         cloudCoverage,
 
-        icon: obs?.icon || "default-icon.png",
+        icon: obs?.icon || "err-icon.png",
 
         hourly: next8,
 
         lastUpdated: new Date().toISOString(),
       };
     });
-
     res.json(data);
   } catch (err) {
     console.error(err);
