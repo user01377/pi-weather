@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { getWeatherEffect } from '../utils/weather-effect.jsx';
 
-const WeatherWaveDashboard = ({ weather = "clear" }) => {
+const WeatherWaveDashboard = ({ weather = "clear", sunrise, sunset }) => {
   const canvasRef = useRef(null);
   const currentSettingsRef = useRef(null); // tracks current animation state
 
@@ -53,10 +53,29 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
       }
     }
 
-    const getTimeGradient = () => {
-      const hour = new Date().getHours();
-      let t = hour >= 6 && hour <= 18 ? (hour - 6) / 12 : hour > 18 ? (hour - 18) / 12 : (hour + 6) / 12;
-      return hour >= 6 && hour <= 18 ? t : 1 - t;
+    const parseTimeString = (timeStr) => {
+      if (!timeStr) return null;
+    
+      const [time, modifier] = timeStr.split(' ');
+      let [hours, minutes] = time.split(':').map(Number);
+    
+      if (modifier.toUpperCase() === 'PM' && hours !== 12) hours += 12;
+      if (modifier.toUpperCase() === 'AM' && hours === 12) hours = 0;
+    
+      const date = new Date();
+      date.setHours(hours, minutes, 0, 0);
+      return date;
+    };
+
+    // --- New: gradient based on sunrise/sunset ---
+    const getTimeGradientFromSun = (sunriseStr, sunsetStr) => {
+      const sunriseDate = parseTimeString(sunriseStr);
+      const sunsetDate = parseTimeString(sunsetStr);
+      if (!sunriseDate || !sunsetDate) return 1; // fallback to full day
+    
+      const now = new Date();
+      if (now < sunriseDate || now > sunsetDate) return 0; // night
+      return (now - sunriseDate) / (sunsetDate - sunriseDate); // 0 → 1 during day
     };
 
     const drawSinWave = ({ baseY, amplitude, wavelength, phase, color }) => {
@@ -113,8 +132,8 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
 
       ctx.clearRect(0, 0, width, height);
 
-      // --- Background ---
-      const tTime = getTimeGradient();
+      // --- Background with sunrise/sunset gradient ---
+      const tTime = getTimeGradientFromSun(sunrise, sunset);
       current.bgColor = lerpColor(current.bgColor, targetSettings.bgColor || dayColor, 0.02);
       const bg = lerpColor(nightColor, current.bgColor, tTime);
       ctx.fillStyle = rgbToString(bg);
@@ -186,7 +205,7 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener('resize', handleResize);
     };
-  }, [weather]);
+  }, [weather, sunrise, sunset]); // added sunrise/sunset to deps
 
   return <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />;
 };
