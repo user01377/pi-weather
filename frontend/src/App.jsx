@@ -19,7 +19,7 @@ export default function App() {
     queryFn: fetchWeather,          // Your API helper
     refetchInterval: 240_000,        // Auto-refresh every 4 mins
     staleTime: 90_000,              // Data considered fresh for 1.5 mins
-    refetchOnWindowFocus: true,     // Refresh when user comes back to tab and if stale is True
+    refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
     retry: 2,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
@@ -29,7 +29,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Background weather={weatherWord}/>
+      <Background weather={weatherWord || "clear"} />
 
       {isError && (
         <div style={{ color: "red" }}>

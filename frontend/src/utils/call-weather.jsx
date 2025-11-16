@@ -26,7 +26,7 @@ export async function fetchWeather() {
           ? "" 
           : typeof json.wind?.direction === "number"
             ? degreesToCardinal16(json.wind.direction) 
-            : "gst", 
+            : "gsts", 
       },
       humidity: `${json.humidity ?? "N/A"}%`,
       precipitation: `${json.precipitation ?? 0}%`,
