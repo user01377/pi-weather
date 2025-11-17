@@ -20,6 +20,7 @@ export default function App() {
     refetchInterval: 240_000,        // Auto-refresh every 4 mins
     staleTime: 90_000,              // Data considered fresh for 1.5 mins
     refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
+    refetchIntervalInBackground: true, 
     retry: 2,
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
