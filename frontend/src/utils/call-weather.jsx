@@ -8,7 +8,7 @@ export async function fetchWeather() {
   }
 
   const json = await res.json();
-  // console.log("Raw API data:", json); 
+  console.log("Raw API data:", json); 
 
   // mapping from app.jsx moved to this helper jsx
   const mappedData = {

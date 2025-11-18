@@ -24,7 +24,14 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
     else if (lower.includes("night/rain")) result = "/night-rain.svg";
     else if (lower.includes("rain")) result = "/rain.svg";
     else if (lower.includes("fog")) result = "/foggy.svg";
-    else if (lower.includes("night/cloud")) result = "/night-cloudy.svg";
+    else if (
+      lower.includes('night/few') ||
+      lower.includes('night/sct') ||
+      lower.includes('night/bkn') ||
+      lower.includes('night/ovc')
+  ) {
+    result = "/night-cloudy.svg";
+}
     else if (
       lower.includes('/few') ||
       lower.includes('/sct') ||
