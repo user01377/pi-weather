@@ -28,8 +28,8 @@ export default function App() {
 
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
-
-  // const weatherWord = "null";
+  // console.log(weatherWord);
+  // const weatherWord = "clear";
   // debugging ^^^
 
   useEffect(() => {
