@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from 'react';
 import { getWeatherEffect } from '../utils/weather-effect.jsx';
 
-const WeatherWaveDashboard = ({ weather = "clear" }) => {
+const WeatherWaveDashboard = ({ weather = "clear", className }) => {
   const canvasRef = useRef(null);
-  const currentSettingsRef = useRef(null); // tracks current wave state
+  const currentSettingsRef = useRef(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext('2d');
 
     let width = canvas.width = window.innerWidth;
@@ -14,13 +15,25 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
 
     const lerp = (start, end, t) => start + (end - start) * t;
 
-    const parseColor = (c) => {
-      if (!c) return [255, 255, 255, 1];
-      const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
-      return m ? [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] !== undefined ? parseFloat(m[4]) : 1] : [255, 255, 255, 1];
+    // Initialize or update wave layers
+    const initializeSettings = () => {
+      const effect = getWeatherEffect(weather);
+      currentSettingsRef.current = {
+        layers: (effect.layers || []).map((layer, i) => ({
+          ...layer,
+          phase: Math.random() * Math.PI * 2,
+          baseY: height / 2 + (i - 1) * 30,
+        })),
+        currentWaveColor: effect.waveColor || 'rgba(255,255,255,0.2)',
+        weatherType: weather,
+      };
     };
 
-    const drawSinWave = ({ baseY, amplitude, wavelength, phase, color }) => {
+    if (!currentSettingsRef.current || currentSettingsRef.current.weatherType !== weather) {
+      initializeSettings();
+    }
+
+    const drawWave = ({ baseY, amplitude, wavelength, phase, color }) => {
       ctx.beginPath();
       for (let x = 0; x <= width; x += 2) {
         const y = baseY +
@@ -35,34 +48,26 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
       ctx.stroke();
     };
 
-    // Initialize wave layers
-    if (!currentSettingsRef.current) {
-      const initialSettings = getWeatherEffect(weather);
-      currentSettingsRef.current = {
-        layers: (initialSettings.layers || []).map((layer, i) => ({
-          ...layer,
-          phase: Math.random() * Math.PI * 2,
-          baseY: height / 2 + (i - 1) * 30
-        })),
-        currentWaveColor: initialSettings.waveColor || '#ffffff',
-        weatherType: weather,
-      };
-    }
-
     const animate = () => {
       const current = currentSettingsRef.current;
-      const targetSettings = getWeatherEffect(weather) || {};
+      const targetSettings = getWeatherEffect(weather);
 
-      // Update wave color
-      const targetWaveRGB = parseColor(targetSettings.waveColor || '#ffffff');
-      const currentWaveRGB = parseColor(current.currentWaveColor);
-      const lerpedWave = currentWaveRGB.map((v, i) => lerp(v, targetWaveRGB[i], 0.05));
-      current.currentWaveColor = `rgba(${Math.round(lerpedWave[0])},${Math.round(lerpedWave[1])},${Math.round(lerpedWave[2])},${lerpedWave[3].toFixed(2)})`;
+      // Smoothly lerp wave color
+      const parseRGBA = (c) => {
+        if (!c) return [255, 255, 255, 1];
+        const m = c.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*([0-9.]+))?\)/);
+        return m ? [parseInt(m[1]), parseInt(m[2]), parseInt(m[3]), m[4] ? parseFloat(m[4]) : 1] : [255,255,255,1];
+      };
+
+      const currentRGBA = parseRGBA(current.currentWaveColor);
+      const targetRGBA = parseRGBA(targetSettings.waveColor || 'rgba(255,255,255,0.2)');
+      const lerped = currentRGBA.map((v, i) => lerp(v, targetRGBA[i], 0.05));
+      current.currentWaveColor = `rgba(${Math.round(lerped[0])},${Math.round(lerped[1])},${Math.round(lerped[2])},${lerped[3].toFixed(2)})`;
 
       // Clear canvas
       ctx.clearRect(0, 0, width, height);
 
-      // Update wave layers
+      // Update layers
       const targetLayers = targetSettings.layers || [];
       while (current.layers.length < targetLayers.length) {
         const i = current.layers.length;
@@ -72,16 +77,14 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
           baseY: height / 2 + (i - 1) * 30
         });
       }
-      if (current.layers.length > targetLayers.length) {
-        current.layers.splice(targetLayers.length);
-      }
+      if (current.layers.length > targetLayers.length) current.layers.splice(targetLayers.length);
 
       current.layers.forEach((layer, i) => {
-        const targetLayer = targetLayers[i] || layer;
-        layer.amplitude = lerp(layer.amplitude, targetLayer.amplitude, 0.02);
-        layer.speed = lerp(layer.speed, targetLayer.speed, 0.02);
+        const target = targetLayers[i] || layer;
+        layer.amplitude = lerp(layer.amplitude, target.amplitude, 0.02);
+        layer.speed = lerp(layer.speed, target.speed, 0.02);
         layer.phase += layer.speed;
-        drawSinWave({ ...layer, color: current.currentWaveColor });
+        drawWave({ ...layer, color: current.currentWaveColor });
       });
 
       requestAnimationFrame(animate);
@@ -98,12 +101,11 @@ const WeatherWaveDashboard = ({ weather = "clear" }) => {
     };
 
     window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+    return () => window.removeEventListener('resize', handleResize);
+
   }, [weather]);
 
-  return <canvas ref={canvasRef} style={{ position: 'absolute', top: 0, left: 0, zIndex: -1 }} />;
+  return <canvas ref={canvasRef} className={className} style={{ pointerEvents: 'none' }} />;
 };
 
 export default WeatherWaveDashboard;

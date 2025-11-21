@@ -1,0 +1,28 @@
+/* Wrapper element for the dynamic background */
+.background-wrapper {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+  
+    /* Default CSS variables for gradient */
+    --bg-day: rgb(125, 185, 209);
+    --bg-night: rgb(10, 15, 50);
+    --wave-color: rgba(255, 255, 255, 0.2);
+  
+    /* Smooth transitions */
+    background: linear-gradient(var(--bg-night), var(--bg-day));
+    transition: background 2s linear;
+}
+
+.sine-wave-layer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1; /* above background-wrapper but below content */
+    pointer-events: none; /* ensures clicks go through to your content */
+}

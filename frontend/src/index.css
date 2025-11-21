@@ -61,4 +61,8 @@ html, body {
 
 #root, .app {
   min-height: 100vh;
+  position: relative; /* added for background-wrapper positioning */
+  width: 100%;
+  height: 100%;
+  overflow: hidden;   /* keep everything within bounds */
 }

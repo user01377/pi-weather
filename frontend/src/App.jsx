@@ -1,8 +1,9 @@
-import React from "react";
-
+import React, { useEffect } from "react";
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 import SineWaveLayer from "./components/wave-render.jsx";
+import "./styles/background.css";
+import { updateBackground } from "./components/background-logic.js";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/call-weather.jsx";
@@ -27,11 +28,20 @@ export default function App() {
 
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
-  // const weatherWord = "";
+
+  useEffect(() => {
+    updateBackground(weatherWord || "clear");
+  }, [weatherWord]);
 
   return (
     <div className="app">
-      <SineWaveLayer weather={weatherWord || "clear"} />
+
+      <div className="background-wrapper"></div>
+
+      <SineWaveLayer 
+        weather={weatherWord || "clear"} 
+        className="sine-wave-layer" 
+      />
 
       {isError && (
         <div style={{ color: "red" }}>
