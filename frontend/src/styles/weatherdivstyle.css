@@ -1,7 +1,7 @@
 .panel {
   position: relative;              /* for layering pseudo-elements */
   background: rgba(255, 255, 255, 0.04);  /* very faint white */
-  backdrop-filter: blur(11px);     /* frosted effect */
+  backdrop-filter: blur(3px);
   border-radius: 15px;
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);  /* soft depth */
@@ -11,36 +11,10 @@
   margin-bottom: 0;
 }
 
-
-/* Optional ice streak highlight */
-/* .panel::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.06) 0%,
-    rgba(255, 255, 255, 0.055) 10%,
-    rgba(255, 255, 255, 0.05) 20%,
-    rgba(255, 255, 255, 0.045) 30%,
-    rgba(255, 255, 255, 0.04) 40%,
-    rgba(255, 255, 255, 0.035) 50%,
-    rgba(255, 255, 255, 0.03) 60%,
-    rgba(255, 255, 255, 0.025) 70%,
-    rgba(255, 255, 255, 0.02) 80%,
-    rgba(255, 255, 255, 0.01) 90%,
-    rgba(255, 255, 255, 0) 100%
-  );
-} */
-
 /* --- Shared Icon Styles --- */
 .icon {
   width: 78x;
   height: 78px;
-  
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
@@ -393,11 +367,6 @@
   filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
 }
 
-
-.animate-icon {
-  animation: float 2s ease-in-out infinite alternate;
-}
-
 .hour-right {
   display: flex;
   flex-direction: column;
@@ -420,21 +389,12 @@
   white-space: nowrap;      /* don’t wrap */
 }
 
-.animate-icon {
-  animation: float 2s ease-in-out infinite alternate;
-}
-
 .last-updated {
   position: absolute;
   top: 100.5%;
   left: 0.25%;
   font-size: 0.75rem;
   color: rgba(255,255,255);
-}
-
-@keyframes float {
-  from { transform: translateY(0px); }
-  to { transform: translateY(-5px); }
 }
 
 /* --- Animations --- */
