@@ -1,4 +1,3 @@
-/* Wrapper element for the dynamic background */
 .background-wrapper {
     position: absolute;
     top: 0;
@@ -6,16 +5,25 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-  
-    /* Default CSS variables for gradient */
-    --bg-day: rgb(125, 185, 209);
-    --bg-night: rgb(10, 15, 50);
-    --wave-color: rgba(255, 255, 255, 0.2);
-  
-    /* Smooth transitions */
-    background: linear-gradient(var(--bg-night), var(--bg-day));
-    transition: background 2s linear;
+
+    --bg-base: rgb(125, 185, 209);
+    --bg-weather: rgba(0,0,0,0); /* Weather tint overlay */
+
+    background-color: var(--bg-base);
+    transition: background-color 1s ease;
 }
+
+/* WEATHER TINT LAYER */
+.background-wrapper::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-color: var(--bg-weather);
+    pointer-events: none;
+    mix-blend-mode: soft-light; /* Or multiply/overlay/etc */
+    transition: background-color 1s ease;
+}
+
 
 .sine-wave-layer {
     position: absolute;

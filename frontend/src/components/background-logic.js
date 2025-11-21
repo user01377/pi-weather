@@ -1,25 +1,24 @@
 import { getWeatherEffect } from '../utils/weather-effect';
 
-/**
- * Updates CSS variables for dynamic background
- * @param {string} weather - Weather keyword ('clear', 'cloud', etc.)
- */
 export const updateBackground = (weather) => {
   const wrapper = document.querySelector('.background-wrapper');
   if (!wrapper) return;
 
   const effect = getWeatherEffect(weather);
 
-  // Apply background color for day
-  const dayRGB = effect.bgColor.join(',');
-  wrapper.style.setProperty('--bg-day', `rgb(${dayRGB})`);
+  const hour = new Date().getHours();
+  const isNight = hour < 6 || hour >= 18;
 
-  // Optional: night color is static, or could be calculated
-  wrapper.style.setProperty('--bg-night', `rgb(10, 15, 50)`);
+  // DAY COLOR: effect.bgColor (your weather base)
+  // NIGHT COLOR: static or auto
+  const baseColor = isNight
+    ? 'rgb(10, 15, 50)'
+    : `rgb(${effect.bgColor.join(',')})`;
 
-  // Wave color for sine wave canvas
-  wrapper.style.setProperty('--wave-color', effect.waveColor);
+  // Apply base color
+  wrapper.style.setProperty('--bg-base', baseColor);
 
-  // Update CSS gradient
-  wrapper.style.background = `linear-gradient(var(--bg-night), var(--bg-day))`;
+  // Weather tint (must be valid rgba)
+  // Example: "rgba(255, 255, 255, 0.15)"
+  wrapper.style.setProperty('--bg-weather', effect.waveColor);
 };

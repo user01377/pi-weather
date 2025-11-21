@@ -29,6 +29,9 @@ export default function App() {
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
 
+  // const weatherWord = "null";
+  // debugging ^^^
+
   useEffect(() => {
     updateBackground(weatherWord || "clear");
   }, [weatherWord]);
@@ -39,7 +42,7 @@ export default function App() {
       <div className="background-wrapper"></div>
 
       <SineWaveLayer 
-        weather={weatherWord || "clear"} 
+        weather={weatherWord} 
         className="sine-wave-layer" 
       />
 
