@@ -2,7 +2,7 @@ import React from "react";
 
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
-import Background from "./components/Background.jsx";
+import SineWaveLayer from "./components/wave-render.jsx";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/call-weather.jsx";
@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <Background weather={weatherWord || "clear"} sunrise={data?.misc?.suntimes?.sunrise || "06:00 AM"} sunset={data?.misc?.suntimes?.sunset || "06:00 PM"} />
+      <SineWaveLayer weather={weatherWord || "clear"} sunrise={data?.misc?.suntimes?.sunrise || "06:00 AM"} sunset={data?.misc?.suntimes?.sunset || "06:00 PM"} />
 
       {isError && (
         <div style={{ color: "red" }}>
