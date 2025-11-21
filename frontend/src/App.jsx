@@ -31,7 +31,7 @@ export default function App() {
 
   return (
     <div className="app">
-      <SineWaveLayer weather={weatherWord || "clear"} sunrise={data?.misc?.suntimes?.sunrise || "06:00 AM"} sunset={data?.misc?.suntimes?.sunset || "06:00 PM"} />
+      <SineWaveLayer weather={weatherWord || "clear"} />
 
       {isError && (
         <div style={{ color: "red" }}>
