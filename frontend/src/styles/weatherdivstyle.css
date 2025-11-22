@@ -1,34 +1,36 @@
+:root {
+  --scale: 1.2; /* 1 = normal, 1.4 = 40% bigger */
+}
+
 .panel {
-  position: relative;              /* for layering pseudo-elements */
-  background: rgba(255, 255, 255, 0.04);  /* very faint white */
-  backdrop-filter: blur(3px);
-  border-radius: 15px;
+  position: relative;
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(calc(3px * var(--scale)));
+  border-radius: calc(15px * var(--scale));
   border: 1px solid rgba(255, 255, 255, 0.04);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);  /* soft depth */
-  padding: 1.5rem;
+  box-shadow: 0 calc(8px * var(--scale)) calc(25px * var(--scale)) rgba(0, 0, 0, 0.25);
+  padding: calc(1.5rem * var(--scale));
   overflow: hidden;
   margin-bottom: 0;
 }
 
 /* --- Shared Icon Styles --- */
 .icon {
-  width: 78x;
-  height: 78px;
+  width: calc(78px * var(--scale));
+  height: calc(78px * var(--scale));
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
 .tile-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.5));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.5));
 }
 
-/* Misc-specific highlights */
 .misc-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.4));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.4));
 }
 
-/* Sun icon highlights */
 .sun-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.5));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.5));
 }
 
 /* --- Wrapper & Container --- */
@@ -38,7 +40,7 @@
   align-items: center;
   width: 100%;
   min-height: 100vh;
-  padding-top: .2rem;
+  padding-top: calc(0.2rem * var(--scale));
 }
 
 .weather-container {
@@ -49,7 +51,7 @@
   width: 90%;
   max-width: 85%;
   max-height: 90%;
-  gap: 1.5rem;
+  gap: calc(1.5rem * var(--scale));
   position: relative;
 }
 
@@ -58,23 +60,23 @@
   align-items: center;
   justify-content: space-between;
   width: 100%;
-  gap: 2rem;
+  gap: calc(2rem * var(--scale));
 }
 
 /* --- Hero Panel --- */
 .hero-panel {
   position: relative;
   overflow: hidden;
-  padding: 2.5rem 2rem;
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  padding: calc(2.5rem * var(--scale)) calc(2rem * var(--scale));
+  box-shadow: 0 calc(12px * var(--scale)) calc(40px * var(--scale)) rgba(0,0,0,0.3);
 }
 
 .hero-icon-box {
-  width: 170px;           /* fixed size */
-  height: 170px;
-  flex-shrink: 0;         /* prevent shrinking */
-  flex-grow: 0;           /* prevent growing */
-  overflow: hidden;       /* clip anything bigger than the box */
+  width: calc(170px * var(--scale));
+  height: calc(170px * var(--scale));
+  flex-shrink: 0;
+  flex-grow: 0;
+  overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -83,41 +85,41 @@
 .hero-icon-img {
   width: 100%;
   height: 100%;
-  object-fit: contain;   /* preserves aspect ratio, scales to fit */
+  object-fit: contain;
   display: block;
 }
 
 .hero-icon-box img[src$=".svg"] {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.6));
 }
 
 .hero-city {
-  font-size: 4rem;
+  font-size: calc(4rem * var(--scale));
   font-weight: 200;
-  margin-left: 0.25rem;
-  flex-shrink: 0;   /* prevents city text from collapsing */
+  margin-left: calc(0.25rem * var(--scale));
+  flex-shrink: 0;
 }
 
 .hero-right {
   display: flex;
   flex-direction: column;
-  align-items: center;   /* center temp and desc horizontally */
-  justify-content: center; /* ensures vertical centering inside the block */
-  margin-left: auto;       /* push to far right */
+  align-items: center;
+  justify-content: center;
+  margin-left: auto;
 }
 
 .hero-temp {
-  font-size: 5.5rem;
+  font-size: calc(5.5rem * var(--scale));
   font-weight: 500;
-  line-height: 1; /* prevents extra vertical space */
+  line-height: 1;
 }
 
 .hero-desc {
-  font-size: 1.3rem;
+  font-size: calc(1.3rem * var(--scale));
   opacity: 0.7;
-  margin-top: 0.1rem;
-  margin-bottom: -.75rem; /* small spacing under temp */
-  line-height: 1;      /* ensures it doesn’t add extra height */
+  margin-top: calc(0.1rem * var(--scale));
+  margin-bottom: calc(-0.75rem * var(--scale));
+  line-height: 1;
 }
 
 /* --- Left Column & Tiles --- */
@@ -125,65 +127,61 @@
   flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: calc(2rem * var(--scale));
 }
 
 .tiles-row {
   display: flex;
-  justify-content: space-between; /* spread tiles evenly */
-  align-items: flex-start;        /* align top edges */
-  gap: 1.25rem;
-  width: 100%;                    /* match hero & misc width */
-  margin: 0;                       /* remove extra margin */
-  padding: 0;                      /* remove inner padding if any */
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: calc(1.25rem * var(--scale));
+  width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 .tile-panel {
-  flex: 1;                         /* all tiles equal width */
-  min-width: 120px;                 /* prevents shrinking too much */
-  padding: 1.8rem;
+  flex: 1;
+  min-width: calc(120px * var(--scale));
+  padding: calc(1.8rem * var(--scale));
 }
 
 .tile-top-row {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: calc(1rem * var(--scale));
 }
 
-/* Icon */
 .tile-icon {
-  width: 60px;
-  height: 60px;
+  width: calc(60px * var(--scale));
+  height: calc(60px * var(--scale));
   object-fit: contain;
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.6));
 }
 
-/* Text stacked next to icon */
 .tile-text {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  gap: 0.5rem;
+  gap: calc(0.5rem * var(--scale));
 }
 
 .tile-value-row {
   display: inline-flex;
   align-items: baseline;
-  gap: 0.3rem; /* controls spacing between value and subValue */
+  gap: calc(0.3rem * var(--scale));
   flex-wrap: nowrap;
 }
 
 .tile-subvalue {
-  margin-left: 2px;
-  font-size: 0.9rem;        /* smaller than value */
-  font-weight: 300;         /* lighter than value */
-  color: rgba(255,255,255,0.7);  /* slightly muted */
+  margin-left: calc(2px * var(--scale));
+  font-size: calc(0.9rem * var(--scale));
+  font-weight: 300;
+  color: rgba(255,255,255,0.7);
 }
 
-
-/* Header (smaller, muted) */
 .tile-header {
-  font-size: 0.93rem;
+  font-size: calc(0.93rem * var(--scale));
   font-weight: 500;
   color: rgba(255,255,255,0.75);
 }
@@ -191,165 +189,152 @@
 .icon-container {
   display: flex;
   flex-direction: column;
-  align-items: center; /* centers value under icon */
-  gap: 0.2rem;        /* spacing between icon and value */
+  align-items: center;
+  gap: calc(0.2rem * var(--scale));
 }
 
-/* Value under the row, centered under text */
 .tile-value {
-  font-size: 1.7rem;
+  font-size: calc(1.7rem * var(--scale));
   font-weight: 600;
   color: white;
   text-align: center;
-  margin: 0;          /* no extra offset */
+  margin: 0;
 }
 
-/* --- Bottom Misc Info --- */
 .misc-info {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3 horizontal columns */
-  gap: 1.5rem;
+  grid-template-columns: repeat(3, 1fr);
+  gap: calc(1.5rem * var(--scale));
 }
 
 .misc-entry {
-  display: flex;            /* horizontal layout */
-  align-items: center;      /* vertically center icon and text */
-  gap: 1rem;             /* space between icon and text */
-  min-height: 60px;
-  padding: 1rem;
-  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  gap: calc(1rem * var(--scale));
+  min-height: calc(60px * var(--scale));
+  padding: calc(1rem * var(--scale));
+  border-radius: calc(12px * var(--scale));
 }
 
 .misc-text {
   display: flex;
   flex-direction: column;
-  justify-content: center;  /* center text vertically if entry height > text */
-  gap: 0.5rem;
+  justify-content: center;
+  gap: calc(0.5rem * var(--scale));
 }
 
 .misc-header {
-  font-size: 0.95rem;
+  font-size: calc(0.95rem * var(--scale));
   color: rgba(255,255,255,0.6);
 }
 
 .misc-value {
-  font-size: 1.6rem;
+  font-size: calc(1.6rem * var(--scale));
   font-weight: 700;
   color: white;
 }
 
-/* --- Sun Times Horizontal --- */
 .sun-times-entry {
   display: flex;
-  gap: 2rem;
+  gap: calc(2rem * var(--scale));
 }
 
 .sun-pair {
   display: flex;
   align-items: center;
-  gap: 2rem;
+  gap: calc(2rem * var(--scale));
 }
 
 .sun-times-text {
   display: flex;
   flex-direction: column;
-  gap: 0.25rem;
+  gap: calc(0.25rem * var(--scale));
 }
 
 .sun-label {
-  font-size: 0.9rem;
+  font-size: calc(0.9rem * var(--scale));
   font-weight: 500;
   color: rgba(255,255,255,0.6);
 }
 
 .sun-value {
-  font-size: 1.2rem;
+  font-size: calc(1.2rem * var(--scale));
   font-weight: 700;
   color: white;
 }
 
-/* --- Hourly Column --- */
 .hourly-column-panel {
-  flex: 0 1 350px;        /* allow vertical growth, keep base width */
+  flex: 0 1 calc(300px * var(--scale));
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  /* remove height: 100% */
-  overflow-y: auto;        /* scroll if content overflows */
+  padding: calc(1rem * var(--scale));
+  overflow-y: auto;
 }
 
-/* Scrollable content inside panel */
 .hourly-column-content {
   display: flex;
   flex-direction: column;
-  gap: 0.67rem;
-  flex: 1 1 auto;       /* let it fill available height */
+  gap: calc(0.67rem * var(--scale));
+  flex: 1 1 auto;
 }
 
-/* Each row as a single box inside the panel */
 .hour-row {
   display: flex;
   justify-content: space-between;
-  align-items: center; 
-  border-radius: 10px;
+  align-items: center;
+  border-radius: calc(10px * var(--scale));
   position: relative;
-  flex: 1 1 0;          /* key: allow row to grow evenly */
-  min-height: 0;        /* needed to allow flex-grow properly */
+  flex: 1 1 0;
+  min-height: 0;
 }
 
-/* Divider between rows using pseudo-element */
 .hour-row:not(:last-child)::after {
   content: "";
   position: absolute;
-  bottom: -0.2rem;
-  left: 1rem;        
-  right: 1rem;       
+  bottom: calc(-0.2rem * var(--scale));
+  left: calc(1rem * var(--scale));
+  right: calc(1rem * var(--scale));
   height: 1px;
-  background: rgba(255, 255, 255, 0.04); 
+  background: rgba(255, 255, 255, 0.04);
 }
 
-
-/* LEFT SIDE: take remaining width */
 .hour-left {
   display: flex;
   align-items: center;
-  gap: 0.67rem;
-  flex: 1;                     /* grow to fill row */
-  min-width: 0;                /* allow text to shrink */
-  padding-right: 0.75rem;
+  gap: calc(0.67rem * var(--scale));
+  flex: 1;
+  min-width: 0;
+  padding-right: calc(0.75rem * var(--scale));
 }
 
-
-/* LEFT TEXT stacked vertically */
 .hour-left-text {
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-width: 0;
-  max-width: calc(100% - 70px); /* leave space for icon + right column */
+  max-width: calc(100% - (70px * var(--scale)));
   overflow: hidden;
-  text-overflow: ellipsis; /* optional, cut overflow text */
-  white-space: normal;      /* wrap text to multiple lines */
+  text-overflow: ellipsis;
+  white-space: normal;
 }
 
 .hour-time {
   font-weight: 600;
-  font-size: 1rem;
+  font-size: calc(1rem * var(--scale));
 }
 
 .hour-desc {
-  font-size: 0.8rem;
+  font-size: calc(0.8rem * var(--scale));
   opacity: 0.65;
-  white-space: normal;         /* allow wrapping */
+  white-space: normal;
   overflow-wrap: break-word;
   max-width: 100%;
-  padding-top: 0.22rem;
+  padding-top: calc(0.22rem * var(--scale));
 }
 
-/* ICON */
 .hourly-icon-box {
-  width: 4.356rem;
-  height: 4.356rem;
+  width: calc(4.356rem * var(--scale));
+  height: calc(4.356rem * var(--scale));
   flex-shrink: 0;
   display: flex;
   justify-content: center;
@@ -363,7 +348,7 @@
 }
 
 .hourly-icon-box img[src$=".svg"] {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.6));
 }
 
 .hour-right {
@@ -371,42 +356,41 @@
   flex-direction: column;
   align-items: flex-end;
   justify-content: center;
-  gap: 0.3rem;
+  gap: calc(0.3rem * var(--scale));
   flex-shrink: 0;
-  width: 125px;  
+  width: calc(125px * var(--scale));
 }
 
 .hour-temp {
-  font-size: 2.35rem;       /* larger font for temperature */
-  white-space: nowrap;     /* prevent wrapping */
+  font-size: calc(2.35rem * var(--scale));
+  white-space: nowrap;
 }
 
 .hour-pop {
-  font-size: 0.85rem;      /* smaller, secondary info */
+  font-size: calc(0.85rem * var(--scale));
   opacity: 0.75;
   text-align: right;
-  white-space: nowrap;      /* don’t wrap */
+  white-space: nowrap;
 }
 
 .last-updated {
   position: absolute;
   top: 100.5%;
   left: 0.25%;
-  font-size: 0.75rem;
+  font-size: 0.9rem;
   color: rgba(255,255,255);
 }
 
-/* --- Animations --- */
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
+  from { opacity: 0; transform: translateY(calc(10px * var(--scale))); }
   to { opacity: 1; transform: translateY(0); }
 }
 
 /* --- Responsive --- */
 @media (max-width: 800px) {
   .weather-wrapper {
-    height: auto;        /* let content dictate total height */
-    min-height: 100vh;   /* still fill the screen initially */
+    height: auto;
+    min-height: 100vh;
   }
   .weather-container {
     flex-direction: column;
@@ -415,30 +399,28 @@
 
   .hourly-column {
     width: 100%;
-    margin-top: 1.5rem;
+    margin-top: calc(1.5rem * var(--scale));
   }
 
   .misc-info {
     grid-template-columns: 1fr;
-    gap: 1rem;
+    gap: calc(1rem * var(--scale));
   }
 
   .misc-entry {
-    gap: 1rem;
+    gap: calc(1rem * var(--scale));
   }
 
   .misc-icon {
-    width: 40px;
-    height: 40px;
+    width: calc(40px * var(--scale));
+    height: calc(40px * var(--scale));
   }
 
   .misc-header {
-    font-size: 0.9rem;
+    font-size: calc(0.9rem * var(--scale));
   }
 
   .misc-value {
-    font-size: 1.2rem;
+    font-size: calc(1.2rem * var(--scale));
   }
 }
-
-
