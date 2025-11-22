@@ -13,17 +13,23 @@ export const updateBackground = (weather, sunriseStr, sunsetStr) => {
 
   const isNight = now < sunriseDate || now >= sunsetDate;
 
-  // console.log("Weather:", weather);
-  // console.log("Sunrise:", sunriseStr, "=>", sunriseDate);
-  // console.log("Sunset:", sunsetStr, "=>", sunsetDate);
-  // console.log("Is night?", isNight);
-  // console.log("Effect:", effect);
+  console.log("Weather:", weather);
+  console.log("Sunrise:", sunriseStr, "=>", sunriseDate);
+  console.log("Sunset:", sunsetStr, "=>", sunsetDate);
+  console.log("Is night?", isNight);
+  console.log("Effect:", effect);
 
-  const baseColor = isNight
-    ? 'rgb(10, 15, 50)'
-    : `rgb(${effect.bgColor.join(',')})`;
+  let baseColor;
+  
+  if (!isNight && weather === 'snow') {
+    // Force an icy daytime color for snow
+    baseColor = 'rgb(150, 180, 230)';
+  } else {
+    baseColor = isNight
+      ? 'rgb(10, 15, 50)'
+      : `rgb(${effect.bgColor.join(',')})`;
+  }
 
   wrapper.style.setProperty('--bg-base', baseColor);
   wrapper.style.setProperty('--bg-weather', effect.waveColor);
 };
-

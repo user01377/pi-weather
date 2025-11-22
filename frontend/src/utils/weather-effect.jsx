@@ -24,8 +24,8 @@ export const getWeatherEffect = (weather) => {
 
     case 'snow':
       return {
-        waveColor: 'rgba(240, 240, 255, 0.1)', // icy, subtle waves
-        bgColor: [200 * 0.85, 220 * 0.85, 255 * 0.85],
+        waveColor: 'rgba(255, 250, 250, 0.3)', // icy, subtle waves
+        bgColor: [150, 180, 230],
         layers: [
           { amplitude: 20, wavelength: 300, speed: 0.0005 },
           { amplitude: 22, wavelength: 500, speed: 0.0007 },
@@ -35,7 +35,7 @@ export const getWeatherEffect = (weather) => {
 
     case 'rain':
       return {
-        waveColor: 'rgba(60, 60, 245, 0.1)',  // faint bluish waves
+        waveColor: 'rgba(60, 60, 245, 0.2)',  // faint bluish waves
         bgColor: [90, 120, 160],               // darker, rainy sky
         layers: [
           { amplitude: 35, wavelength: 300, speed: 0.0025 },
@@ -46,7 +46,7 @@ export const getWeatherEffect = (weather) => {
 
     case 'storm':
       return {
-        waveColor: 'rgba(120, 40, 160, 0.2)', // dramatic, dark purple waves
+        waveColor: 'rgba(120, 40, 160, 0.23)', // dramatic, dark purple waves
         bgColor: [40, 50, 90],                // stormy night blue
         layers: [
           { amplitude: 60, wavelength: 300, speed: 0.003 },
