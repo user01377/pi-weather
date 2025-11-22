@@ -28,13 +28,14 @@ export default function App() {
 
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
-  // console.log(weatherWord);
-  // const weatherWord = "clear";
+  // const weatherWord = "snow";
   // debugging ^^^
 
   useEffect(() => {
-    updateBackground(weatherWord || "clear");
-  }, [weatherWord]);
+    if (!data?.misc?.suntimes) return;
+
+    updateBackground(weatherWord || "clear", data?.misc?.suntimes?.sunrise || "06:00 AM", data?.misc?.suntimes?.sunset || "06:00 PM");
+  }, [weatherWord, data]);
 
   return (
     <div className="app">

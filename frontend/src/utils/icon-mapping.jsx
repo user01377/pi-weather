@@ -23,7 +23,6 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
     else if (lower.includes("thunder")) result = "/thunder.svg";
     else if (lower.includes("night/rain")) result = "/night-rain.svg";
     else if (lower.includes("rain")) result = "/rain.svg";
-    else if (lower.includes("fog")) result = "/foggy.svg";
     else if (
       lower.includes('night/few') ||
       lower.includes('night/sct') ||
