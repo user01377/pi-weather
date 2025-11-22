@@ -8,7 +8,7 @@ const router = express.Router();
 const DEFAULT_LAT = 43.083308;
 const DEFAULT_LON = -77.676973;
 const STATION_ID = "KROC";
-const CACHE_DURATION = 10 * 1000; // seconds for cache to last
+const CACHE_DURATION = 30 * 1000; // seconds for cache to last
 
 let cache = {};
 
