@@ -98,7 +98,7 @@ const WeatherWaveDashboard = ({ weather = "clear", className }) => {
           const target = targetLayers[i] || layer;
           layer.amplitude = lerp(layer.amplitude, target.amplitude, 0.02);
           layer.speed = lerp(layer.speed, target.speed, 0.02);
-          layer.phase += layer.speed;
+          layer.phase += layer.speed * 2;
           drawWave({ ...layer, color: current.currentWaveColor });
         });
       }
