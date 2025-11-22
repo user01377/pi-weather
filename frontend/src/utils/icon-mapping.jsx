@@ -15,32 +15,38 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
     let result = "/day.svg";
 
     const pickDeterministicNightIcon = () => {
-      const h = hashString(lower); // 0–1 pseudo-random but deterministic
-      return h < 0.6 ? "/moon.svg" : "/team.png"; // weighted
+      const h = hashString(lower); // 0–1 pseudo-random deterministic
+      console.log("Night hash:", h); // <— debug log
+      const icon = h < 0.6 ? "/moon.svg" : "/team.png";
+      console.log("Chosen night icon:", icon); // <— debug log
+      return icon;
     };
 
     if (lower.includes("snow")) result = "/snow.svg";
+
     else if (lower.includes("thunder")) result = "/thunder.svg";
+
     else if (lower.includes("night/rain")) result = "/night-rain.svg";
+
     else if (lower.includes("rain")) result = "/rain.svg";
+
     else if (
-      lower.includes('night/few') ||
-      lower.includes('night/sct') ||
       lower.includes('night/bkn') ||
       lower.includes('night/ovc')
   ) {
     result = "/night-cloudy.svg";
 }
+
     else if (
-      lower.includes('/few') ||
-      lower.includes('/sct') ||
       lower.includes('/bkn') ||
       lower.includes('/ovc')
   ) {
     result = "/cloudy.svg";
 }
+
     else if (lower.includes("night")) result = pickDeterministicNightIcon();
-    else console.warn(`No matching icon: "${iconUrl}"`);
+    
+    else console.warn(`Defaulting To Day Icon With: ${iconUrl}`);
 
     return result;
   }, [lower]);
