@@ -16,7 +16,7 @@ const WeatherWaveDashboard = ({ weather = "clear", className }) => {
     const lerp = (start, end, t) => start + (end - start) * t;
 
     // Precompute sine values
-    const SINE_RESOLUTION = 500; // number of points per full sine cycle
+    const SINE_RESOLUTION = 256; // number of points per full sine cycle
     const sineLookup = new Array(SINE_RESOLUTION);
     for (let i = 0; i < SINE_RESOLUTION; i++) {
       sineLookup[i] = Math.sin((i / SINE_RESOLUTION) * 2 * Math.PI);
