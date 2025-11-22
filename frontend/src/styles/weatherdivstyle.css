@@ -18,17 +18,17 @@
 }
 
 .tile-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.5));
 }
 
 /* Misc-specific highlights */
 .misc-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.4));
 }
 
 /* Sun icon highlights */
 .sun-icon.icon {
-  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.6));
+  filter: brightness(0) invert(1) drop-shadow(0 0 6px rgba(255,255,255,0.5));
 }
 
 /* --- Wrapper & Container --- */
