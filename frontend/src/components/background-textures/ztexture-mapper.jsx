@@ -2,41 +2,41 @@
 
 import React from "react";
 import { NightClearTexture } from "./night-clear-texture";
-import { DayClearTexture } from "./day-clear-texture";
+// import { DayClearTexture } from "./day-clear-texture";
 // import RainTexture from "./rain-texture";
 // import SnowTexture from "./snow-texture";
 // import StormTexture from "./storm-texture";
-// import CloudTexture from "./cloud-texture";
+import { CloudTexture } from "./cloud-texture";
 
 /**
  * Returns the appropriate weather texture component.
  * 
  * @param {string} weather - the weather keyword
- * @param {number} opacity - optional, default opacity for the texture/noise
  * @param {boolean} isNight - true if it is currently night
+ * @param {string} cloudType - cloud type
  */
 
-export function getWeatherTexture(weather, opacity = 0.2, isNight) {
+export function getWeatherTexture(weather, isNight, cloudType) {
   switch (weather) {
     // case "rain":
-    //   return <RainTexture opacity={opacity} />;
+    //   return <RainTexture />;
 
     // case "snow":
-    //   return <SnowTexture opacity={opacity} />;
+    //   return <SnowTexture />;
 
     // case "storm":
-    //   return <StormTexture opacity={opacity} />;
+    //   return <StormTexture />;
 
-    // case "cloud":
-    //   return <CloudTexture opacity={opacity} />;
+    case "cloud":
+      return <CloudTexture type = {cloudType}/>;
 
     case "clear": 
       if (isNight) {
-        // pass opacity to NightClearTexture as noiseOpacity
-        return <NightClearTexture noiseOpacity={opacity} />;
+        return <NightClearTexture />;
+
       } else {
-        // pass opacity to DayClearTexture (adjust prop name if needed)
-        return <DayClearTexture opacity={opacity} />;
+
+        // return <DayClearTexture />;
       }
 
     default:

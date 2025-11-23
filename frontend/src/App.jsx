@@ -19,66 +19,84 @@ export default function App() {
     isLoading,
     isError,
     error,
-  } = useQuery({
-    queryKey: ["weather"],         // Unique key for caching
-    queryFn: fetchWeather,          // Your API helper
-    refetchInterval: 240_000,        // Auto-refresh every 4 mins
-    staleTime: 90_000,              // Data considered fresh for 1.5 mins
-    refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
-    refetchIntervalInBackground: true, 
-    retry: 2,
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
-  });
+    } = useQuery({
+      queryKey: ["weather"],         // Unique key for caching
+      queryFn: fetchWeather,          // Your API helper
+      refetchInterval: 240_000,        // Auto-refresh every 4 mins
+      staleTime: 90_000,              // Data considered fresh for 1.5 mins
+      refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
+      refetchIntervalInBackground: true, 
+      retry: 2,
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+    });
 
     // computes weather key word for background color and background weather effect "texture"
     const weatherIconUrl = data?.hero?.icon ?? "clear";
-    const weatherWord = getWeatherKeyword(weatherIconUrl);
-    // const weatherWord = "";
+    // const weatherWord = getWeatherKeyword(weatherIconUrl);
+    const weatherWord = "cloud";
     // debugging ^^^
 
-  const night = isNightNow(
-    data?.misc?.suntimes?.sunrise || "06:00 AM",
-    data?.misc?.suntimes?.sunset || "06:00 PM"
-  );
+    // computes the true false boolean for night
+    const night = isNightNow(
+      data?.misc?.suntimes?.sunrise || "06:00 AM",
+      data?.misc?.suntimes?.sunset || "06:00 PM"
+    );
 
-  // const night = true;
-  // debugging ^^^
+    // const night = true;
+    // debugging ^^^
 
-  // track previous weather/night for memoization
-  const [prevWeatherWord, setPrevWeatherWord] = useState(null);
-  const [prevNight, setPrevNight] = useState(null);
-
-  const shouldUpdateBackground =
-    prevWeatherWord !== weatherWord || prevNight !== night;
-
-  useEffect(() => {
-    if (!data?.misc?.suntimes) return;
-
-    if (prevWeatherWord === null || prevNight === null || shouldUpdateBackground) {
-      updateBackground(weatherWord || "clear", night);
-      setPrevWeatherWord(weatherWord);
-      setPrevNight(night);
+    // stores the cloud data into a variable
+    const cloudMap = {
+      "/few": "few",
+      "/sct": "sct",
+      "/bkn": "bkn",
+      "/ovc": "ovc",
+    };
+    
+    let cloudType = null;
+    for (const key in cloudMap) {
+      if (weatherIconUrl.includes(key)) {
+        cloudType = cloudMap[key];
+        break; // stop at the first match
+      }
     }
-  }, [shouldUpdateBackground, weatherWord, night, data, prevWeatherWord, prevNight]);
+    
 
-  // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
-  const memoizedTexture = useMemo(() => {
-    return getWeatherTexture(weatherWord || "clear", night);
-  }, [prevWeatherWord, prevNight]); // depends on previous states for comparison
+    // track previous weather/night for memoization
+    const [prevWeatherWord, setPrevWeatherWord] = useState(null);
+    const [prevNight, setPrevNight] = useState(null);
+
+    const shouldUpdateBackground =
+      prevWeatherWord !== weatherWord || prevNight !== night;
+
+    useEffect(() => {
+      if (!data?.misc?.suntimes) return;
+
+      if (prevWeatherWord === null || prevNight === null || shouldUpdateBackground) {
+        updateBackground(weatherWord || "clear", night);
+        setPrevWeatherWord(weatherWord);
+        setPrevNight(night);
+      }
+    }, [shouldUpdateBackground, weatherWord, night, data, prevWeatherWord, prevNight]);
+
+    // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
+    const memoizedTexture = useMemo(() => {
+      return getWeatherTexture(weatherWord || "clear", night);
+    }, [prevWeatherWord, prevNight]);
 
   return (
     <div className="app">
 
       {/* always mount the texture once, then memoize for future updates */}
       {prevWeatherWord === null || prevNight === null ? 
-        getWeatherTexture(weatherWord || "clear", night) 
+        getWeatherTexture(weatherWord || "clear", night, cloudType) 
         : memoizedTexture
       }
 
       {/* background color layer */}
       <div className="background-wrapper"></div>
 
-      {/* always re-render the UI component */}
+      {/* always re-render the UI data component */}
       <div style={{ position: "relative", zIndex: 1 }}>
         {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
         {!isError && <WeatherDiv data={data} loading={isLoading} />}

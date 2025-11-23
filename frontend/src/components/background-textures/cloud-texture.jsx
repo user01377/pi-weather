@@ -1,43 +1,100 @@
 import React from "react";
 
 export function CloudTexture({
-  waveColor = "rgba(255, 255, 255, 0.2)", 
+  type,
+  waveColor = "rgba(255, 255, 255, 0.2)",
 }) {
+
+  const cloudType = type || "sct";
+
+  // Cloud type configuration
+  const cloudConfigs = {
+    few: { layers: 1, amplitude: 25, peaks: 12, opacity: 0.15 },
+    sct: { layers: 2, amplitude: 35, peaks: 14, opacity: 0.18 },
+    bkn: { layers: 3, amplitude: 45, peaks: 16, opacity: 0.22 },
+    ovc: { layers: 4, amplitude: 60, peaks: 18, opacity: 0.28 },
+  };
+
+  const config = cloudConfigs[cloudType] || cloudConfigs["sct"];
+
+  // Generate smooth wavy path
+  const generatePath = (width = 1440, height = 320, amplitude = 40, peaks = 12) => {
+    const segment = width / peaks;
+    const points = [];
+
+    // Generate y-values for each peak
+    for (let i = 0; i <= peaks; i++) {
+      const x = i * segment;
+      const baseY = height / 2;
+      const y = baseY + (Math.random() - 0.5) * amplitude;
+      points.push({ x, y });
+    }
+
+    // Build smooth cubic path
+    let d = `M0,${points[0].y}`;
+    for (let i = 1; i < points.length; i++) {
+      const prev = points[i - 1];
+      const curr = points[i];
+      const cpX = prev.x + (curr.x - prev.x) / 2;
+      const cpY = prev.y + (curr.y - prev.y) / 2;
+      d += ` C${cpX},${cpY} ${cpX},${cpY} ${curr.x},${curr.y}`;
+    }
+
+    // Close path to bottom
+    d += ` L${width},${height} L0,${height} Z`;
+    return d;
+  };
+
+  // Calculate heights for each layer (inner layers smaller, outer layers taller)
+  const layerHeights = Array.from({ length: config.layers }, (_, i) =>
+    ((i + 1) / config.layers) * 60
+  );
+
   return (
     <div
-      className="wave-background"
       style={{
         position: "absolute",
         inset: 0,
         pointerEvents: "none",
         overflow: "hidden",
-        zIndex: 0, // ensures it sits above wrapper but below UI
+        zIndex: 0,
       }}
     >
-      {/* Wave Layers */}
-      <svg
-        style={{ position: "absolute", bottom: 0, width: "100%", height: "40%" }}
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
-      >
-        <path
-          fill={waveColor}
-          d="M0,224L48,218.7C96,213,192,203,288,208C384,213,480,235,576,240C672,245,768,235,864,234.7C960,235,1056,245,1152,234.7C1248,224,1344,192,1392,176L1440,160L1440,320L1392,320C1344,320,1248,320,
-1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"
-        />
-      </svg>
+      {layerHeights.map((height, i) => {
+        const amplitude = config.amplitude + i * 10; // outer layers bigger
+        const peaks = Math.max(config.peaks - i, 6); // fewer peaks for outer layers
+        const opacity = config.opacity * (1 - i * 0.25);
+        const path = generatePath(1440, 320, amplitude, peaks);
 
-      <svg
-        style={{ position: "absolute", bottom: 0, width: "100%", height: "50%" }}
-        viewBox="0 0 1440 320"
-        preserveAspectRatio="none"
-      >
-        <path
-          fill={waveColor.replace("0.25", "0.15")}
-          d="M0,288L60,272C120,256,240,224,360,202.7C480,181,600,171,720,160C840,149,960,139,1080,154.7C1200,171,1320,213,1380,234.7L1440,256L1440,320L1380,320C1320,320,
-1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z"
-        />
-      </svg>
+        return (
+          <div
+            key={i}
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: `${height}%`,
+              overflow: "hidden",
+            }}
+          >
+            <svg
+              style={{
+                position: "absolute",
+                top: 0,
+                left: 0,
+                width: "100%",
+                height: "100%",
+                transform: "rotate(180deg) scaleX(-1)", // radiate from top-left
+              }}
+              viewBox="0 0 1440 320"
+              preserveAspectRatio="none"
+            >
+              <path fill={waveColor.replace("0.2", opacity.toString())} d={path} />
+            </svg>
+          </div>
+        );
+      })}
     </div>
   );
 }
