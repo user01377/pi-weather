@@ -1,4 +1,4 @@
-// parses time string into a readable num
+// parses time string from api back into a comparable time to Date()
 export function parseTimeToDate(timeStr) {
   if (!timeStr) return new Date(); // fallback to now
 

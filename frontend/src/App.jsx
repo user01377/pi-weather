@@ -1,7 +1,6 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 
 import "./index.css";
-
 import "./styles/background.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 
@@ -10,8 +9,9 @@ import { getWeatherTexture } from "./components/background-textures/ztexture-map
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/fetch-api-data.jsx";
+
 import { getWeatherKeyword } from './utils/weather-keyword-mapper.jsx';
-import { isNightNow } from "./utils/parseAPI-time.js";
+import { isNightNow } from "./utils/check-isNight.js";
 
 export default function App() {
   const {
@@ -30,31 +30,54 @@ export default function App() {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 
-  // computes weather key word for background color and background weather effect "texture"
-  const weatherIconUrl = data?.hero?.icon;
-  const weatherWord = getWeatherKeyword(weatherIconUrl);
-  // const weatherWord = "";
-  // debugging ^^^
+    // computes weather key word for background color and background weather effect "texture"
+    const weatherIconUrl = data?.hero?.icon ?? "clear";
+    // const weatherWord = getWeatherKeyword(weatherIconUrl);
+    const weatherWord = "clear";
+    // debugging ^^^
 
-  // returns a True or False boolean checking if it is night
-  const night = isNightNow(data?.misc?.suntimes?.sunrise || "06:00 AM", data?.misc?.suntimes?.sunset || "06:00 PM");
-  console.log(night)
+  const night = isNightNow(
+    data?.misc?.suntimes?.sunrise || "06:00 AM",
+    data?.misc?.suntimes?.sunset || "06:00 PM"
+  );
+
+  const opacity = null;
+
+  // track previous weather/night for memoization
+  const [prevWeatherWord, setPrevWeatherWord] = useState(null);
+  const [prevNight, setPrevNight] = useState(null);
+
+  const shouldUpdateBackground =
+    prevWeatherWord !== weatherWord || prevNight !== night;
 
   useEffect(() => {
     if (!data?.misc?.suntimes) return;
 
-    updateBackground(weatherWord || "clear", night);
-  }, [weatherWord, data]);
+    if (prevWeatherWord === null || prevNight === null || shouldUpdateBackground) {
+      updateBackground(weatherWord || "clear", night);
+      setPrevWeatherWord(weatherWord);
+      setPrevNight(night);
+    }
+  }, [shouldUpdateBackground, weatherWord, night, data, prevWeatherWord, prevNight]);
+
+  // memoize texture so it only re-mounts when weatherWord or night changes
+  const memoizedTexture = useMemo(() => {
+    return getWeatherTexture(weatherWord || "clear", opacity, night);
+  }, [prevWeatherWord, prevNight]); // depends on previous states for comparison
 
   return (
     <div className="app">
-      
-      <div className="background-wrapper">
-        {getWeatherTexture(weatherWord || "clear", night)}
-      </div>
 
+      {/* always mount the texture once, then memoize for future updates */}
+      {prevWeatherWord === null || prevNight === null ? 
+        getWeatherTexture(weatherWord || "clear", opacity, night) 
+        : memoizedTexture
+      }
 
+      {/* background color layer */}
+      <div className="background-wrapper"></div>
 
+      {/* always re-render the UI component */}
       <div style={{ position: "relative", zIndex: 1 }}>
         {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
         {!isError && <WeatherDiv data={data} loading={isLoading} />}
@@ -62,5 +85,4 @@ export default function App() {
 
     </div>
   );
-  
 }

@@ -8,7 +8,7 @@ export const updateBackground = (weather, isNight) => {
 
   console.log("Weather:", weather);
   console.log("Is night?", isNight);
-  console.log("Effect:", effect);
+  // console.log("Effect:", effect);
 
   let baseColor;
   
