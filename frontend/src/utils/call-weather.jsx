@@ -1,7 +1,8 @@
 import { degreesToCardinal16 } from "./degreetocardinal.jsx";
+const API_URL = import.meta.env.VITE_API_URL;
 
 export async function fetchWeather() {
-  const res = await fetch("/current");
+  const res = await fetch(`${API_URL}/current`);
 
   if (!res.ok) {
     throw new Error("Network response was not ok");
