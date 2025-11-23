@@ -32,8 +32,8 @@ export default function App() {
 
     // computes weather key word for background color and background weather effect "texture"
     const weatherIconUrl = data?.hero?.icon ?? "clear";
-    // const weatherWord = getWeatherKeyword(weatherIconUrl);
-    const weatherWord = "cloud";
+    const weatherWord = getWeatherKeyword(weatherIconUrl);
+    // const weatherWord = "cloud";
     // debugging ^^^
 
     // computes the true false boolean for night
@@ -81,7 +81,7 @@ export default function App() {
 
     // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
     const memoizedTexture = useMemo(() => {
-      return getWeatherTexture(weatherWord || "clear", night);
+      return getWeatherTexture(weatherWord || "clear", night, cloudType);
     }, [prevWeatherWord, prevNight]);
 
   return (
