@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
-import SineWaveLayer from "./components/wave-render.jsx";
+import { SubtleDotTexture } from "./components/background-texture.jsx";
 import "./styles/background.css";
 import { updateBackground } from "./components/background-logic.js";
 
@@ -38,24 +38,25 @@ export default function App() {
   }, [weatherWord, data]);
 
   return (
-    <div className="app">
+    <div className="app" style={{ position: "relative", width: "100vw", height: "100vh" }}>
+  
+  {/* Dynamic background color */}
+  <div className="background-wrapper" style={{ width: "100%", height: "100%" }}></div>
 
-      <div className="background-wrapper"></div>
+  {/* Subtle texture overlay */}
+  <SubtleDotTexture
+    dotSize={2}
+    spacing={35}
+    color="rgba(255,255,255,0.05)"
+  />
 
-      <SineWaveLayer 
-        weather={weatherWord} 
-        className="sine-wave-layer" 
-      />
+  {/* Weather panels on top */}
+  <div style={{ position: "relative", zIndex: 1 }}>
+    {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
+    {!isError && <WeatherDiv data={data} loading={isLoading} />}
+  </div>
 
-      {isError && (
-        <div style={{ color: "red" }}>
-          Error loading weather data: {error.message}
-        </div>
-      )}
-
-      {!isError && (
-        <WeatherDiv data={data} loading={isLoading} />
-      )}
-    </div>
+</div>
   );
+  
 }
