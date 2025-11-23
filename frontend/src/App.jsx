@@ -11,6 +11,7 @@ import { getWeatherTexture } from "./components/background-textures/ztexture-map
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/fetch-api-data.jsx";
 import { getWeatherKeyword } from './utils/weather-keyword-mapper.jsx';
+import { isNightNow } from "./utils/parseAPI-time.js";
 
 export default function App() {
   const {
@@ -29,22 +30,27 @@ export default function App() {
     retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
   });
 
+  // computes weather key word for background color and background weather effect "texture"
   const weatherIconUrl = data?.hero?.icon;
   const weatherWord = getWeatherKeyword(weatherIconUrl);
   // const weatherWord = "";
   // debugging ^^^
 
+  // returns a True or False boolean checking if it is night
+  const night = isNightNow(data?.misc?.suntimes?.sunrise || "06:00 AM", data?.misc?.suntimes?.sunset || "06:00 PM");
+  console.log(night)
+
   useEffect(() => {
     if (!data?.misc?.suntimes) return;
 
-    updateBackground(weatherWord || "clear", data?.misc?.suntimes?.sunrise || "06:00 AM", data?.misc?.suntimes?.sunset || "06:00 PM");
+    updateBackground(weatherWord || "clear", night);
   }, [weatherWord, data]);
 
   return (
     <div className="app">
       
       <div className="background-wrapper">
-        {getWeatherTexture(weatherWord || "clear")}
+        {getWeatherTexture(weatherWord || "clear", night)}
       </div>
 
 

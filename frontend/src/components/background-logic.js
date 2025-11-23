@@ -1,21 +1,12 @@
 import { getWeatherEffect } from '../utils/weather-values';
-import { parseTimeToDate } from '../utils/parseAPI-time'
 
-export const updateBackground = (weather, sunriseStr, sunsetStr) => {
+export const updateBackground = (weather, isNight) => {
   const wrapper = document.querySelector('.background-wrapper');
   if (!wrapper) return;
 
   const effect = getWeatherEffect(weather);
 
-  const now = new Date();
-  const sunriseDate = parseTimeToDate(sunriseStr);
-  const sunsetDate  = parseTimeToDate(sunsetStr);
-
-  const isNight = now < sunriseDate || now >= sunsetDate;
-
   console.log("Weather:", weather);
-  console.log("Sunrise:", sunriseStr, "=>", sunriseDate);
-  console.log("Sunset:", sunsetStr, "=>", sunsetDate);
   console.log("Is night?", isNight);
   console.log("Effect:", effect);
 
