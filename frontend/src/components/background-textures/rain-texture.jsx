@@ -1,41 +1,34 @@
 import React from "react";
 
 export function RainTexture({
-  lineColor = "rgba(255, 255, 255, 0.2)", // base color of streaks
+  lineColor = "rgba(255, 255, 255, 1)", // base color of streaks
   lineWidth = 2,                         // thickness of streaks
-  streakCount = 75,                       // number of streaks
-  direction = "top-left",                 // "top-left" or "top-right"
+  streakCount = 80,                       // number of streaks
+  direction = "top-left",                 // fixed direction
   minSpacing = 10,                        // minimum horizontal distance between streaks
-  minLength = 30,                         // minimum streak length
-  maxLength = 70,                         // maximum streak length
+  minLength = 30,
+  maxLength = 70,
+  slope = 0.2,                            // fixed slope for direction
 }) {
   const width = window.innerWidth;
   const height = window.innerHeight;
 
   const lines = [];
-  const usedX = [];
+
+  // Divide width into segments for guaranteed spacing
+  const segmentWidth = Math.max(minSpacing, width / streakCount);
 
   for (let i = 0; i < streakCount; i++) {
-    let x;
-    let tries = 0;
-
-    // Ensure minimum horizontal spacing
-    do {
-      x = Math.random() * width;
-      tries++;
-    } while (usedX.some(prevX => Math.abs(prevX - x) < minSpacing) && tries < 10);
-    usedX.push(x);
-
+    const x = i * segmentWidth + Math.random() * (segmentWidth - minSpacing);
     const y = Math.random() * height;
-
-    // Randomize length and angle
     const length = minLength + Math.random() * (maxLength - minLength);
-    const angleOffset = (Math.random() - 0.5) * 0.2; // subtle angle variation
-    const dx = direction === "top-left" ? -length * (1 + angleOffset) : length * (1 + angleOffset);
-    const dy = length;
 
     // Opacity slightly linked to length for depth
-    const opacity = 0.05 + 0.25 * (length - minLength) / (maxLength - minLength);
+    const opacity = 0.1 + 0.25 * (length - minLength) / (maxLength - minLength);
+
+    // Fixed direction
+    const dx = direction === "top-left" ? -length * slope : length * slope;
+    const dy = length;
 
     lines.push(
       <line
@@ -44,7 +37,7 @@ export function RainTexture({
         y1={y}
         x2={x + dx}
         y2={y + dy}
-        stroke={`rgba(255,255,255,${opacity})`}
+        stroke={lineColor.replace(/[\d.]+\)$/g, `${opacity})`)}
         strokeWidth={lineWidth}
         strokeLinecap="round"
       />
@@ -58,14 +51,10 @@ export function RainTexture({
         inset: 0,
         pointerEvents: "none",
         overflow: "hidden",
-        zIndex: 0, // ensures it sits above wrapper but below UI
+        zIndex: 0,
       }}
     >
-      <svg
-        width="100%"
-        height="100%"
-        style={{ position: "absolute", top: 0, left: 0 }}
-      >
+      <svg width="100%" height="100%" style={{ position: "absolute", top: 0, left: 0 }}>
         {lines}
       </svg>
     </div>
