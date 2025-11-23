@@ -6,7 +6,7 @@
     height: 100%;
     z-index: -1;
 
-    --bg-base: rgb(125, 185, 209);
+    --bg-base: rgb(98,193,229);
     --bg-weather: rgba(0,0,0,0); /* Weather tint overlay */
 
     background-color: var(--bg-base);

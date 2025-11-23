@@ -1,73 +1,42 @@
 import React from "react";
 
 export function DayClearTexture({
-  dotCount = 200,            // number of random dots
-  minDotSize = 1,
-  maxDotSize = 3,
-  dotColor = "rgba(255,255,255,0.06)",
-  noiseOpacity = 0.03,       // opacity of the noise overlay
+  waveColor = "rgba(255,255,255,0.35)", // more opaque than cloud waves
+  waveHeight = 450,                      // how tall the wave spans downward
+  curvature = 0.25,                       // how curvy the top wave is
   style = {},
 }) {
-  // Generate random dot positions
-  const dots = React.useMemo(() => {
-    const arr = [];
-    for (let i = 0; i < dotCount; i++) {
-      arr.push({
-        cx: Math.random() * 100,  // percentages to scale with width
-        cy: Math.random() * 100,
-        r: minDotSize + Math.random() * (maxDotSize - minDotSize),
-      });
-    }
-    return arr;
-  }, [dotCount, minDotSize, maxDotSize]);
+  const path = `
+    M 0 ${waveHeight * 0.3}
+    C ${window.innerWidth * curvature} 0,
+      ${window.innerWidth * (1 - curvature)} ${waveHeight},
+      ${window.innerWidth} ${waveHeight * 0.3}
+    L ${window.innerWidth} 0
+    L 0 0
+    Z
+  `;
 
   return (
     <div
       style={{
         position: "absolute",
-        top: 0,
-        left: 0,
-        width: "100%",
-        height: "100%",
+        inset: 0,
         pointerEvents: "none",
         overflow: "hidden",
-        ...style,
+        zIndex: 0, // ensures it sits above wrapper but below UI
+        backgroundColor: "rgb(32,167,219)"
       }}
     >
-      {/* Dots layer */}
       <svg
         width="100%"
-        height="100%"
-        style={{ position: "absolute", top: 0, left: 0 }}
-      >
-        {dots.map((dot, i) => (
-          <circle
-            key={i}
-            cx={`${dot.cx}%`}
-            cy={`${dot.cy}%`}
-            r={dot.r}
-            fill={dotColor}
-          />
-        ))}
-      </svg>
-
-      {/* Noise layer */}
-      <svg
-        width="100%"
-        height="100%"
+        height={waveHeight}
         style={{
           position: "absolute",
           top: 0,
           left: 0,
-          opacity: noiseOpacity,
         }}
       >
-        <defs>
-          <filter id="noiseFilter">
-            <feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="2" />
-          </filter>
-        </defs>
-        <rect width="100%" height="100%" filter="url(#noiseFilter)" fill="white" />
+        <path d={path} fill={waveColor} />
       </svg>
     </div>
   );

@@ -33,7 +33,7 @@ export default function App() {
     // computes weather key word for background color and background weather effect "texture"
     const weatherIconUrl = data?.hero?.icon ?? "clear";
     const weatherWord = getWeatherKeyword(weatherIconUrl);
-    // const weatherWord = "cloud";
+    // const weatherWord = "clear";
     // debugging ^^^
 
     // computes the true false boolean for night
@@ -42,7 +42,7 @@ export default function App() {
       data?.misc?.suntimes?.sunset || "06:00 PM"
     );
 
-    // const night = true;
+    // const night = false;
     // debugging ^^^
 
     // stores the cloud data into a variable
@@ -61,7 +61,6 @@ export default function App() {
       }
     }
     
-
     // track previous weather/night for memoization
     const [prevWeatherWord, setPrevWeatherWord] = useState(null);
     const [prevNight, setPrevNight] = useState(null);

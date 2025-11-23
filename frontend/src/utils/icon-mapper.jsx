@@ -16,9 +16,9 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
 
     const pickDeterministicNightIcon = () => {
       const h = hashString(lower); // 0–1 pseudo-random deterministic
-      console.log("Night hash:", h); // <— debug log
+      console.log("Night hash:", h);
       const icon = h < 0.6 ? "/moon.svg" : "/team.png";
-      console.log("Chosen night icon:", icon); // <— debug log
+      console.log("Chosen night icon:", icon);
       return icon;
     };
 

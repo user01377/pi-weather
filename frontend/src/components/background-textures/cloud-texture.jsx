@@ -14,6 +14,8 @@ export function CloudTexture({
     ovc: { layers: 4, amplitude: 60, peaks: 16, baseOpacity: 0.18, heightFactor: 0.6 },
   };
 
+
+  console.log("cloudType", cloudType)
   const config = cloudConfigs[cloudType] || cloudConfigs["sct"];
 
   const generatePath = (width = 1440, height = 320, amplitude = 40, peaks = 12, offsetY = 0) => {

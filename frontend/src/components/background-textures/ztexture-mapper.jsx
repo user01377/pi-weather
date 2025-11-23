@@ -2,10 +2,10 @@
 
 import React from "react";
 import { NightClearTexture } from "./night-clear-texture";
-// import { DayClearTexture } from "./day-clear-texture";
+import { DayClearTexture } from "./day-clear-texture";
 import { RainTexture } from "./rain-texture";
 import { SnowTexture } from "./snow-texture";
-// import StormTexture from "./storm-texture";
+import  { StormTexture } from "./storm-texture";
 import { CloudTexture } from "./cloud-texture";
 
 /**
@@ -24,8 +24,8 @@ export function getWeatherTexture(weather, isNight, cloudType) {
     case "snow":
       return <SnowTexture />;
 
-    // case "storm":
-    //   return <StormTexture />;
+    case "storm":
+      return <StormTexture />;
 
     case "cloud":
       return <CloudTexture type = {cloudType}/>;
@@ -36,7 +36,7 @@ export function getWeatherTexture(weather, isNight, cloudType) {
 
       } else {
 
-        // return <DayClearTexture />;
+        return <DayClearTexture />;
       }
 
     default:
