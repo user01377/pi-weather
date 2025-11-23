@@ -82,7 +82,7 @@ export default function App() {
     // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
     const memoizedTexture = useMemo(() => {
       return getWeatherTexture(weatherWord || "clear", night, cloudType);
-    }, [prevWeatherWord, prevNight]);
+    }, [weatherWord, night, cloudType]);
 
   return (
     <div className="app">
