@@ -1,4 +1,4 @@
-import { getWeatherEffect } from '../utils/weather-effect';
+import { getWeatherEffect } from '../utils/weather-values';
 import { parseTimeToDate } from '../utils/parseAPI-time'
 
 export const updateBackground = (weather, sunriseStr, sunsetStr) => {
