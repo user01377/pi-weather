@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import "./index.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
-import { SubtleDotTexture } from "./components/background-texture.jsx";
+import { GlassTexture } from "./components/background-texture.jsx";
 import "./styles/background.css";
 import { updateBackground } from "./components/background-logic.js";
 
@@ -39,24 +39,26 @@ export default function App() {
 
   return (
     <div className="app" style={{ position: "relative", width: "100vw", height: "100vh" }}>
-  
-  {/* Dynamic background color */}
-  <div className="background-wrapper" style={{ width: "100%", height: "100%" }}></div>
+      
+      {/* Dynamic background color */}
+      <div className="background-wrapper" style={{ width: "100%", height: "100%" }}></div>
 
-  {/* Subtle texture overlay */}
-  <SubtleDotTexture
-    dotSize={2}
-    spacing={35}
-    color="rgba(255,255,255,0.05)"
-  />
+      {/* Glass texture overlay */}
+      <GlassTexture
+        dotCount={250}
+        minDotSize={1}
+        maxDotSize={3}
+        dotColor="rgba(255,255,255,0.06)"
+        noiseOpacity={0.03}
+      />
 
-  {/* Weather panels on top */}
-  <div style={{ position: "relative", zIndex: 1 }}>
-    {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
-    {!isError && <WeatherDiv data={data} loading={isLoading} />}
-  </div>
+      {/* Weather panels */}
+      <div style={{ position: "relative", zIndex: 1 }}>
+        {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
+        {!isError && <WeatherDiv data={data} loading={isLoading} />}
+      </div>
 
-</div>
+    </div>
   );
   
 }
