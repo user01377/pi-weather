@@ -1,9 +1,5 @@
 import React from "react";
 
-/**
- * GlassTexture
- * Combines subtle randomized dots + faint noise for a static glassmorphic background.
- */
 export function GlassTexture({
   dotCount = 200,            // number of random dots
   minDotSize = 1,

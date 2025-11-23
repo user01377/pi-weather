@@ -1,8 +1,12 @@
 import React, { useEffect } from "react";
+
 import "./index.css";
-import WeatherDiv from "./components/WeatherDiv.jsx";
+
 import "./styles/background.css";
+import WeatherDiv from "./components/WeatherDiv.jsx";
+
 import { updateBackground } from "./components/background-logic.js";
+import { getWeatherTexture } from "./components/background-textures/ztexture-mapper.jsx";
 
 import { useQuery } from "@tanstack/react-query";
 import { fetchWeather } from "./utils/fetch-api-data.jsx";
@@ -37,10 +41,12 @@ export default function App() {
   }, [weatherWord, data]);
 
   return (
-    <div className="app" style={{ position: "relative", width: "100vw", height: "100vh" }}>
+    <div className="app">
       
+      <div className="background-wrapper">
+        {getWeatherTexture(weatherWord || "clear")}
+      </div>
 
-      <div className="background-wrapper" style={{ width: "100%", height: "100%" }}></div>
 
 
       <div style={{ position: "relative", zIndex: 1 }}>

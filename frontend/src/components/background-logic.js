@@ -31,5 +31,4 @@ export const updateBackground = (weather, sunriseStr, sunsetStr) => {
   }
 
   wrapper.style.setProperty('--bg-base', baseColor);
-  wrapper.style.setProperty('--bg-weather', effect.waveColor);
 };
