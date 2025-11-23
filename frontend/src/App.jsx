@@ -32,8 +32,8 @@ export default function App() {
 
     // computes weather key word for background color and background weather effect "texture"
     const weatherIconUrl = data?.hero?.icon ?? "clear";
-    // const weatherWord = getWeatherKeyword(weatherIconUrl);
-    const weatherWord = "clear";
+    const weatherWord = getWeatherKeyword(weatherIconUrl);
+    // const weatherWord = "";
     // debugging ^^^
 
   const night = isNightNow(
@@ -41,7 +41,8 @@ export default function App() {
     data?.misc?.suntimes?.sunset || "06:00 PM"
   );
 
-  const opacity = null;
+  // const night = true;
+  // debugging ^^^
 
   // track previous weather/night for memoization
   const [prevWeatherWord, setPrevWeatherWord] = useState(null);
@@ -60,9 +61,9 @@ export default function App() {
     }
   }, [shouldUpdateBackground, weatherWord, night, data, prevWeatherWord, prevNight]);
 
-  // memoize texture so it only re-mounts when weatherWord or night changes
+  // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
   const memoizedTexture = useMemo(() => {
-    return getWeatherTexture(weatherWord || "clear", opacity, night);
+    return getWeatherTexture(weatherWord || "clear", night);
   }, [prevWeatherWord, prevNight]); // depends on previous states for comparison
 
   return (
@@ -70,7 +71,7 @@ export default function App() {
 
       {/* always mount the texture once, then memoize for future updates */}
       {prevWeatherWord === null || prevNight === null ? 
-        getWeatherTexture(weatherWord || "clear", opacity, night) 
+        getWeatherTexture(weatherWord || "clear", night) 
         : memoizedTexture
       }
 
