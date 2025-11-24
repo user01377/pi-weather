@@ -1,25 +1,27 @@
-import { getWeatherEffect } from '../utils/weather-values';
-
-export const updateBackground = (weather, isNight) => {
+export const updateDayNightBackground = (isNight) => {
   const wrapper = document.querySelector('.background-wrapper');
   if (!wrapper) return;
 
-  const effect = getWeatherEffect(weather);
+  const dayColor = 'rgb(98,193,229)';   // daytime base
+  const nightColor = 'rgb(10, 15, 50)'; // nighttime base
 
-  console.log("Weather:", weather);
-  console.log("Is night?", isNight);
-  // console.log("Effect:", effect);
+  const targetColor = isNight ? nightColor : dayColor;
+  wrapper.style.setProperty('--bg-base', targetColor);
+};
 
-  let baseColor;
-  
-  if (!isNight && weather === 'snow') {
-    // Force an icy daytime color for snow
-    baseColor = 'rgb(150, 180, 230)';
-  } else {
-    baseColor = isNight
-      ? 'rgb(10, 15, 50)'
-      : `rgb(${effect.bgColor.join(',')})`;
-  }
+export const updateWeatherOverlay = (weatherWord) => {
+  const wrapper = document.querySelector('.background-wrapper');
+  if (!wrapper) return;
 
-  wrapper.style.setProperty('--bg-base', baseColor);
+  // Map weather words to overlay colors
+  const weatherMap = {
+    clear: 'rgba(0,0,0,0)',
+    snow: 'rgba(255,255,255,0.1)',
+    rain: 'rgba(0,0,0,0.2)',
+    thunder: 'rgba(50,0,0,0.2)',
+    cloudy: 'rgba(0,0,0,0.05)',
+  };
+
+  const overlayColor = weatherMap[weatherWord] ?? 'rgba(0,0,0,0)';
+  wrapper.style.setProperty('--bg-weather', overlayColor);
 };

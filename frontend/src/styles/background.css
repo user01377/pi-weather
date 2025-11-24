@@ -5,21 +5,21 @@
     width: 100%;
     height: 100%;
     z-index: -1;
-
-    --bg-base: rgb(98,193,229);
-    --bg-weather: rgba(0,0,0,0); /* Weather tint overlay */
-
+  
+    --bg-base: rgb(98,193,229); /* day/night base */
+    --bg-weather: rgba(0,0,0,0); /* weather overlay */
+  
     background-color: var(--bg-base);
-    transition: background-color 1s ease;
-}
-
-/* WEATHER TINT LAYER */
-.background-wrapper::after {
+    transition: background-color 20m linear; /* slow day/night transition */
+  }
+  
+  .background-wrapper::after {
     content: "";
     position: absolute;
     inset: 0;
     background-color: var(--bg-weather);
     pointer-events: none;
-    mix-blend-mode: soft-light; /* Or multiply/overlay/etc */
-    transition: background-color 1s ease;
-}
+    mix-blend-mode: soft-light; /* or multiply/overlay */
+    transition: background-color 1s ease; /* fast weather change */
+  }
+  
