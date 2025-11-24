@@ -28,7 +28,7 @@ export function getWeatherTexture(weather, isNight, cloudType) {
       return <StormTexture />;
 
     case "cloud":
-      return <CloudTexture type = {cloudType}/>;
+      return <CloudTexture type = {cloudType} isNight = {isNight}/>;
 
     case "clear": 
       if (isNight) {
