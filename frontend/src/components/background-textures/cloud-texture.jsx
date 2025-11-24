@@ -39,9 +39,9 @@ export function CloudTexture({
   // Cloud configuration
   const cloudConfigs = {
     few: { layers: 2, amplitude: 25, peaks: 9, baseOpacity: 0.15, heightFactor: 0.45 },
-    sct: { layers: 2, amplitude: 30, peaks: 12, baseOpacity: 0.18, heightFactor: 0.5 },
+    sct: { layers: 2, amplitude: 30, peaks: 12, baseOpacity: 0.23, heightFactor: 0.5 },
     bkn: { layers: 3, amplitude: 35, peaks: 12, baseOpacity: 0.14, heightFactor: 0.5 },
-    ovc: { layers: 4, amplitude: 40, peaks: 14, baseOpacity: 0.25, heightFactor: 0.57 },
+    ovc: { layers: 4, amplitude: 40, peaks: 14, baseOpacity: 0.257, heightFactor: 0.57 },
   };
 
   // Night opacity overrides
