@@ -2,7 +2,7 @@ import React from "react";
 
 export function DayClearTexture({
   waveColor = "rgba(255,255,255,0.35)", // more opaque than cloud waves
-  waveHeight = 450,                      // how tall the wave spans downward
+  waveHeight = 350,                      // how tall the wave spans downward
   curvature = 0.25,                       // how curvy the top wave is
   style = {},
 }) {
