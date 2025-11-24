@@ -1,6 +1,6 @@
 import React from "react";
 import "../styles/weatherdivstyle.css";
-import { GetCustomIcon } from "../utils/icon-mapping.jsx";
+import { GetCustomIcon } from "../utils/icon-mapper.jsx";
 
 export default function WeatherDiv({ data, loading, isFetching }) {
   // Initial loading state

@@ -1,4 +1,12 @@
 export const getWeatherKeyword = (iconUrl) => {
+    
+    // returns 
+    // SNOW, 
+    // STORM, 
+    // RAIN, 
+    // or CLOUD, 
+    // defaults to CLEAR
+
     if (!iconUrl) return 'clear';
   
     const lowerUrl = iconUrl.toLowerCase();

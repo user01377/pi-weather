@@ -6,7 +6,7 @@
     height: 100%;
     z-index: -1;
 
-    --bg-base: rgb(125, 185, 209);
+    --bg-base: rgb(98,193,229);
     --bg-weather: rgba(0,0,0,0); /* Weather tint overlay */
 
     background-color: var(--bg-base);
@@ -22,15 +22,4 @@
     pointer-events: none;
     mix-blend-mode: soft-light; /* Or multiply/overlay/etc */
     transition: background-color 1s ease;
-}
-
-
-.sine-wave-layer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1; /* above background-wrapper but below content */
-    pointer-events: none; /* ensures clicks go through to your content */
 }

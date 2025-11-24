@@ -1,13 +1,17 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useMemo } from "react";
+
 import "./index.css";
-import WeatherDiv from "./components/WeatherDiv.jsx";
-import { GlassTexture } from "./components/background-texture.jsx";
 import "./styles/background.css";
+import WeatherDiv from "./components/WeatherDiv.jsx";
+
 import { updateBackground } from "./components/background-logic.js";
+import { getWeatherTexture } from "./components/background-textures/ztexture-mapper.jsx";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchWeather } from "./utils/call-weather.jsx";
-import { getWeatherKeyword } from './utils/background-iconmapping.jsx';
+import { fetchWeather } from "./utils/fetch-api-data.jsx";
+
+import { getWeatherKeyword } from './utils/weather-keyword-mapper.jsx';
+import { isNightNow } from "./utils/check-isNight.js";
 
 export default function App() {
   const {
@@ -15,44 +19,83 @@ export default function App() {
     isLoading,
     isError,
     error,
-  } = useQuery({
-    queryKey: ["weather"],         // Unique key for caching
-    queryFn: fetchWeather,          // Your API helper
-    refetchInterval: 240_000,        // Auto-refresh every 4 mins
-    staleTime: 90_000,              // Data considered fresh for 1.5 mins
-    refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
-    refetchIntervalInBackground: true, 
-    retry: 2,
-    retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
-  });
+    } = useQuery({
+      queryKey: ["weather"],         // Unique key for caching
+      queryFn: fetchWeather,          // Your API helper
+      refetchInterval: 240_000,        // Auto-refresh every 4 mins
+      staleTime: 90_000,              // Data considered fresh for 1.5 mins
+      refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
+      refetchIntervalInBackground: true, 
+      retry: 2,
+      retryDelay: attemptIndex => Math.min(1000 * 2 ** attemptIndex, 30000)
+    });
 
-  const weatherIconUrl = data?.hero?.icon;
-  const weatherWord = getWeatherKeyword(weatherIconUrl);
-  // const weatherWord = "";
-  // debugging ^^^
+    // computes weather key word for background color and background weather effect "texture"
+    const weatherIconUrl = data?.hero?.icon ?? "clear";
+    const weatherWord = getWeatherKeyword(weatherIconUrl);
+    // const weatherWord = "clear";
+    // debugging ^^^
 
-  useEffect(() => {
-    if (!data?.misc?.suntimes) return;
+    // computes the true false boolean for night
+    const night = isNightNow(
+      data?.misc?.suntimes?.sunrise || "06:00 AM",
+      data?.misc?.suntimes?.sunset || "06:00 PM"
+    );
 
-    updateBackground(weatherWord || "clear", data?.misc?.suntimes?.sunrise || "06:00 AM", data?.misc?.suntimes?.sunset || "06:00 PM");
-  }, [weatherWord, data]);
+    // const night = false;
+    // debugging ^^^
+
+    // stores the cloud data into a variable
+    const cloudMap = {
+      "/few": "few",
+      "/sct": "sct",
+      "/bkn": "bkn",
+      "/ovc": "ovc",
+    };
+    
+    let cloudType = null;
+    for (const key in cloudMap) {
+      if (weatherIconUrl.includes(key)) {
+        cloudType = cloudMap[key];
+        break; // stop at the first match
+      }
+    }
+    
+    // track previous weather/night for memoization
+    const [prevWeatherWord, setPrevWeatherWord] = useState(null);
+    const [prevNight, setPrevNight] = useState(null);
+
+    const shouldUpdateBackground =
+      prevWeatherWord !== weatherWord || prevNight !== night;
+
+    useEffect(() => {
+      if (!data?.misc?.suntimes) return;
+
+      if (prevWeatherWord === null || prevNight === null || shouldUpdateBackground) {
+        updateBackground(weatherWord || "clear", night);
+        setPrevWeatherWord(weatherWord);
+        setPrevNight(night);
+      }
+    }, [shouldUpdateBackground, weatherWord, night, data, prevWeatherWord, prevNight]);
+
+    // memoize texture so it only re-mounts when WEATHERWORD or NIGHT changes
+    const memoizedTexture = useMemo(() => {
+      return getWeatherTexture(weatherWord || "clear", night, cloudType);
+    }, [weatherWord, night, cloudType]);
 
   return (
-    <div className="app" style={{ position: "relative", width: "100vw", height: "100vh" }}>
-      
-      {/* Dynamic background color */}
-      <div className="background-wrapper" style={{ width: "100%", height: "100%" }}></div>
+    <div className="app">
 
-      {/* Glass texture overlay */}
-      <GlassTexture
-        dotCount={250}
-        minDotSize={1}
-        maxDotSize={3}
-        dotColor="rgba(255,255,255,0.06)"
-        noiseOpacity={0.03}
-      />
+      {/* always mount the texture once, then memoize for future updates */}
+      {prevWeatherWord === null || prevNight === null ? 
+        getWeatherTexture(weatherWord || "clear", night, cloudType) 
+        : memoizedTexture
+      }
 
-      {/* Weather panels */}
+      {/* background color layer */}
+      <div className="background-wrapper"></div>
+
+      {/* always re-render the UI data component */}
       <div style={{ position: "relative", zIndex: 1 }}>
         {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
         {!isError && <WeatherDiv data={data} loading={isLoading} />}
@@ -60,5 +103,4 @@ export default function App() {
 
     </div>
   );
-  
 }
