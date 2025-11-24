@@ -175,7 +175,7 @@
 
 .tile-subvalue {
   margin-left: calc(2px * var(--scale));
-  font-size: calc(0.9rem * var(--scale));
+  font-size: calc(0.67rem * var(--scale));
   font-weight: 300;
   color: rgba(255,255,255,0.7);
 }
