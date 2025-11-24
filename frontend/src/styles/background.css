@@ -10,7 +10,7 @@
     --bg-weather: rgba(0,0,0,0); /* weather overlay */
   
     background-color: var(--bg-base);
-    transition: background-color 10s linear; /* slow day/night transition */
+    transition: background-color 4s linear; /* slow day/night transition */
   }
   
   .background-wrapper::after {
