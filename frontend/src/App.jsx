@@ -4,7 +4,7 @@ import "./index.css";
 import "./styles/background.css";
 import WeatherDiv from "./components/WeatherDiv.jsx";
 
-import { updateDayNightBackground, updateWeatherOverlay } from "./components/background-logic.js";
+import { updateBackground } from "./components/background-logic.js";
 import { getWeatherTexture } from "./components/background-textures/ztexture-mapper.jsx";
 
 import { useQuery } from "@tanstack/react-query";
@@ -72,8 +72,7 @@ export default function App() {
       if (!data?.misc?.suntimes) return;
 
       if (prevWeatherWord === null || prevNight === null || shouldUpdateBackground) {
-        updateWeatherOverlay(weatherWord || "clear");
-        updateDayNightBackground(night);
+        updateBackground(weatherWord, night)
         setPrevWeatherWord(weatherWord);
         setPrevNight(night);
       }
