@@ -16,8 +16,8 @@
 
 /* --- Shared Icon Styles --- */
 .icon {
-  width: calc(72px * var(--scale));
-  height: calc(72px * var(--scale));
+  width: calc(75px * var(--scale));
+  height: calc(75px * var(--scale));
   transition: transform 0.3s ease, filter 0.3s ease;
 }
 
