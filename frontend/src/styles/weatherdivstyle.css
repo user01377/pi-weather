@@ -196,7 +196,7 @@
 }
 
 .tile-value {
-  font-size: calc(1.7rem * var(--scale));
+  font-size: calc(1.8rem * var(--scale));
   font-weight: 600;
   color: white;
   text-align: center;
@@ -231,7 +231,7 @@
 }
 
 .misc-value {
-  font-size: calc(1.6rem * var(--scale));
+  font-size: calc(1.7rem * var(--scale));
   font-weight: 700;
   color: white;
 }
