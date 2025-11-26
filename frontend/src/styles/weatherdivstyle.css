@@ -5,7 +5,7 @@
 .panel {
   position: relative;
   background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(calc(5px * var(--scale)));
+  backdrop-filter: blur(calc(8px * var(--scale)));
   border-radius: calc(15px * var(--scale));
   border: 1px solid rgba(255, 255, 255, 0.04);
   box-shadow: 0 calc(8px * var(--scale)) calc(25px * var(--scale)) rgba(0, 0, 0, 0.25);
@@ -48,8 +48,8 @@
   flex-direction: row;
   align-items: stretch;
   justify-content: space-between;
-  width: 90%;
-  max-width: 85%;
+  width: 100%;
+  max-width: 95%;
   max-height: 90%;
   gap: calc(1.5rem * var(--scale));
   position: relative;
@@ -149,7 +149,7 @@
 .tile-top-row {
   display: flex;
   align-items: center;
-  gap: calc(0.85rem * var(--scale));
+  gap: calc(1rem * var(--scale));
 }
 
 .tile-icon {
@@ -167,21 +167,16 @@
 }
 
 .tile-value-row {
-  position: relative; /* establishes a positioning context */
   display: inline-flex;
   align-items: baseline;
-  gap: calc(0.2rem * var(--scale));
-  justify-content: center; /* optional, centers horizontally */
+  justify-content: center; 
   flex-wrap: nowrap;
 }
 
-
 .tile-subvalue {
-  position: absolute;
-  top: 105%; /* directly below the main value */
-  right: 0; /* start from the center */
-  transform: translateX(-50%); /* center horizontally under value */
-  font-size: calc(0.7rem * var(--scale));
+  display: inline-flex;
+  font-size: calc(0.8rem * var(--scale));
+  padding-left: calc(0.3rem * var(--scale));
   font-weight: 300;
   color: rgba(255,255,255,0.7);
   white-space: nowrap; /* prevents wrapping */
@@ -271,7 +266,7 @@
 }
 
 .hourly-column-panel {
-  flex: 0 1 calc(300px * var(--scale));
+  flex: 0 1 calc(325px * var(--scale));
   display: flex;
   flex-direction: column;
   padding: calc(1rem * var(--scale));
@@ -331,7 +326,7 @@
 }
 
 .hour-desc {
-  font-size: calc(0.8rem * var(--scale));
+  font-size: calc(0.75rem * var(--scale));
   opacity: 0.65;
   white-space: normal;
   overflow-wrap: break-word;
@@ -369,12 +364,12 @@
 }
 
 .hour-temp {
-  font-size: calc(2.35rem * var(--scale));
+  font-size: calc(2.1rem * var(--scale));
   white-space: nowrap;
 }
 
 .hour-pop {
-  font-size: calc(0.85rem * var(--scale));
+  font-size: calc(0.76rem * var(--scale));
   opacity: 0.75;
   text-align: right;
   white-space: nowrap;
