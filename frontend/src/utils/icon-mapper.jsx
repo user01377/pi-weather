@@ -26,20 +26,20 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
 
     else if (lower.includes("thunder")) result = "/thunder.svg";
 
-    else if (lower.includes("night/rain")) result = "/night-rain.svg";
+    else if (lower.includes('night') && lower.includes('rain')) result = "/night-rain.svg";
 
     else if (lower.includes("rain")) result = "/rain.svg";
 
     else if (
-      lower.includes('night/bkn') ||
-      lower.includes('night/ovc')
-  ) {
-    result = "/night-cloudy.svg";
-}
-
+      (lower.includes('night') && lower.includes('bkn')) ||
+      (lower.includes('night') && lower.includes('ovc'))
+    ) {
+      result = "/night-cloudy.svg";
+    }
+    
     else if (
-      lower.includes('/bkn') ||
-      lower.includes('/ovc')
+      lower.includes('bkn') ||
+      lower.includes('ovc')
   ) {
     result = "/cloudy.svg";
 }
