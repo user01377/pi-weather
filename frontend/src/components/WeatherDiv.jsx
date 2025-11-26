@@ -176,10 +176,10 @@ export default function WeatherDiv({ data, loading, isFetching }) {
             </div>
 
             <div className="misc-entry">
-              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunrise.icon} alt="Sunrise" className="icon misc-icon" />
+              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunset.icon} alt="Sunset" className="icon misc-icon" />
               <div className="misc-text">
-                <div className="misc-header">Sunrise</div>
-                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunrise.time}</div>
+                <div className="misc-header">Sunset</div>
+                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunset.time}</div>
               </div>
             </div>
 
@@ -201,10 +201,10 @@ export default function WeatherDiv({ data, loading, isFetching }) {
             </div>
 
             <div className="misc-entry">
-              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunset.icon} alt="Sunset" className="icon misc-icon" />
+              <img src={miscMetrics.find(m => typeof m.value === "object").value.sunrise.icon} alt="Sunrise" className="icon misc-icon" />
               <div className="misc-text">
-                <div className="misc-header">Sunset</div>
-                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunset.time}</div>
+                <div className="misc-header">Sunrise</div>
+                <div className="misc-value">{miscMetrics.find(m => typeof m.value === "object").value.sunrise.time}</div>
               </div>
             </div>
           </div>
