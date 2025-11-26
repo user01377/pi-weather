@@ -153,8 +153,8 @@
 }
 
 .tile-icon {
-  width: calc(57px * var(--scale));
-  height: calc(57px * var(--scale));
+  width: calc(61px * var(--scale));
+  height: calc(61px * var(--scale));
   object-fit: contain;
   filter: brightness(0) invert(1) drop-shadow(0 0 calc(6px * var(--scale)) rgba(255,255,255,0.6));
 }
