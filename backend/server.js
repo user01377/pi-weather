@@ -17,7 +17,7 @@ const PORT = 8000;
 const isDev = process.env.NODE_ENV === 'development';
 
 if (isDev) {
-  console.log("Running in development mode");
+  // console.log("Running in development mode");
 
   // Enable CORS for dev frontend
   server.use(cors({
@@ -28,7 +28,7 @@ if (isDev) {
   // Use verbose logging
   server.use(morgan('dev'));
 } else {
-  console.log("Running in production mode");
+  // console.log("Running in production mode");
 
   // Use combined logging in prod
   server.use(morgan('combined'));
@@ -52,5 +52,5 @@ if (!isDev) {
 
 // Start server
 server.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+  // console.log(`Server listening on port ${PORT}`);
 });
