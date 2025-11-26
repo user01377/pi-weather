@@ -17,7 +17,7 @@ export const updateBackground = (weather, isNight) => {
     baseColor = 'rgb(150, 180, 230)';
   } else {
     baseColor = isNight
-      ? 'rgb(10, 15, 50)'
+      ? 'rgb(25, 20, 55)'
       : `rgb(${effect.bgColor.join(',')})`;
   }
 
