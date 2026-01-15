@@ -22,7 +22,9 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
       return icon;
     };
 
-    if (lower.includes("snow")) result = "/snow.svg";
+    if (lower.includes("blizzard")) result = "/blizzard.svg";
+
+    else if (lower.includes("snow")) result = "/snow.svg";
 
     else if (lower.includes("thunder")) result = "/thunder.svg";
 
