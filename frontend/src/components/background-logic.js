@@ -14,7 +14,7 @@ export const updateBackground = (weather, isNight) => {
   
   if (!isNight && weather === 'snow') {
     // Force an icy daytime color for snow
-    baseColor = 'rgb(150, 180, 230)';
+    baseColor = 'rgb(105, 135, 185)';
   } else {
     baseColor = isNight
       ? 'rgb(25, 20, 55)'
