@@ -22,7 +22,7 @@ export default function App() {
     } = useQuery({
       queryKey: ["weather"],         // Unique key for caching
       queryFn: fetchWeather,          // Your API helper
-      refetchInterval: 240_000,        // Auto-refresh every 4 mins
+      refetchInterval: 720_000,        // 12 mins refresh time, 5 refresh/hr
       staleTime: 90_000,              // Data considered fresh for 1.5 mins
       refetchOnWindowFocus: false,     // Refresh when user comes back to tab and if stale is True
       refetchIntervalInBackground: true, 
@@ -97,7 +97,7 @@ export default function App() {
 
       {/* always re-render the UI data component */}
       <div style={{ position: "relative", zIndex: 1 }}>
-        {isError && <div style={{ color: "red" }}>Error loading weather data: {error.message}</div>}
+        {isError && !data && (<div style={{ color: "red" }}>Error loading weather data: {error.message}</div>)}
         {!isError && <WeatherDiv data={data} loading={isLoading} />}
       </div>
 
