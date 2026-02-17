@@ -32,6 +32,8 @@ export function GetCustomIcon({ iconUrl, alt, className }) {
 
     else if (lower.includes("rain")) result = "/rain.svg";
 
+    else if (lower.includes("fog")) result = "/foggy.svg";
+
     else if (
       (lower.includes('night') && lower.includes('bkn')) ||
       (lower.includes('night') && lower.includes('ovc'))
