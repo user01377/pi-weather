@@ -18,7 +18,8 @@ export const getWeatherKeyword = (iconUrl) => {
         lowerUrl.includes('few') ||
         lowerUrl.includes('sct') ||
         lowerUrl.includes('bkn') ||
-        lowerUrl.includes('ovc')
+        lowerUrl.includes('ovc') ||
+        lowerUrl.includes('fog')
     ) {
         return 'cloud';
     }
