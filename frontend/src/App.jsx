@@ -17,6 +17,7 @@ export default function App() {
   const {
     data,
     isLoading,
+    isFetching,
     isError,
     error,
     } = useQuery({
@@ -98,7 +99,20 @@ export default function App() {
       {/* always re-render the UI data component */}
       <div style={{ position: "relative", zIndex: 1 }}>
         {isError && !data && (<div style={{ color: "red" }}>Error loading weather data: {error.message}</div>)}
-        {!isError && <WeatherDiv data={data} loading={isLoading} />}
+        {data && (
+          <>
+            {isError && (
+              <div style={{ color: "orange", marginBottom: "8px" }}>
+                Failed to refresh. Showing stale last fetch data.
+              </div>
+            )}
+
+            <WeatherDiv
+              data={data}
+              loading={isLoading || isFetching}
+            />
+          </>
+        )}
       </div>
 
     </div>
