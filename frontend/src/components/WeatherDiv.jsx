@@ -7,68 +7,29 @@ export default function WeatherDiv({ data, loading, isFetching }) {
   if (loading || !data) {
     return (
       <div
-        className="weather-wrapper"
         style={{
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
           height: "100vh",
-          backgroundColor: "rgba(0, 0, 0, 0.6)",
+          backgroundColor: "#f5f5f5",
         }}
       >
         <div
-          className="weather-container"
           style={{
-            padding: "2rem 3rem",
-            borderRadius: "15px",
-            backgroundColor: "#f5f5f5",
-            color: "#333",
-            fontSize: "1.8rem",
-            fontWeight: "600",
-            textAlign: "center",
-            boxShadow: "0 8px 25px rgba(0,0,0,0.3)",
-            display: "flex",
-            flexDirection: "column",
-            gap: "1.5rem",
-            width: "300px",
+            padding: "1.5rem 2rem",
+            borderRadius: "8px",
+            backgroundColor: "#808080",
+            color: "#ffffff",
+            fontSize: "1.2rem",
+            fontWeight: "500",
           }}
         >
-          <div>Loading Data...</div>
-  
-          {/* Animated loading bar */}
-          <div
-            style={{
-              width: "100%",
-              height: "8px",
-              backgroundColor: "#e0e0e0",
-              borderRadius: "4px",
-              overflow: "hidden",
-            }}
-          >
-            <div
-              style={{
-                width: "0%",
-                height: "100%",
-                background: "linear-gradient(90deg, #4facfe, #00f2fe)",
-                animation: "loadingAnimation 1.5s ease-in-out infinite",
-              }}
-            />
-          </div>
+          Loading Data...
         </div>
-  
-        <style>
-          {`
-            @keyframes loadingAnimation {
-              0% { transform: translateX(-100%); width: 50%; }
-              50% { transform: translateX(25%); width: 75%; }
-              100% { transform: translateX(100%); width: 50%; }
-            }
-          `}
-        </style>
       </div>
     );
   }
-  
 
   // metrics for the tiles
   const tileMetrics = [
