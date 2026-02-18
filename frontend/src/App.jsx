@@ -17,7 +17,6 @@ export default function App() {
   const {
     data,
     isLoading,
-    isFetching,
     isError,
     error,
     } = useQuery({
@@ -102,14 +101,14 @@ export default function App() {
         {data && (
           <>
             {isError && (
-              <div style={{ color: "orange", marginBottom: "8px" }}>
+              <div style={{ color: "orange" }}>
                 Failed to refresh. Showing stale last fetch data.
               </div>
             )}
 
             <WeatherDiv
               data={data}
-              loading={isLoading || isFetching}
+              loading={isLoading}
             />
           </>
         )}
