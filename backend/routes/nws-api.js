@@ -126,7 +126,7 @@ router.get("/current", async (req, res) => {
           const fraction = cloudMap[layer.amount] ?? 0; // fallback if unknown code
           const thickness = base - prevBase;
 
-          weightedSum += fraction * thickness;4
+          weightedSum += fraction * thickness;
           totalThickness += thickness;
           prevBase = base;
         }
