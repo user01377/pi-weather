@@ -1,0 +1,12 @@
+services:
+  pi-weather:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    image: pi-weather:latest
+    container_name: pi-weather
+    ports:
+      - "8000:8000"
+    environment:
+      NODE_ENV: production
+    restart: unless-stopped
