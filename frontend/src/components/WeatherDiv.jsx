@@ -171,12 +171,13 @@ export default function WeatherDiv({ data, loading, isFetching }) {
           </div>
 
           <div className="last-updated">
-            {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString([], {
-                hour: "2-digit",
-                minute: "2-digit",
-                second: "2-digit",
-                hour12: true
-              })} — KROC INTL METAR`}
+            {`Last Fetch: ${new Date(data.lastUpdated).toLocaleTimeString("en-US", {
+              timeZone: "America/New_York",
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+              hour12: true
+            })} — KROC INTL METAR`}
           </div>
 
         </div>
